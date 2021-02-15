@@ -10,7 +10,7 @@ const logger = container.resolve(LoggerService)
 const NAMESPACE = 'Server';
 
 app.listen(config.server.port)
-console.log(`listening on http://localhost:${config.server.port}`)
+logger.info('app', `listening on http://localhost:${config.server.port}`)
 
 // const httpServer = http.createServer(app);
 
