@@ -1,45 +1,34 @@
-import 'reflect-metadata';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import { requestLoggerMiddleware } from './request.logger.middleware';
+import "reflect-metadata";
+import cors from "cors";
+import bodyParser from "body-parser";
 
-import express from 'express';
-import { singleton } from 'tsyringe';
-import VocabularyRouter from './router/vocabularies';
-import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger.json';
+import express from "express";
+import { container, singleton } from "tsyringe";
+import VocabularyRouter from "./router/vocabularies";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json";
+import readingRouter from "./router/reading";
+const vocabularyRouter = container.resolve(VocabularyRouter);
+const router = express();
 
-@singleton()
-class App {
-    router = express()
-    constructor(
-        private vocabularyRouter: VocabularyRouter,
-    ) {
+router.use(cors());
+/** Parse the body of the request */
+router.use(cors());
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json({ limit: "50mb" }));
+/** Routes go here */
 
-        this.router.use(cors());
-        /** Parse the body of the request */
-        this.router.use(cors());
-        this.router.use(bodyParser.urlencoded({ extended: false }));
-        this.router.use(bodyParser.json({ limit: '50mb', }));
-        /** Routes go here */
+router.use("/swagger", swaggerUi.serve);
+router.get("/swagger", swaggerUi.setup(swaggerDocument));
 
-        this.router.use('/vocabulary', this.vocabularyRouter.router);
+/** Error handling */
+router.use((req, res, next) => {
+  console.info("Request:", req.originalUrl, " METHOD: ", req.method);
+  console.info("Request data:", req.body);
+  next();
+});
 
-        this.router.use('/swagger', swaggerUi.serve);
-        this.router.get('/swagger', swaggerUi.setup(swaggerDocument));
+router.use("/user", readingRouter);
+router.use("/vocabulary", vocabularyRouter.router);
 
-
-        /** Error handling */
-        this.router.use((req, res, next) => {
-            const error = new Error('Not found');
-
-            res.status(404).json({
-                message: error.message
-            });
-        });
-
-        this.router.use(requestLoggerMiddleware)
-    }
-}
-
-export default App;
+export default router;

@@ -15,7 +15,7 @@ class RouterModule {
         const flow = async (req: express.Request, resp: express.Response, next: express.NextFunction) => {
             return this.baseFlow(req, resp, next, mainFunction)
         }
-        this.router.post(path, middelWare, flow);
+        this.router.get(path, middelWare, flow);
     }
 
     postMethod = async (path: string, middelWare: ValidationChain[], mainFunction) => {
