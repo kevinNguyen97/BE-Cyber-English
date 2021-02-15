@@ -8,9 +8,11 @@ import VocabularyRouter from "./router/vocabularies";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
 import readingRouter from "./router/reading";
+import LoggerService from "./config/logger";
 const vocabularyRouter = container.resolve(VocabularyRouter);
 const router = express();
 
+const logger = container.resolve(LoggerService);
 router.use(cors());
 /** Parse the body of the request */
 router.use(cors());
@@ -23,9 +25,13 @@ router.get("/swagger", swaggerUi.setup(swaggerDocument));
 
 /** Error handling */
 router.use((req, res, next) => {
-  console.info("Request:", req.originalUrl, " METHOD: ", req.method);
-  console.info("Request data:", req.body);
+  logger.info("Request:", `${req.originalUrl}, " METHOD: ", ${req.method}`);
+  logger.info("Request data:", req.body);
   next();
+});
+
+router.get("/test", (req, res, next) => {
+  res.send("Hello World!"), next();
 });
 
 router.use("/user", readingRouter);

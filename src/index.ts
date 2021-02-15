@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import * as http from 'http'
 import { container } from 'tsyringe';
 import app from './app';
 import config from './config/config';
@@ -7,10 +6,8 @@ import LoggerService from './config/logger';
 
 
 const logger = container.resolve(LoggerService)
-const NAMESPACE = 'Server';
 
-app.listen(config.server.port)
-logger.info('app', `listening on http://localhost:${config.server.port}`)
+app.listen(process.env.PORT || config.server.port, () => logger.info( 'app',`Example app listening at http://localhost:${process.env.PORT || config.server.port}`))
 
 // const httpServer = http.createServer(app);
 
