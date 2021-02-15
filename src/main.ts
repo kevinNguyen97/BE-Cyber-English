@@ -10,4 +10,4 @@ const logger = container.resolve(LoggerService)
 const NAMESPACE = 'Server';
 const httpServer = http.createServer(app);
 
-httpServer.listen(config.server.port, () => logger.info(NAMESPACE, `Server is running ${config.server.hostName}:${config.server.port}`));
+httpServer.listen(config.server.port, () => logger.info(NAMESPACE, `Server is running ${config.server.port}:${config.server.port}`));

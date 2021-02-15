@@ -1,7 +1,5 @@
 import 'reflect-metadata';
 import mysql from 'mysql';
-import hasher from 'wordpress-hash-node';
-import jwtHelper from '../helpers/jwt.helper';
 import DBService from '../config/mysql';
 import { singleton } from 'tsyringe';
 

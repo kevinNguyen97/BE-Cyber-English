@@ -5,6 +5,9 @@ const config = {
   MYSQL_PASSWORD: "l1ev5gbwzda2965l",
   MYSQL_PORT: 3306,
   MYSQL_CONNECTIONLIMIT: 10,
+
+  SERVER_HOSTNAME: 'localhost',
+  SERVER_PORT: 3000
 };
 
 export default config;
