@@ -3,13 +3,25 @@ import cors from "cors";
 import bodyParser from "body-parser";
 
 import express from "express";
-import { container, singleton } from "tsyringe";
+import { container, Lifecycle, scoped } from "tsyringe";
 import VocabularyRouter from "./router/vocabularies";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
-import readingRouter from "./router/reading";
 import LoggerService from "./config/logger";
-const vocabularyRouter = container.resolve(VocabularyRouter);
+import ReadingRouter from "./router/reading";
+@scoped(Lifecycle.ResolutionScoped)
+class Childrouter {
+  readingRouter;
+  vocabularyRouter;
+  constructor(
+    private readingR: ReadingRouter,
+    private vocabularyR: VocabularyRouter
+  ) {
+    this.readingRouter = this.readingR.router;
+    this.vocabularyRouter = this.vocabularyR.router;
+  }
+}
+
 const router = express();
 
 const logger = container.resolve(LoggerService);
@@ -30,11 +42,10 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get("/test", (req, res, next) => {
-  res.send("Hello World!"), next();
-});
+// app.get('/', (req, res) => res.send('Hello World!'));
 
-router.use("/user", readingRouter);
-router.use("/vocabulary", vocabularyRouter.router);
+const myrouter = container.resolve(Childrouter);
+router.use("/vocabulary", myrouter.vocabularyRouter);
+router.use("/reading", myrouter.readingRouter);
 
 export default router;

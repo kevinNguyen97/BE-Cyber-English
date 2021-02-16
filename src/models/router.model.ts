@@ -1,13 +1,14 @@
 import 'reflect-metadata'
 import express from 'express';
-import { singleton, } from 'tsyringe';
+import { Lifecycle, scoped, singleton, } from 'tsyringe';
 import { ResponseCode, ResponseData } from './response';
 import { ValidationChain, validationResult } from 'express-validator';
 
-@singleton()
+@scoped(Lifecycle.ResolutionScoped)
 class RouterModule {
     router: express.IRouter
     constructor() {
+        console.log('RouterModule', Math.random())
         this.router = express.Router()
     }
 
