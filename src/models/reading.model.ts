@@ -62,7 +62,7 @@ export class ReadingResponseModel {
   id: numberOrNull = null;
   unit: numberOrNull = null;
   unitTitle: stringOrNull = null;
-  UnitTitleTranslate: stringOrNull = null;
+  unitTitleTranslate: stringOrNull = null;
   audioUrl: stringOrNull | undefined = null;
   listParagraphs: ParagraphResponseModel[] = [];
   discussionQuestions: string[] = [];
@@ -75,7 +75,7 @@ export class ReadingResponseModel {
     this.id = unit.id;
     this.unit = unit.unit;
     this.unitTitle = unit.title;
-    this.UnitTitleTranslate = unit.translate;
+    this.unitTitleTranslate = unit.translate;
     this.audioUrl = media?.url;
     this.listParagraphs = paragraphs.map(
       (item) => new ParagraphResponseModel(item)

@@ -1,3 +1,4 @@
+import { getFullMediaUrl } from "../helpers/mediaUrl";
 import { numberOrNull, stringOrNull } from "../interfaces/types";
 export class VocabularyModel {
   id: numberOrNull = null;
@@ -49,10 +50,11 @@ export class VocabularyModel {
       this.orther = orther;
       this.unit = unit;
       this.oldId = old_id;
-      this.audioDictionaryUS = audio_dictionary_US;
-      this.audioDictionaryUK = audio_dictionary_UK;
-      this.audioExampleSentencesUS = audio_example_Sentences_US;
-      this.audioExampleSentencesUK = audio_example_Sentences_UK;
+      this.audioDictionaryUS = getFullMediaUrl(audio_dictionary_US);
+      this.audioDictionaryUK = getFullMediaUrl(audio_dictionary_UK);
+      this.audioExampleSentencesUS = getFullMediaUrl(audio_example_Sentences_US);
+      this.audioExampleSentencesUK = getFullMediaUrl(audio_example_Sentences_UK);
     }
   }
 }
+

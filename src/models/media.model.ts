@@ -1,3 +1,4 @@
+import { getFullMediaUrl } from "../helpers/mediaUrl";
 import { numberOrNull, stringOrNull } from "../interfaces/types";
 
 export class MediaModel {
@@ -15,7 +16,7 @@ export class MediaModel {
       this.id = data?.id;
       this.created = data?.created;
       this.modified = data?.modified;
-      this.url = data?.url;
+      this.url = getFullMediaUrl(data?.url);
       this.targetId = data?.target_id;
       this.targetType = data?.target_type;
       this.author = data?.author;

@@ -18,7 +18,7 @@ class MediaService {
     private logger: LoggerService,
     private unitSev: UnitService
   ) {
-    this.log('')
+    this.log("");
     this.connection = this.dBService.getConnection();
   }
   log = (data: any, message: string = "") => {
@@ -65,6 +65,8 @@ class MediaService {
     return new Promise(async (resolve, reject) => {
       const allUnit = await this.getAllMedia();
       const unitDetail = await this.unitSev.getUnitDetail(unit);
+      this.log(unitDetail, "this");
+      this.log(allUnit, "all media")
       if (!allUnit || !unitDetail) {
         reject(null);
         return;

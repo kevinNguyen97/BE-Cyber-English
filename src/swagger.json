@@ -7,7 +7,11 @@
     "tags": [
         {
             "name": "Vocabulary",
-            "description": "API for cats in the system"
+            "description": "API for vcabulary"
+        },
+        {
+            "name": "Reading",
+            "description": "API for Reading"
         }
     ],
     "consumes": [
@@ -34,10 +38,32 @@
                 "summary": "Get all vocabulary in unit",
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/Cat"
-                        }
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. Cat not found."
+                    }
+                }
+            }
+        },
+        "/reading/{unit}": {
+            "parameters": [
+                {
+                    "name": "unit",
+                    "in": "path",
+                    "required": true,
+                    "description": "unit that we want to match",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Reading"
+                ],
+                "summary": "Get all Reading in unit",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
                     },
                     "404": {
                         "description": "Failed. Cat not found."
@@ -51,20 +77,56 @@
             "type": "object",
             "properties": {
                 "id": {
+                    "type": "number"
+                },
+                "created": {
+                    "type": "number"
+                },
+                "modified": {
+                    "type": "number"
+                },
+                "vocabulary": {
                     "type": "string"
                 },
-                "name": {
+                "dictionaryEntry": {
                     "type": "string"
                 },
-                "isHungry": {
-                    "type": "boolean"
-                },
-                "lastFedDate": {
+                "audioDictionaryUS": {
                     "type": "string"
+                },
+                "audioDictionaryUK": {
+                    "type": "string"
+                },
+                "dictionaryEntryTranslate": {
+                    "type": "string"
+                },
+                "exampleSentences": {
+                    "type": "string"
+                },
+                "exampleSentencesTranslate": {
+                    "type": "string"
+                },
+                "audioExampleSentencesUS": {
+                    "type": "string"
+                },
+                "audioExampleSentencesUK": {
+                    "type": "string"
+                },
+                "author": {
+                    "type": "number"
+                },
+                "orther": {
+                    "type": "string"
+                },
+                "unit": {
+                    "type": "number"
+                },
+                "oldId": {
+                    "type": "number"
                 }
             }
         },
-        "Cats": {
+        "Vocabularies": {
             "type": "object",
             "properties": {
                 "cats": {
@@ -74,6 +136,9 @@
                     }
                 }
             }
+        },
+        "200": {
+            "description": "Success"
         }
     }
 }

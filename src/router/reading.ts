@@ -55,7 +55,6 @@ class ReadingRouter {
         try {
           const unit = Number(req.params.unit);
           const unitDetail = await this.unitService.getUnitDetail(unit);
-          this.log(unitDetail)
 
           if (!unitDetail)
             return this.handleError(
@@ -77,6 +76,7 @@ class ReadingRouter {
               ResponseCode.INTERNAL_SERVER_ERROR
             );
           const media = await this.mediaSev.getMediaReadingByUnit(unit);
+          console.log(media)
           const data = new ReadingResponseModel(unitDetail, media, paragraphs);
           responseData.success = true;
           responseData.data = data;

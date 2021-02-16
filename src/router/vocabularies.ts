@@ -7,6 +7,7 @@ import LoggerService from "../config/logger";
 import VocabularyService from "../services/vocabularies.service";
 import { IVocabulary } from "../interfaces/vocabulary";
 import UnitService from "../services/unit.service";
+import { VocabularyModel } from '../models/vocabulary';
 
 @singleton()
 class VocabularyRouter {
@@ -63,7 +64,7 @@ class VocabularyRouter {
               ResponseCode.BAD_REQUEST
             );
           const listVocabulary = await this.vocabularySev.getListVocabularyByID<
-            IVocabulary[]
+            VocabularyModel[]
           >(unitId);
           if (!listVocabulary)
             return this.handleError(
