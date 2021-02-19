@@ -28,23 +28,50 @@ export class ParagraphModel {
       this.unit = data?.unit;
     }
   }
+
+  getDataResponse = () => {
+    return {
+      paragraphs: this.paragraphs,
+      translate: this.translate,
+      fullHtmlTag: this.fullHtmlTag,
+      isChildren: this.isChildren,
+    };
+  };
 }
 
 // tslint:disable-next-line: max-classes-per-file
-export class ParagraphResponseModel {
-  paragraphs: stringOrNull = null;
+export class ReadingDiscussionQuestions {
+  id: numberOrNull = null;
+  created: numberOrNull = null;
+  modified: numberOrNull = null;
+  author: numberOrNull = null;
+  unit: numberOrNull = null;
+  questtion: stringOrNull = null;
   translate: stringOrNull = null;
-  fullHtmlTag: stringOrNull = null;
-  isChildren: boolean = false;
+  isExact: boolean = false;
+  orther: stringOrNull = null;
 
-  constructor(data: ParagraphModel) {
+  constructor(data: any) {
     if (data) {
-      this.paragraphs = data?.paragraphs;
+      this.id = data?.id;
+      this.created = data?.created;
+      this.modified = data?.modified;
+      this.author = data?.author;
+      this.unit = data?.unit;
+      this.questtion = data?.questtion;
       this.translate = data?.translate;
-      this.fullHtmlTag = data?.fullHtmlTag;
-      this.isChildren = !!data?.isChildren;
+      this.isExact = !!data?.is_exact;
+      this.orther = data?.orther;
     }
   }
+
+  getDataResponse = () => {
+    return {
+      id: this.id,
+      questtion: this.questtion,
+      translate: this.translate,
+    };
+  };
 }
 
 // tslint:disable-next-line: max-classes-per-file
@@ -53,9 +80,34 @@ export class ReadingComprehensionQuestions {
   created: numberOrNull = null;
   modified: numberOrNull = null;
   author: numberOrNull = null;
-  question: stringOrNull = null;
-  isExact: boolean = false;
+  unit: numberOrNull = null;
+  questtion: stringOrNull = null;
+  translate: stringOrNull = null;
+  orther: stringOrNull = null;
+
+  constructor(data: any) {
+    if (data) {
+      this.id = data?.id;
+      this.created = data?.created;
+      this.modified = data?.modified;
+      this.author = data?.author;
+      this.unit = data?.unit;
+      this.questtion = data?.questtion;
+      this.translate = data?.translate;
+      this.orther = data?.orther;
+    }
+  }
+
+  getDataResponse = () => {
+    return {
+      id: this.id,
+      questtion: this.questtion,
+      translate: this.translate,
+    };
+  };
 }
+
+// tslint:disable-next-line: max-classes-per-file
 
 // tslint:disable-next-line: max-classes-per-file
 export class ReadingResponseModel {
@@ -64,23 +116,29 @@ export class ReadingResponseModel {
   unitTitle: stringOrNull = null;
   unitTitleTranslate: stringOrNull = null;
   audioUrl: stringOrNull | undefined = null;
-  listParagraphs: ParagraphResponseModel[] = [];
-  discussionQuestions: string[] = [];
-  readingComprehensionQuestions: ReadingComprehensionQuestions[] = [];
+  listParagraphs: any[] = [];
+  discussionQuestions: any[] = [];
+  comprehensionQuestions: any[] = [];
   constructor(
     unit: UnitsModel,
     media: MediaModel | undefined,
-    paragraphs: ParagraphModel[]
+    paragraphs: ParagraphModel[],
+    discussionQuestions: ReadingDiscussionQuestions[] | null,
+    comprehensionQuestions: ReadingComprehensionQuestions[] | null
   ) {
     this.id = unit.id;
     this.unit = unit.unit;
     this.unitTitle = unit.title;
     this.unitTitleTranslate = unit.translate;
     this.audioUrl = media?.url;
-    this.listParagraphs = paragraphs.map(
-      (item) => new ParagraphResponseModel(item)
-    );
-    this.discussionQuestions = [];
-    this.readingComprehensionQuestions = [];
+    this.listParagraphs = paragraphs.map((item) => item.getDataResponse());
+    this.discussionQuestions = (discussionQuestions
+      ? discussionQuestions
+      : []
+    ).map((item) => item.getDataResponse());
+    this.comprehensionQuestions = (comprehensionQuestions
+      ? comprehensionQuestions
+      : []
+    ).map((item) => item.getDataResponse());
   }
 }

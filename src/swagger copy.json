@@ -164,6 +164,70 @@
         }
     },
     "definitions": {
+        "vocabulary": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "created": {
+                    "type": "number"
+                },
+                "modified": {
+                    "type": "number"
+                },
+                "vocabulary": {
+                    "type": "string"
+                },
+                "dictionaryEntry": {
+                    "type": "string"
+                },
+                "audioDictionaryUS": {
+                    "type": "string"
+                },
+                "audioDictionaryUK": {
+                    "type": "string"
+                },
+                "dictionaryEntryTranslate": {
+                    "type": "string"
+                },
+                "exampleSentences": {
+                    "type": "string"
+                },
+                "exampleSentencesTranslate": {
+                    "type": "string"
+                },
+                "audioExampleSentencesUS": {
+                    "type": "string"
+                },
+                "audioExampleSentencesUK": {
+                    "type": "string"
+                },
+                "author": {
+                    "type": "number"
+                },
+                "orther": {
+                    "type": "string"
+                },
+                "unit": {
+                    "type": "number"
+                },
+                "oldId": {
+                    "type": "number"
+                }
+            }
+        },
+        "Vocabularies": {
+            "type": "object",
+            "properties": {
+                "cats": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/Cat"
+                    }
+                }
+            }
+        },
         "id": {
             "properties": {
                 "uuid": {

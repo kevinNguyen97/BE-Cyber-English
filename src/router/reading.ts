@@ -19,9 +19,8 @@ class ReadingRouter {
     private unitService: UnitService,
     private readingService: ReadingService,
     private mediaSev: MediaService
-    ) {
-    this.routerModule = container.resolve(RouterModule),
-    this.log('')
+  ) {
+    (this.routerModule = container.resolve(RouterModule)), this.log("");
     this.router = this.routerModule.router;
     this.run();
   }
@@ -75,9 +74,25 @@ class ReadingRouter {
               ],
               ResponseCode.INTERNAL_SERVER_ERROR
             );
+
+          const discussionQuestions = await this.readingService.getReadingDiscussionQuestionsByUnit(
+            unit
+          );
+          const readingComprehensionQuestions = await this.readingService.getReadingComprehensionQuestionsByUnit(
+            unit
+          );
+
           const media = await this.mediaSev.getMediaReadingByUnit(unit);
-          console.log(media)
-          const data = new ReadingResponseModel(unitDetail, media, paragraphs);
+
+          this.log(media);
+
+          const data = new ReadingResponseModel(
+            unitDetail,
+            media,
+            paragraphs,
+            discussionQuestions,
+            readingComprehensionQuestions
+          );
           responseData.success = true;
           responseData.data = data;
 
