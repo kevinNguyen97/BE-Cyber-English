@@ -34,6 +34,9 @@ router.use(bodyParser.json({ limit: "50mb" }));
 
 router.use("/swagger", swaggerUi.serve);
 router.get("/swagger", swaggerUi.setup(swaggerDocument));
+// static
+router.use(express.static('public'))
+
 
 /** Error handling */
 router.use((req, res, next) => {

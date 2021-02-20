@@ -1,33 +1,25 @@
 import "reflect-metadata";
 import express from "express";
-import { container, singleton } from "tsyringe";
+import { singleton } from "tsyringe";
 import { handleError, ResponseCode, ResponseData } from "../models/response";
-import RouterModule from "../models/router.model";
-import LoggerService from "../config/logger";
 import UnitService from "../services/unit.service";
 import ReadingService from "../services/reading.service";
 import { ParagraphModel, ReadingResponseModel } from "../models/reading.model";
 import MediaService from "../services/media.service";
+import BaseRouter from "./baseRouter";
 
 @singleton()
-class ReadingRouter {
-  private nameSpace = "ReadingRouter";
-  routerModule: any;
-  router: express.IRouter;
+class ReadingRouter extends BaseRouter{
   constructor(
-    private logger: LoggerService,
     private unitService: UnitService,
     private readingService: ReadingService,
     private mediaSev: MediaService
   ) {
-    (this.routerModule = container.resolve(RouterModule)), this.log("");
-    this.router = this.routerModule.router;
+    super();
     this.run();
   }
 
-  log = (data: any, message: string = "") => {
-    this.logger.info(this.nameSpace, message, data);
-  };
+
 
   handleError = (
     resp: express.Response,
@@ -42,7 +34,7 @@ class ReadingRouter {
   };
 
   run() {
-    this.routerModule.getMethod(
+    this.getMethod(
       "/:unit",
       [],
       async (
