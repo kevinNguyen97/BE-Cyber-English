@@ -24,7 +24,7 @@ class UnitService {
     callBackMap = (item) => item
   ): void => {
     if (err) {
-      this.logger.error(this.nameSpace, "", err);
+      this.log("", err);
       reject(err);
     }
     if (result && result?.length) {
@@ -52,13 +52,14 @@ class UnitService {
       }
     });
   };
+
   log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);
   };
+
   checkUnitsExist = (unit: number): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
       const allUnit = await this.getAllUnit();
-      this.log(allUnit);
       const isExist = allUnit.find((item) => item.unit === unit);
       resolve(!!isExist);
     });

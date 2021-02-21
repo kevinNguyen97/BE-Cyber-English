@@ -42,7 +42,6 @@ class VocabularyRouter extends BaseRouter {
       ) => {
         try {
           const unitId = Number(req.params.unitID);
-          this.log(unitId);
           const unitIsExist = await this.unitService.checkUnitsExist(unitId);
           if (!unitIsExist)
             return this.handleError(
