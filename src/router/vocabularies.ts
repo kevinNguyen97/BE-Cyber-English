@@ -77,8 +77,6 @@ class VocabularyRouter extends BaseRouter {
         }
       }
     );
-
-    this.router.use(express.static(''))
   }
 }
 

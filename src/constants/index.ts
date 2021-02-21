@@ -1,1 +1,1 @@
-export const baseMediaUrl = 'https://cyber-english.s3.us-west-000.backblazeb2.com/media/'
+export const baseMediaUrl = '/media/'

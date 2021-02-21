@@ -15,16 +15,18 @@ class ReadingService {
   private nameSpace = "ReadingService";
   private connection: mysql.Pool;
 
-  private listDiscussionQuestions;
-  private listReadingComprehensionQuestions;
+  private listDiscussionQuestions: ReadingDiscussionQuestions[] = [];
+  private listReadingComprehensionQuestions: ReadingComprehensionQuestions[] = [];
 
   constructor(private dBService: DBService, private logger: LoggerService) {
     this.log("");
     this.connection = this.dBService.getConnection();
   }
+
   log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);
   };
+
   handleGetAllResult = (
     err: any,
     result: any,
@@ -44,9 +46,9 @@ class ReadingService {
     }
   };
 
-  getReadingDiscussionQuestions = <T>(
-    unit: string | number
-  ): Promise<T | null> => {
+  getReadingDiscussionQuestions = (): Promise<
+    ReadingComprehensionQuestions[]
+  > => {
     return new Promise((resolve, reject) => {
       this.connection.query(
         `SELECT * FROM reading_discussion_questions;`,
@@ -57,9 +59,10 @@ class ReadingService {
           }
           if (result && result.length) {
             this.listReadingComprehensionQuestions = result.map(
-              (item: any) => new ReadingDiscussionQuestions(item)
+              (item: any) => new ReadingComprehensionQuestions(item)
             );
           }
+          resolve(this.listReadingComprehensionQuestions);
         }
       );
     });

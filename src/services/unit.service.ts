@@ -3,7 +3,6 @@ import mysql from "mysql";
 import DBService from "../config/mysql";
 import { singleton } from "tsyringe";
 import LoggerService from "../config/logger";
-import { VocabularyModel } from "../models/vocabulary";
 import { UnitsModel } from "../models/Units.model";
 
 @singleton()
@@ -13,9 +12,8 @@ class UnitService {
   private listUnit: UnitsModel[] = [];
 
   constructor(private dBService: DBService, private logger: LoggerService) {
-    this.log('')
+    this.log("");
     this.connection = this.dBService.getConnection();
-
   }
 
   handleGetAllResult = (
@@ -60,7 +58,7 @@ class UnitService {
   checkUnitsExist = (unit: number): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
       const allUnit = await this.getAllUnit();
-      this.log(allUnit)
+      this.log(allUnit);
       const isExist = allUnit.find((item) => item.unit === unit);
       resolve(!!isExist);
     });

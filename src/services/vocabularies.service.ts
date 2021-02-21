@@ -3,7 +3,6 @@ import mysql from "mysql";
 import DBService from "../config/mysql";
 import { singleton } from "tsyringe";
 import LoggerService from "../config/logger";
-import { IVocabulary } from "../interfaces/vocabulary/index";
 import { VocabularyModel } from "../models/vocabulary";
 
 @singleton()
