@@ -60,6 +60,7 @@ class UnitService {
   checkUnitsExist = (unit: number): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
       const allUnit = await this.getAllUnit();
+      this.log(allUnit)
       const isExist = allUnit.find((item) => item.unit === unit);
       resolve(!!isExist);
     });
