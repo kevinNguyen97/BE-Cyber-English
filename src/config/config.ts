@@ -33,4 +33,6 @@ const config = {
     server: SERVER,
 }
 
+export const enviroment = process.env.NODE_ENV || 'beta';
+
 export default config;
