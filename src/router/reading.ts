@@ -9,7 +9,7 @@ import MediaService from "../services/media.service";
 import BaseRouter from "./baseRouter";
 
 @singleton()
-class ReadingRouter extends BaseRouter{
+class ReadingRouter extends BaseRouter {
   constructor(
     private unitService: UnitService,
     private readingService: ReadingService,
@@ -18,8 +18,6 @@ class ReadingRouter extends BaseRouter{
     super();
     this.run();
   }
-
-
 
   handleError = (
     resp: express.Response,

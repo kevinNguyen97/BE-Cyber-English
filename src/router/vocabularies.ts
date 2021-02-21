@@ -50,10 +50,10 @@ class VocabularyRouter extends BaseRouter {
               [`unit ${unitId} is not exist`],
               ResponseCode.BAD_REQUEST
             );
-          const listVocabulary = await this.vocabularySev.getListVocabularyByID<
+          const listVocabularies = await this.vocabularySev.getListVocabularyByID<
             VocabularyModel[]
           >(unitId);
-          if (!listVocabulary)
+          if (!listVocabularies)
             return this.handleError(
               resp,
               responseData,
@@ -64,7 +64,7 @@ class VocabularyRouter extends BaseRouter {
             );
 
           responseData.success = true;
-          responseData.data = listVocabulary;
+          responseData.data = listVocabularies;
           return resp.status(ResponseCode.OK).json(responseData);
         } catch (error) {
           return handleError(
