@@ -11,11 +11,13 @@ class VocabularyService {
   private connection: mysql.Pool;
   constructor(private dBService: DBService, private logger: LoggerService) {
     this.connection = this.dBService.getConnection();
-    this.log('')
+    this.log("");
   }
+
   log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);
   };
+
   handleGetAllResult = (
     err: any,
     result: any,

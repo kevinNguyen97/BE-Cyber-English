@@ -16,22 +16,10 @@ class ReadingRouter extends BaseRouter {
     private mediaSev: MediaService
   ) {
     super();
-    this.run();
+    this.init();
   }
 
-  handleError = (
-    resp: express.Response,
-    responseData: ResponseData<any>,
-    errorMessage: string[],
-    errorCode: ResponseCode
-  ) => {
-    responseData.data = null;
-    responseData.success = false;
-    responseData.errorCodes = errorMessage;
-    return resp.status(errorCode).json(responseData);
-  };
-
-  run() {
+  init() {
     this.getMethod(
       "/:unit",
       [],

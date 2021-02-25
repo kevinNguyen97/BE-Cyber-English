@@ -10,6 +10,7 @@ import swaggerDocument from "./swagger.json";
 import ReadingRouter from "./router/reading";
 import BaseRouter from "./router/baseRouter";
 import config from './config/config';
+import UserRouter from "./router/users";
 
 // const myrouter = {
 //   vocabularyRouter: container.resolve(ReadingRouter).router,
@@ -22,7 +23,8 @@ class AppRouter extends BaseRouter {
 
   constructor(
     private vocabulary: VocabularyRouter,
-    private reading: ReadingRouter
+    private reading: ReadingRouter,
+    private user: UserRouter,
   ) {
     super();
     this.appRouter = express();
@@ -35,7 +37,6 @@ class AppRouter extends BaseRouter {
 
     this.appRouter.use("/swagger", swaggerUi.serve);
     this.appRouter.get("/swagger", swaggerUi.setup(swaggerDocument));
-    // static
 
     /** Error handling */
     this.appRouter.use((req, res, next) => {
@@ -44,11 +45,12 @@ class AppRouter extends BaseRouter {
       this.log("Request data:", req.body);
       next();
     });
-
+    // static
     this.appRouter.use(express.static("public"));
 
     this.appRouter.use("/vocabulary", this.vocabulary.router);
     this.appRouter.use("/reading", this.reading.router);
+    this.appRouter.use("/user", this.user.router);
   }
 }
 
