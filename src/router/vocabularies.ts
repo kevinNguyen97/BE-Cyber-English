@@ -18,18 +18,6 @@ class VocabularyRouter extends BaseRouter {
     this.run();
   }
 
-  handleError = (
-    resp: express.Response,
-    responseData: ResponseData<any>,
-    errorMessage: string[],
-    errorCode: ResponseCode
-  ) => {
-    responseData.data = null;
-    responseData.success = false;
-    responseData.errorCodes = errorMessage;
-    return resp.status(errorCode).json(responseData);
-  };
-
   run() {
     this.getMethod(
       "/:unitID",

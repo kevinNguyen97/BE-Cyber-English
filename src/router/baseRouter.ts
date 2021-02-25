@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import express from "express";
 import LoggerService from "../config/logger";
-import { ResponseData } from "../models/response";
+import { ResponseCode, ResponseData } from "../models/response";
 import { ValidationChain, validationResult } from "express-validator";
 import { container } from "tsyringe";
 
@@ -15,6 +15,18 @@ class BaseRouter {
   }
   log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);
+  };
+
+  handleError = (
+    resp: express.Response,
+    responseData: ResponseData<any>,
+    errorMessage: string[],
+    errorCode: ResponseCode
+  ) => {
+    responseData.data = null;
+    responseData.success = false;
+    responseData.errorCodes = errorMessage;
+    return resp.status(errorCode).json(responseData);
   };
 
   getMethod = async (
