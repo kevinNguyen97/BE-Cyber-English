@@ -12,6 +12,10 @@
         {
             "name": "Reading",
             "description": "API for Reading"
+        },
+        {
+            "name": "User",
+            "description": "API for User"
         }
     ],
     "consumes": [
@@ -70,11 +74,72 @@
                     }
                 }
             }
+        },
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "Reading"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ndDN",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "produces": [],
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "200": {
             "description": "Success"
+        },
+        "Cat": {
+            "type": "object",
+            "properties": {
+                "genus": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "isHungry": {
+                    "type": "boolean"
+                },
+                "lastFedDate": {
+                    "type": "string"
+                }
+            }
+        },
+        "id": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                }
+            }
         }
     }
 }
