@@ -33,6 +33,9 @@
                     "required": true,
                     "description": "unit that we want to match",
                     "type": "string"
+                },
+                {
+                    "$ref": "#/definitions/auth"
                 }
             ],
             "get": {
@@ -58,6 +61,9 @@
                     "required": true,
                     "description": "unit that we want to match",
                     "type": "string"
+                },
+                {
+                    "$ref": "#/definitions/auth"
                 }
             ],
             "get": {
@@ -78,7 +84,7 @@
         "/user/login": {
             "post": {
                 "tags": [
-                    "Reading"
+                    "User"
                 ],
                 "consumes": [
                     "application/json"
@@ -117,29 +123,12 @@
         "200": {
             "description": "Success"
         },
-        "Cat": {
-            "type": "object",
-            "properties": {
-                "genus": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "isHungry": {
-                    "type": "boolean"
-                },
-                "lastFedDate": {
-                    "type": "string"
-                }
-            }
-        },
-        "id": {
-            "properties": {
-                "uuid": {
-                    "type": "string"
-                }
-            }
+        "auth": {
+            "name": "Auth-key",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "type": "string"
         }
     }
 }
