@@ -13,7 +13,7 @@ class ReadingRouter extends BaseRouter {
   constructor(
     private unitService: UnitService,
     private readingService: ReadingService,
-    private mediaSev: MediaService,
+    private mediaSev: MediaService
   ) {
     super();
     this.init();
@@ -21,7 +21,7 @@ class ReadingRouter extends BaseRouter {
 
   init() {
     this.getMethod(
-      "/:unit",
+      "/unit/:unit",
       [this.isAuth],
       async (
         req: express.Request,
@@ -31,6 +31,9 @@ class ReadingRouter extends BaseRouter {
       ) => {
         try {
           const unit = Number(req.params.unit);
+          if (!unit) {
+            next();
+          }
           const unitDetail = await this.unitService.getUnitDetail(unit);
 
           if (!unitDetail)
@@ -86,6 +89,8 @@ class ReadingRouter extends BaseRouter {
       }
     );
   }
+
+
 }
 
 export default ReadingRouter;

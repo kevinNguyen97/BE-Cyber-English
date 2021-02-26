@@ -25,7 +25,7 @@
         "application/json"
     ],
     "paths": {
-        "/vocabulary/{unit}": {
+        "/vocabulary/unit/{unit}": {
             "parameters": [
                 {
                     "name": "unit",
@@ -53,7 +53,43 @@
                 }
             }
         },
-        "/reading/{unit}": {
+        "/vocabulary/details": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "post": {
+                "tags": [
+                    "Vocabulary"
+                ],
+                "parameters": [
+                    {
+                        "name": "body details vocabulary",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "vocabulary": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "summary": "Get detail vocabulary",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "vocabulary is not exist1"
+                    }
+                }
+            }
+        },
+        "/reading/unit/{unit}": {
             "parameters": [
                 {
                     "name": "unit",

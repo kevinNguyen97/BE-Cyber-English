@@ -17,7 +17,7 @@ class UserService {
 
   getListUser() {
     this.connection.query("SELECT * FROM users", (error, result) => {
-      console.log(result);
+      (result);
     });
   }
 

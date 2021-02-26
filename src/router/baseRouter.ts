@@ -2,7 +2,7 @@ import "reflect-metadata";
 import express from "express";
 import LoggerService from "../config/logger";
 import { ResponseCode, ResponseData } from "../models/response";
-import { ValidationChain, validationResult } from "express-validator";
+import { check, ValidationChain, validationResult } from "express-validator";
 import { container } from "tsyringe";
 import Authentication from "../middleware/Authentication";
 
@@ -13,6 +13,7 @@ class BaseRouter {
   private auth: Authentication = container.resolve(Authentication);
   public isAuth: any;
   public isUserLoggedIn: any;
+  check = check
   constructor() {
     this.isAuth = this.auth.isAuth
     this.isUserLoggedIn = this.auth.isUserLoggedIn

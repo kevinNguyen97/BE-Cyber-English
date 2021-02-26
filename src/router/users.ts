@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from "express";
-import { check, validationResult } from "express-validator";
+import { check } from "express-validator";
 import { singleton } from "tsyringe";
 import { handleError, ResponseCode, ResponseData } from "../models/response";
 // import Authentication from '../middleware/Authentication';
