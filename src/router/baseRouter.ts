@@ -12,11 +12,13 @@ class BaseRouter {
   private logger: LoggerService = container.resolve(LoggerService);
   private auth: Authentication = container.resolve(Authentication);
   public isAuth: any;
+  public checkAuthThenGetuser: any;
   public isUserLoggedIn: any;
   check = check
   constructor() {
     this.isAuth = this.auth.isAuth
     this.isUserLoggedIn = this.auth.isUserLoggedIn
+    this.checkAuthThenGetuser = this.auth.checkThenGetuser
     this.router = express.Router();
     this.log("");
   }

@@ -65,8 +65,6 @@ class ReadingRouter extends BaseRouter {
 
           const media = await this.mediaSev.getMediaReadingByUnit(unit);
 
-          this.log(media);
-
           const data = new ReadingResponseModel(
             unitDetail,
             media,

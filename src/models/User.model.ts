@@ -34,7 +34,7 @@ export class User {
         }
     }
 
-    getUserRoleName = async (roleID: number) => {
+    private getUserRoleName = async (roleID: number) => {
         const roleServ = container.resolve(RoleService)
         this.userRoleName = await roleServ.getRoleNameById(roleID);
     }

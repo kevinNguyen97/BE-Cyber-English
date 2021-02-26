@@ -89,6 +89,79 @@
                 }
             }
         },
+        "/vocabulary/word-list/{page_size}/{page_index}": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Vocabulary"
+                ],
+                "parameters": [
+                    {
+                        "name": "page_size",
+                        "in": "path",
+                        "required": true,
+                        "description": "page size",
+                        "type": "number"
+                    },
+                    {
+                        "name": "page_index",
+                        "in": "path",
+                        "required": true,
+                        "description": "page index",
+                        "type": "number"
+                    }
+                ],
+                "summary": "Get detail vocabulary",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "vocabulary is not exist1"
+                    }
+                }
+            }
+        },
+        "/vocabulary/word-list": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "post": {
+                "tags": [
+                    "Vocabulary"
+                ],
+                "parameters": [
+                    {
+                        "name": "body add wordlist",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "vocabulary_id": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "summary": "add vocabulary to wordlist",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "bad request"
+                    }
+                }
+            }
+        },
         "/reading/unit/{unit}": {
             "parameters": [
                 {

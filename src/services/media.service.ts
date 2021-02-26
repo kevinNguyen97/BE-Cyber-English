@@ -65,8 +65,6 @@ class MediaService {
     return new Promise(async (resolve, reject) => {
       const allUnit = await this.getAllMedia();
       const unitDetail = await this.unitSev.getUnitDetail(unit);
-      this.log(unitDetail, "this");
-      this.log(allUnit, "all media")
       if (!allUnit || !unitDetail) {
         reject(null);
         return;

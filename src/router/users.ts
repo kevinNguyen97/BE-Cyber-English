@@ -77,7 +77,43 @@ class UserRouter extends BaseRouter {
         }
       }
     );
+    this.postMethod(
+      "/details",
+      [this.isAuth, this.check("vocabulary").isString()],
+      this.getVocabularyDetails
+    );
   }
+  getVocabularyDetails = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    const vocabulary = String(req.body.vocabulary).trim();
+
+    if (!vocabulary) {
+      return this.handleError(
+        resp,
+        responseData,
+        [`invalid vocabulary`],
+        ResponseCode.BAD_REQUEST
+      );
+    }
+
+    const vocabularyDetails = null
+    if (!vocabulary) {
+      return this.handleError(
+        resp,
+        responseData,
+        [`vocabulary is not exist`],
+        ResponseCode.BAD_REQUEST
+      );
+    }
+
+    responseData.success = true;
+    responseData.data = vocabularyDetails;
+    return resp.status(ResponseCode.OK).json(responseData);
+  };
 }
 
 export default UserRouter;

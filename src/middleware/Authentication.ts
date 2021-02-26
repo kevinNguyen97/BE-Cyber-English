@@ -28,6 +28,29 @@ class Authentication {
     );
   };
 
+  checkThenGetuser = async (req: any, res: any, next: any) => {
+    const token = req.headers["auth-key"];
+    this.userService.getUserByToken(token).then(
+      (userInfo) => {
+        this.userService.getUserById(userInfo.userId).then((user) => {
+          req.body.userData = user;
+          next();
+        });
+      },
+      (err) => {
+        const obj = new ResponseData<any>();
+        obj.success = false;
+        obj.data = {
+          error_code: ["unauthorized"],
+        };
+        if (err.error_name === "TokenExpiredError") {
+          obj.data.error_code = ["Token Expired"];
+        }
+        res.status(ResponseCode.UNAUTHORIZED).json(obj);
+      }
+    );
+  };
+
   isUserLoggedIn = async (req: any, res: any) => {
     return new Promise(async (resolve, reject) => {
       const token = req.headers["sb-auth-key"];
