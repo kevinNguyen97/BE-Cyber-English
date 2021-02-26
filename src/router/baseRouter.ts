@@ -53,6 +53,21 @@ class BaseRouter {
     this.router.get(path, middelWare, flow);
   };
 
+  deleteMethod = async (
+    path: string,
+    middelWare: any[],
+    mainFunction
+  ) => {
+    const flow = async (
+      req: express.Request,
+      resp: express.Response,
+      next: express.NextFunction
+    ) => {
+      return this.baseFlow(req, resp, next, mainFunction);
+    };
+    this.router.delete(path, middelWare, flow);
+  };
+
   postMethod = async (
     path: string,
     middelWare: ValidationChain[],
@@ -66,6 +81,36 @@ class BaseRouter {
       return this.baseFlow(req, resp, next, mainFunction);
     };
     this.router.post(path, middelWare, flow);
+  };
+
+  putMethod = async (
+    path: string,
+    middelWare: ValidationChain[],
+    mainFunction
+  ) => {
+    const flow = async (
+      req: express.Request,
+      resp: express.Response,
+      next: express.NextFunction
+    ) => {
+      return this.baseFlow(req, resp, next, mainFunction);
+    };
+    this.router.put(path, middelWare, flow);
+  };
+
+  patchMethod = async (
+    path: string,
+    middelWare: ValidationChain[],
+    mainFunction
+  ) => {
+    const flow = async (
+      req: express.Request,
+      resp: express.Response,
+      next: express.NextFunction
+    ) => {
+      return this.baseFlow(req, resp, next, mainFunction);
+    };
+    this.router.patch(path, middelWare, flow);
   };
 
   baseFlow(

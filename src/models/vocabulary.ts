@@ -67,7 +67,7 @@ export class VocabularyModel {
 
 // tslint:disable-next-line: max-classes-per-file
 export class UserWorkList {
-  id: numberOrNull = null;
+  id: number = 0;
   created: numberOrNull = null;
   modified: numberOrNull = null;
   vocabularyId: numberOrNull = null;

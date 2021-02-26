@@ -162,6 +162,59 @@
                 }
             }
         },
+        "/vocabulary/word-list/{wordlist_id}": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "delete": {
+                "tags": [
+                    "Vocabulary"
+                ],
+                "parameters": [
+                    {
+                        "name": "wordlist_id",
+                        "in": "path",
+                        "required": true,
+                        "description": "wordlist id",
+                        "type": "number"
+                    }
+                ],
+                "summary": "delete wordlist",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "bad request"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Vocabulary"
+                ],
+                "parameters": [
+                    {
+                        "name": "wordlist_id",
+                        "in": "path",
+                        "required": true,
+                        "description": "wordlist id",
+                        "type": "number"
+                    }
+                ],
+                "summary": "highlight wordlist",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "bad request"
+                    }
+                }
+            }
+        },
         "/reading/unit/{unit}": {
             "parameters": [
                 {

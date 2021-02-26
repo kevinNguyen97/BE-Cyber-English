@@ -1,18 +1,15 @@
 import "reflect-metadata";
-import mysql from "mysql";
-import DBService from "../config/mysql";
 import { singleton } from "tsyringe";
 import LoggerService from "../config/logger";
 import { UserWorkList, VocabularyModel } from "../models/vocabulary";
-import { promises } from "fs";
+import BaseService from "./base.service";
 
 @singleton()
-class VocabularyService {
+class VocabularyService extends BaseService {
   private nameSpace = "VocabularyService";
-  private connection: mysql.Pool;
   private allVocabularies: VocabularyModel[] = [];
-  constructor(private dBService: DBService, private logger: LoggerService) {
-    this.connection = this.dBService.getConnection();
+  constructor(private logger: LoggerService) {
+    super();
     this.log("");
   }
 
@@ -100,6 +97,7 @@ class VocabularyService {
       const subQueryPagin = pageSize
         ? `LIMIT ${pageIndex * pageSize},${pageSize}`
         : "";
+
       this.connection.query(
         `SELECT * FROM user_worklist WHERE user_id = ${userId} ${subQueryPagin}`,
         (err, result) => {
@@ -174,16 +172,45 @@ class VocabularyService {
     userId: number
   ): Promise<number> => {
     return new Promise(async (resolve, reject) => {
-      const timeNow = Date.now();
       this.connection.query(
-        `INSERT INTO r4b8weicc0brc2ug.user_worklist (created,modified,vocabulary_id,user_id,is_highlight,is_deleted)
-        VALUES (${timeNow},${timeNow},${vocabularyId},${userId},false,false);`,
+        `INSERT INTO user_worklist (created,modified,vocabulary_id,user_id,is_highlight,is_deleted)
+        VALUES (${this.timeNow},${this.timeNow},${vocabularyId},${userId},false,false);`,
         (err, result) => {
           if (err) {
             this.logger.error(this.nameSpace, "", err);
             return reject(err);
           }
           if (result) return resolve(Number(result.insertId));
+        }
+      );
+    });
+  };
+
+  deleteWordList = (worklistId: number): Promise<number> => {
+    return new Promise(async (resolve, reject) => {
+      this.connection.query(
+        `UPDATE user_worklist SET modified=${this.timeNow},is_highlight=false,is_deleted=true WHERE id=${worklistId};`,
+        (err, result) => {
+          if (err) {
+            this.logger.error(this.nameSpace, "", err);
+            return reject(err);
+          }
+          if (result) return resolve(worklistId);
+        }
+      );
+    });
+  };
+
+  highlightWordList = (worklistId: number): Promise<number> => {
+    return new Promise(async (resolve, reject) => {
+      this.connection.query(
+        `UPDATE user_worklist SET modified=${this.timeNow},is_deleted=0,is_highlight=1 WHERE id=${worklistId};`,
+        (err, result) => {
+          if (err) {
+            this.logger.error(this.nameSpace, "", err);
+            return reject(err);
+          }
+          if (result) return resolve(worklistId);
         }
       );
     });

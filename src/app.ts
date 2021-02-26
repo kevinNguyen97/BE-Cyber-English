@@ -35,8 +35,8 @@ class AppRouter extends BaseRouter {
     this.appRouter.use(bodyParser.json({ limit: "50mb" }));
     /** Routes go here */
 
-    this.appRouter.use("/swagger", swaggerUi.serve);
-    this.appRouter.get("/swagger", swaggerUi.setup(swaggerDocument));
+    this.appRouter.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    // this.appRouter.get("/swagger", swaggerUi.setup(swaggerDocument));
 
     /** Error handling */
     this.appRouter.use((req, res, next) => {
