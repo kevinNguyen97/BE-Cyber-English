@@ -4,8 +4,8 @@ import { singleton } from "tsyringe";
 import { handleError, ResponseCode, ResponseData } from "../models/response";
 import VocabularyService from "../services/vocabularies.service";
 import UnitService from "../services/unit.service";
-import { VocabularyModel } from "../models/vocabulary";
 import BaseRouter from "./baseRouter";
+import { User } from "../models/User.model";
 
 @singleton()
 class VocabularyRouter extends BaseRouter {
@@ -68,39 +68,181 @@ class VocabularyRouter extends BaseRouter {
       [this.isAuth, this.check("vocabulary").isString()],
       this.getVocabularyDetails
     );
+    this.getMethod(
+      "/word-list/:page_size/:page_index",
+      [this.checkAuthThenGetuser],
+      this.getWordListbyUserId
+    );
+    this.postMethod(
+      "/word-list",
+      [this.checkAuthThenGetuser],
+      this.addWordList
+    );
   }
-  getVocabularyDetails = async (
+  private getVocabularyDetails = async (
     req: express.Request,
     resp: express.Response,
     next: express.NextFunction,
     responseData: ResponseData<any>
   ) => {
-    const vocabulary = String(req.body.vocabulary).trim();
+    try {
+      const vocabulary = String(req.body.vocabulary).trim();
 
-    if (!vocabulary) {
-      return this.handleError(
+      if (!vocabulary) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invalid vocabulary`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const vocabularyDetails = await this.vocabularySev.getVocabularyDetail(
+        vocabulary
+      );
+      if (!vocabulary) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`vocabulary is not exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      responseData.success = true;
+      responseData.data = vocabularyDetails;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
         resp,
-        responseData,
-        [`invalid vocabulary`],
-        ResponseCode.BAD_REQUEST
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
       );
     }
+  };
 
-    const vocabularyDetails = await this.vocabularySev.getVocabularyDetail(
-      vocabulary
-    );
-    if (!vocabulary) {
-      return this.handleError(
+  private getWordListbyUserId = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+
+      const pageSize: number = Number(req.params.page_size)
+        ? Number(req.params.page_size)
+        : 0;
+      const pageIndex: number = Number(req.params.page_index)
+        ? Number(req.params.page_index)
+        : 0;
+
+      const wordlist = await this.vocabularySev.getWordListbyUserId(
+        user.id,
+        pageSize,
+        pageIndex
+      );
+
+      const vocabularies = await this.vocabularySev.getAllVocabularies();
+      const data = wordlist.map((item) => {
+        const vocabulary = vocabularies.find(
+          (voca) => voca.id === item.vocabularyId
+        );
+        return {
+          wordlistId: item.id,
+          created: item.created,
+          modified: item.modified,
+          vocabularyId: vocabulary?.id,
+          vocabulary: vocabulary?.vocabulary,
+          translate: vocabulary?.translate,
+          isHighlight: item.isHighlight,
+          isDeleted: item.isDeleted,
+        };
+      });
+      responseData.success = true;
+      responseData.data = data;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
         resp,
-        responseData,
-        [`vocabulary is not exist`],
-        ResponseCode.BAD_REQUEST
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
       );
     }
+  };
 
-    responseData.success = true;
-    responseData.data = vocabularyDetails;
-    return resp.status(ResponseCode.OK).json(responseData);
+  private addWordList = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+
+      const vocabularyId = Number(req.body.vocabulary_id);
+
+      if (!vocabularyId) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invalid vocabulary`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const isExistVocabulary = await this.vocabularySev.checkVocabularyIsExistById(
+        vocabularyId
+      );
+
+      if (!isExistVocabulary) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`vocabulary id is not exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const isExistWordList = await this.vocabularySev.checkWorklistUserIsExist(
+        user.id,
+        vocabularyId
+      );
+      if (isExistWordList) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`wordlist is exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+      const idAdded = await this.vocabularySev.addVocabularyToWordList(
+        vocabularyId,
+        user.id
+      );
+
+      const dataAdded = await this.vocabularySev.getWordListbyId(idAdded);
+      if (!dataAdded) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`INTERNAL SERVER ERROR`],
+          ResponseCode.INTERNAL_SERVER_ERROR
+        );
+      }
+      responseData.success = true;
+      responseData.data = dataAdded;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
   };
 }
 
