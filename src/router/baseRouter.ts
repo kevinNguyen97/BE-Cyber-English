@@ -4,12 +4,18 @@ import LoggerService from "../config/logger";
 import { ResponseCode, ResponseData } from "../models/response";
 import { ValidationChain, validationResult } from "express-validator";
 import { container } from "tsyringe";
+import Authentication from "../middleware/Authentication";
 
 class BaseRouter {
   protected nameSpace = "";
   router: express.IRouter;
   private logger: LoggerService = container.resolve(LoggerService);
+  private auth: Authentication = container.resolve(Authentication);
+  public isAuth: any;
+  public isUserLoggedIn: any;
   constructor() {
+    this.isAuth = this.auth.isAuth
+    this.isUserLoggedIn = this.auth.isUserLoggedIn
     this.router = express.Router();
     this.log("");
   }
@@ -31,7 +37,7 @@ class BaseRouter {
 
   getMethod = async (
     path: string,
-    middelWare: ValidationChain[],
+    middelWare: any[],
     mainFunction
   ) => {
     const flow = async (

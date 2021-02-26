@@ -12,7 +12,7 @@ import { User, UserLoginResponse } from "../models/User.model";
 class UserRouter extends BaseRouter {
   constructor(
     // private auth: Authentication,
-    private userSev: UserService
+    private userSev: UserService,
   ) {
     super();
     this.init();
