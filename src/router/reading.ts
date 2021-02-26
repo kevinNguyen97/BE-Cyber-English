@@ -13,7 +13,7 @@ class ReadingRouter extends BaseRouter {
   constructor(
     private unitService: UnitService,
     private readingService: ReadingService,
-    private mediaSev: MediaService
+    private mediaSev: MediaService,
   ) {
     super();
     this.init();
@@ -22,7 +22,7 @@ class ReadingRouter extends BaseRouter {
   init() {
     this.getMethod(
       "/:unit",
-      [],
+      [this.isAuth],
       async (
         req: express.Request,
         resp: express.Response,

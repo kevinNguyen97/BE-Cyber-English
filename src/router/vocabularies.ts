@@ -14,14 +14,13 @@ class VocabularyRouter extends BaseRouter {
     private unitService: UnitService
   ) {
     super();
-
     this.run();
   }
 
   run() {
     this.getMethod(
       "/:unitID",
-      [],
+      [this.isAuth],
       async (
         req: express.Request,
         resp: express.Response,
