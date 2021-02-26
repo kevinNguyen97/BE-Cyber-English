@@ -78,6 +78,16 @@ class VocabularyRouter extends BaseRouter {
       [this.checkAuthThenGetuser],
       this.addWordList
     );
+    this.deleteMethod(
+      "/word-list/:wordlist_id",
+      [this.isAuth],
+      this.deleteWordList
+    );
+    this.patchMethod(
+      "/word-list/:wordlist_id",
+      [this.isAuth],
+      this.highlightWordList
+    );
   }
   private getVocabularyDetails = async (
     req: express.Request,
@@ -234,6 +244,120 @@ class VocabularyRouter extends BaseRouter {
       }
       responseData.success = true;
       responseData.data = dataAdded;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private deleteWordList = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const wordlistId = Number(req.params.wordlist_id);
+
+      if (!wordlistId) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invalid wordlist Id`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const wordList = await this.vocabularySev.getWordListbyId(wordlistId);
+
+      if (!wordList) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`wordlist is exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const idWordlistdeleted = await this.vocabularySev.deleteWordList(
+        wordList.id
+      );
+      if (!idWordlistdeleted) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`INTERNAL SERVER ERROR`],
+          ResponseCode.INTERNAL_SERVER_ERROR
+        );
+      }
+
+      const dataDeleted = await this.vocabularySev.getWordListbyId(
+        idWordlistdeleted
+      );
+      responseData.success = true;
+      responseData.data = dataDeleted;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private highlightWordList = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const wordlistId = Number(req.params.wordlist_id);
+
+      if (!wordlistId) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invalid wordlist Id`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const wordList = await this.vocabularySev.getWordListbyId(wordlistId);
+
+      if (!wordList) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`wordlist is exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const idWordlistHighlight = await this.vocabularySev.highlightWordList(
+        wordList.id
+      );
+      if (!idWordlistHighlight) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`INTERNAL SERVER ERROR`],
+          ResponseCode.INTERNAL_SERVER_ERROR
+        );
+      }
+
+      const wordListHighlight = await this.vocabularySev.getWordListbyId(
+        idWordlistHighlight
+      );
+      responseData.success = true;
+      responseData.data = wordListHighlight;
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(
