@@ -1,21 +1,18 @@
 import "reflect-metadata";
 import { singleton } from "tsyringe";
-import LoggerService from "../config/logger";
 import { UserWorkList, VocabularyModel } from "../models/vocabulary";
+import { getRandomInt } from "../ultils/Ultil";
 import BaseService from "./base.service";
 
 @singleton()
 class VocabularyService extends BaseService {
-  private nameSpace = "VocabularyService";
   private allVocabularies: VocabularyModel[] = [];
-  constructor(private logger: LoggerService) {
+  private vocabularyUnit: any = {};
+  constructor() {
     super();
-    this.log("");
+    this.nameSpace = "VocabularyService";
+    this.getAllVocabularies();
   }
-
-  log = (data: any, message: string = "") => {
-    this.logger.info(this.nameSpace, message, data);
-  };
 
   handleGetAllResult = (
     err: any,
@@ -25,7 +22,7 @@ class VocabularyService extends BaseService {
     callBackMap = (item) => item
   ): void => {
     if (err) {
-      this.logger.error(this.nameSpace, "", err);
+      this.log(err, "");
       reject(err);
     }
     if (result && result?.length) {
@@ -43,7 +40,7 @@ class VocabularyService extends BaseService {
       } else {
         this.connection.query(`SELECT * FROM vocabularies`, (err, result) => {
           if (err) {
-            this.logger.error(this.nameSpace, "", err);
+            this.log(err, "");
             reject(err);
             return;
           }
@@ -51,6 +48,17 @@ class VocabularyService extends BaseService {
             this.allVocabularies = result.map(
               (item: any) => new VocabularyModel(item)
             );
+            this.vocabularyUnit = {};
+            this.allVocabularies.forEach((item) => {
+              const isExistUnit = !!Object.keys(this.vocabularyUnit).find(
+                (ele) => Number(ele) === item.unit
+              );
+              if (isExistUnit) {
+                this.vocabularyUnit[item.unit].push(item);
+              } else {
+                this.vocabularyUnit[item.unit] = [item];
+              }
+            });
           }
           resolve(this.allVocabularies.length ? this.allVocabularies : []);
         });
@@ -59,15 +67,32 @@ class VocabularyService extends BaseService {
   };
 
   getListVocabularyByUnitID = (
-    unitID: number
+    id: number
   ): Promise<VocabularyModel[] | null> => {
     return new Promise(async (resolve, reject) => {
       await this.getAllVocabularies();
-      const data = this.allVocabularies.filter((item) => item.unit === unitID);
+      const data = this.allVocabularies.filter((item) => item.id === id);
       if (data) {
         resolve(data);
       } else {
         reject(null);
+      }
+    });
+  };
+
+  getListVocabularyByUnit = (
+    unit: number
+  ): Promise<VocabularyModel[] | null> => {
+    return new Promise(async (resolve, reject) => {
+      await this.getAllVocabularies();
+      const data: VocabularyModel[] = await this.vocabularyUnit[unit];
+      if (data) {
+        resolve(data);
+      } else {
+        this.vocabularyUnit[unit] = this.allVocabularies.filter(
+          (item) => item.unit === unit
+        );
+        resolve(this.vocabularyUnit[unit] ? this.vocabularyUnit[unit] : null);
       }
     });
   };
@@ -102,7 +127,7 @@ class VocabularyService extends BaseService {
         `SELECT * FROM user_worklist WHERE user_id = ${userId} ${subQueryPagin}`,
         (err, result) => {
           if (err) {
-            this.logger.error(this.nameSpace, "", err);
+            this.log(err, "");
             reject(err);
           } else if (result) {
             const userWorklist: UserWorkList[] = result.map(
@@ -123,7 +148,7 @@ class VocabularyService extends BaseService {
         `SELECT * FROM user_worklist WHERE id = ${id}`,
         (err, result) => {
           if (err) {
-            this.logger.error(this.nameSpace, "", err);
+            this.log(err, "");
             reject(err);
           } else if (result) {
             const userWorklist: UserWorkList = new UserWorkList(result[0]);
@@ -145,7 +170,7 @@ class VocabularyService extends BaseService {
         `SELECT * FROM user_worklist WHERE user_id = ${userId} AND vocabulary_id = ${vocabularyId}`,
         (err, result) => {
           if (err) {
-            this.logger.error(this.nameSpace, "", err);
+            this.log(err, "");
             return reject(err);
           }
           if (result && result.length) {
@@ -177,7 +202,7 @@ class VocabularyService extends BaseService {
         VALUES (${this.timeNow},${this.timeNow},${vocabularyId},${userId},false,false);`,
         (err, result) => {
           if (err) {
-            this.logger.error(this.nameSpace, "", err);
+            this.log(err, "");
             return reject(err);
           }
           if (result) return resolve(Number(result.insertId));
@@ -192,7 +217,7 @@ class VocabularyService extends BaseService {
         `UPDATE user_worklist SET modified=${this.timeNow},is_highlight=false,is_deleted=true WHERE id=${worklistId};`,
         (err, result) => {
           if (err) {
-            this.logger.error(this.nameSpace, "", err);
+            this.log(err, "");
             return reject(err);
           }
           if (result) return resolve(worklistId);
@@ -207,12 +232,62 @@ class VocabularyService extends BaseService {
         `UPDATE user_worklist SET modified=${this.timeNow},is_deleted=0,is_highlight=1 WHERE id=${worklistId};`,
         (err, result) => {
           if (err) {
-            this.logger.error(this.nameSpace, "", err);
+            this.log(err, "");
             return reject(err);
           }
           if (result) return resolve(worklistId);
         }
       );
+    });
+  };
+
+  fillterVocabularyIsNotExistInArray = (
+    data: any[],
+    unit: number = 1
+  ): Promise<VocabularyModel[]> => {
+    return new Promise(async (resolve, reject) => {
+      if (!data) {
+        reject(false);
+      } else if (!data.length) {
+        const dataResult = await this.getListVocabularyByUnit(unit);
+        resolve(dataResult ? dataResult : []);
+      } else {
+        const dataUnit = await this.getListVocabularyByUnit(unit);
+        const dataResult = dataUnit?.filter((item) =>
+          data.findIndex((elem) => elem.vocabularyId === item.id) === -1
+            ? true
+            : false
+        );
+        resolve(dataResult ? dataResult : []);
+      }
+    });
+  };
+
+  getRandomVocabularies = (
+    quantity: number,
+    unit: number = 1,
+    ignoreId?: number
+  ): Promise<VocabularyModel[]> => {
+    return new Promise(async (resolve) => {
+      const data: VocabularyModel[] = [];
+      const vocaUnit = await this.getListVocabularyByUnit(unit);
+      if (!vocaUnit) {
+        return resolve([]);
+      }
+      for (let ele = 0; ele < quantity; ele++) {
+        const index = getRandomInt(vocaUnit.length);
+        console.log(vocaUnit);
+        const elem = vocaUnit[index];
+        if (
+          elem.id === ignoreId ||
+          data.findIndex((item) => item.id === elem.id) !== -1
+        ) {
+          ele--;
+          continue;
+        }
+        data.push(vocaUnit[index]);
+      }
+      resolve(data);
     });
   };
 }

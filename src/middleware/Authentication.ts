@@ -32,10 +32,20 @@ class Authentication {
     const token = req.headers["auth-key"];
     this.userService.getUserByToken(token).then(
       (userInfo) => {
-        this.userService.getUserById(userInfo.userId).then((user) => {
-          req.body.userData = user;
-          next();
-        });
+        this.userService
+          .getUserById(userInfo.userId)
+          .then((user) => {
+            req.body.userData = user;
+            next();
+          })
+          .catch((err) => {
+            const obj = new ResponseData<any>();
+            obj.success = false;
+            obj.data = {
+              error_code: ["unauthorized"],
+            };
+            res.status(ResponseCode.UNAUTHORIZED).json(obj);
+          });
       },
       (err) => {
         const obj = new ResponseData<any>();

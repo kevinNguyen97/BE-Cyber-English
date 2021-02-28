@@ -16,6 +16,10 @@
         {
             "name": "User",
             "description": "API for User"
+        },
+        {
+            "name": "Multiple Choice",
+            "description": "API for User"
         }
     ],
     "consumes": [
@@ -239,6 +243,69 @@
                     },
                     "404": {
                         "description": "Failed. unit not found."
+                    }
+                }
+            }
+        },
+        "/multiple-choice/unit/{unit}": {
+            "parameters": [
+                {
+                    "name": "unit",
+                    "in": "path",
+                    "required": true,
+                    "description": "unit that we want to match",
+                    "type": "number"
+                },
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Multiple Choice"
+                ],
+                "summary": "Get question Multiple choice in unit",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Multiple Choice"
+                ],
+                "parameters": [
+                    {
+                        "name": "body add wordlist",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "vocabulary": {
+                                    "type": "number"
+                                },
+                                "answer": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "summary": "add vocabulary to wordlist",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "bad request"
                     }
                 }
             }

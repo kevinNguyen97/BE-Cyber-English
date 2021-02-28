@@ -11,6 +11,7 @@ import ReadingRouter from "./router/reading";
 import BaseRouter from "./router/baseRouter";
 import config from './config/config';
 import UserRouter from "./router/users";
+import MultipleChoiceRouter from "./router/multipleChoice";
 
 // const myrouter = {
 //   vocabularyRouter: container.resolve(ReadingRouter).router,
@@ -25,6 +26,7 @@ class AppRouter extends BaseRouter {
     private vocabulary: VocabularyRouter,
     private reading: ReadingRouter,
     private user: UserRouter,
+    private multipleChoice: MultipleChoiceRouter,
   ) {
     super();
     this.appRouter = express();
@@ -50,6 +52,7 @@ class AppRouter extends BaseRouter {
 
     this.appRouter.use("/vocabulary", this.vocabulary.router);
     this.appRouter.use("/reading", this.reading.router);
+    this.appRouter.use("/multiple-choice", this.multipleChoice.router);
     this.appRouter.use("/user", this.user.router);
   }
 }

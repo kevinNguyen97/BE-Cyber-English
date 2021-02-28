@@ -15,7 +15,7 @@ export class User {
     userPass: string = '';
     address: string = '';
     userRoleName: string = ''
-
+    isActiveAccount: boolean = false;
     constructor(data: any) {
         if (data && data.id) {
             this.id = data.id
@@ -30,6 +30,7 @@ export class User {
             this.userLogin = data.user_login
             this.userPass = data.user_pass
             this.address = data.address
+            this.isActiveAccount = !!data.is_active_account
             this.getUserRoleName(data.user_role);
         }
     }

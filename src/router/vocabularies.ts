@@ -19,7 +19,7 @@ class VocabularyRouter extends BaseRouter {
 
   run() {
     this.getMethod(
-      "/unit/:unitID",
+      "/unit/:unit",
       [this.isAuth],
       async (
         req: express.Request,
@@ -28,24 +28,24 @@ class VocabularyRouter extends BaseRouter {
         responseData: ResponseData<any>
       ) => {
         try {
-          const unitId = Number(req.params.unitID);
-          const unitIsExist = await this.unitService.checkUnitsExist(unitId);
+          const unit = Number(req.params.unit);
+          const unitIsExist = await this.unitService.checkUnitsExist(unit);
           if (!unitIsExist)
             return this.handleError(
               resp,
               responseData,
-              [`unit ${unitId} is not exist`],
+              [`unit ${unit} is not exist`],
               ResponseCode.BAD_REQUEST
             );
-          const listVocabularies = await this.vocabularySev.getListVocabularyByUnitID(
-            unitId
+          const listVocabularies = await this.vocabularySev.getListVocabularyByUnit(
+            unit
           );
           if (!listVocabularies)
             return this.handleError(
               resp,
               responseData,
               [
-                `doesn't have any vocabulary of unit ${unitId} in database please contact with admin`,
+                `doesn't have any vocabulary of unit ${unit} in database please contact with admin`,
               ],
               ResponseCode.INTERNAL_SERVER_ERROR
             );

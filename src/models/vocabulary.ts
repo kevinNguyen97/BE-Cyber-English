@@ -1,23 +1,23 @@
 import { getFullMediaUrl } from "../helpers/mediaUrl";
 import { numberOrNull, stringOrNull } from "../interfaces/types";
 export class VocabularyModel {
-  id: numberOrNull = null;
-  created: numberOrNull = null;
-  modified: numberOrNull = null;
-  vocabulary: stringOrNull = null;
-  translate: stringOrNull = null;
-  dictionaryEntry: stringOrNull = null;
-  audioDictionaryUS: stringOrNull = null;
-  audioDictionaryUK: stringOrNull = null;
-  dictionaryEntryTranslate: stringOrNull = null;
-  exampleSentences: stringOrNull = null;
-  exampleSentencesTranslate: stringOrNull = null;
-  audioExampleSentencesUS: stringOrNull = null;
-  audioExampleSentencesUK: stringOrNull = null;
+  id: number = 0;
+  created: number = 0;
+  modified: number = 0;
+  vocabulary: string = '';
+  translate: string = '';
+  dictionaryEntry: string = '';
+  audioDictionaryUS: stringOrNull = '';
+  audioDictionaryUK: stringOrNull = '';
+  dictionaryEntryTranslate: string = '';
+  exampleSentences: string = '';
+  exampleSentencesTranslate: string = '';
+  audioExampleSentencesUS: stringOrNull = '';
+  audioExampleSentencesUK: stringOrNull = '';
   author: number | undefined | null = null;
-  orther: stringOrNull = null;
-  unit: numberOrNull = null;
-  oldId: numberOrNull = null;
+  orther: string = '';
+  unit: number = 0;
+  oldId: number = 0;
 
   constructor(data: any = null) {
     if (data) {
@@ -68,10 +68,10 @@ export class VocabularyModel {
 // tslint:disable-next-line: max-classes-per-file
 export class UserWorkList {
   id: number = 0;
-  created: numberOrNull = null;
-  modified: numberOrNull = null;
-  vocabularyId: numberOrNull = null;
-  userId: numberOrNull = null;
+  created: number = 0;
+  modified: number = 0;
+  vocabularyId: number = 0;
+  userId: number = 0;
   isHighlight: boolean = false;
   isDeleted: boolean = false;
   orther: any = null;
