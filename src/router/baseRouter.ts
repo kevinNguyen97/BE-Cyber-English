@@ -14,11 +14,11 @@ class BaseRouter {
   public isAuth: any;
   public checkAuthThenGetuser: any;
   public isUserLoggedIn: any;
-  check = check
+  check = check;
   constructor() {
-    this.isAuth = this.auth.isAuth
-    this.isUserLoggedIn = this.auth.isUserLoggedIn
-    this.checkAuthThenGetuser = this.auth.checkThenGetuser
+    this.isAuth = this.auth.isAuth;
+    this.isUserLoggedIn = this.auth.isUserLoggedIn;
+    this.checkAuthThenGetuser = this.auth.checkThenGetuser;
     this.router = express.Router();
     this.log("");
   }
@@ -38,11 +38,7 @@ class BaseRouter {
     return resp.status(errorCode).json(responseData);
   };
 
-  getMethod = async (
-    path: string,
-    middelWare: any[],
-    mainFunction
-  ) => {
+  getMethod = async (path: string, middelWare: any[], mainFunction) => {
     const flow = async (
       req: express.Request,
       resp: express.Response,
@@ -53,11 +49,7 @@ class BaseRouter {
     this.router.get(path, middelWare, flow);
   };
 
-  deleteMethod = async (
-    path: string,
-    middelWare: any[],
-    mainFunction
-  ) => {
+  deleteMethod = async (path: string, middelWare: any[], mainFunction) => {
     const flow = async (
       req: express.Request,
       resp: express.Response,
@@ -125,6 +117,7 @@ class BaseRouter {
       return resp.status(400).json({
         data: {
           error_codes: ["bad_request"],
+          error_message: errors,
         },
         success: false,
       });

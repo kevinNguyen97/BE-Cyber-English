@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { singleton } from "tsyringe";
 import { UserWorkList, VocabularyModel } from "../models/vocabulary";
-import { getRandomInt } from "../ultils/Ultil";
+import { getRandomInt, toSingular } from "../ultils/Ultil";
 import BaseService from "./base.service";
-
+import "ts-replace-all";
 @singleton()
 class VocabularyService extends BaseService {
   private allVocabularies: VocabularyModel[] = [];
@@ -102,9 +102,36 @@ class VocabularyService extends BaseService {
   ): Promise<VocabularyModel | null> => {
     return new Promise(async (resolve, reject) => {
       await this.getAllVocabularies();
-      const data = this.allVocabularies.find(
-        (item) => item.vocabulary?.toLowerCase() === vocabulary.toLowerCase()
-      );
+      const data = this.allVocabularies.find((item) => {
+        return item.vocabulary
+          ?.toLowerCase()
+          .includes(vocabulary.toLowerCase());
+      });
+      if (data) {
+        resolve(data);
+      } else {
+        reject(null);
+      }
+    });
+  };
+
+  getVocabularyDetailInUnit = (
+    vocabulary: string,
+    unit: number
+  ): Promise<VocabularyModel | null> => {
+    return new Promise(async (resolve, reject) => {
+     const listData = await this.getListVocabularyByUnit(unit);
+      const data = listData?.find((item) => {
+        const isInclude = toSingular(item.vocabulary?.toLowerCase()).includes(
+          toSingular(vocabulary.toLowerCase())
+        );
+        if (isInclude) {
+          return true;
+        }
+        return toSingular(vocabulary.toLowerCase()).includes(
+          toSingular(item.vocabulary?.toLowerCase())
+        );
+      });
       if (data) {
         resolve(data);
       } else {

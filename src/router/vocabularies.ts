@@ -64,7 +64,7 @@ class VocabularyRouter extends BaseRouter {
       }
     );
     this.postMethod(
-      "/details",
+      "/details/:unit",
       [this.isAuth, this.check("vocabulary").isString()],
       this.getVocabularyDetails
     );
@@ -96,20 +96,33 @@ class VocabularyRouter extends BaseRouter {
     responseData: ResponseData<any>
   ) => {
     try {
+      const unit = Number(req.params.unit);
       const vocabulary = String(req.body.vocabulary).trim();
 
-      if (!vocabulary) {
+      if (!vocabulary || !unit) {
         return this.handleError(
           resp,
           responseData,
-          [`invalid vocabulary`],
+          [`invalid vocabulary | unit`],
           ResponseCode.BAD_REQUEST
         );
       }
 
-      const vocabularyDetails = await this.vocabularySev.getVocabularyDetail(
-        vocabulary
+      const isExistUnit = await this.unitService.checkUnitsExist(unit);
+      if (!isExistUnit) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`unit ${unit} is not exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const vocabularyDetails = await this.vocabularySev.getVocabularyDetailInUnit(
+        vocabulary,
+        unit
       );
+
       if (!vocabulary) {
         return this.handleError(
           resp,
