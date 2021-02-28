@@ -1,4 +1,4 @@
-import { numberOrNull, stringOrNull } from "../interfaces/types";
+import { numberOrNull, stringOrNull, TProcessing } from "../interfaces/types";
 import { getRandomInt } from "../ultils/Ultil";
 import { VocabularyModel } from "./vocabulary";
 
@@ -22,7 +22,12 @@ export class MultipleChoiceQuestion {
   id: numberOrNull = null;
   vocabulary: stringOrNull = null;
   answerList: stringOrNull[] = [];
-  constructor(exact: VocabularyModel, subQuestion: VocabularyModel[]) {
+  processing: TProcessing;
+  constructor(
+    exact: VocabularyModel,
+    subQuestion: VocabularyModel[],
+    _process: TProcessing
+  ) {
     this.id = exact.id;
     this.vocabulary = exact.vocabulary;
     const indexRandom = getRandomInt(3);
@@ -36,6 +41,7 @@ export class MultipleChoiceQuestion {
     if (this.answerList.length < 3) {
       this.answerList.push(exact.dictionaryEntry);
     }
+    this.processing = _process;
   }
 }
 
@@ -45,21 +51,19 @@ export class MultipleChoiceResponseChecked {
   vocabulary: string = "";
   answer: string = "";
   isExact: boolean = false;
-  answered: number = 0;
-  total: number | null = 0;
+  processing: TProcessing;
+
   constructor(
     _vocabulary: string,
     _answer: string,
     _isExact: boolean = false,
     _unit: number,
-    _answered: number,
-    _total: number
+    _process: TProcessing
   ) {
     this.vocabulary = _vocabulary;
     this.answer = _answer;
     this.isExact = _isExact;
     this.unit = _unit;
-    this.answered = _answered;
-    this.total = _total;
+    this.processing = _process;
   }
 }

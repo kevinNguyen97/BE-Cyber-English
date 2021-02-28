@@ -9,7 +9,11 @@ import { User } from "../models/User.model";
 import listeningService from "../services/multipleChoice.service";
 import { MultipleChoiceResponseChecked } from "../models/MultipleChoice";
 import ListeningService from "../services/listening.service";
-import { ListeningResponseChecked } from "../models/Listening";
+import {
+  ListeningQuestionResponses,
+  ListeningResponseChecked,
+} from "../models/Listening";
+import { TProcessing } from "../interfaces/types";
 
 @singleton()
 class ListeningComprehension extends BaseRouter {
@@ -67,8 +71,10 @@ class ListeningComprehension extends BaseRouter {
         unit
       );
 
+      const dataProcess = await this.getProcessListening(user, unit);
+
       responseData.success = true;
-      responseData.data = data;
+      responseData.data = new ListeningQuestionResponses(data, dataProcess);
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(
@@ -122,12 +128,7 @@ class ListeningComprehension extends BaseRouter {
         );
       }
 
-      const answered = await this.listeningServ.getAllQuestionHaveDoneByUnit(
-        user.id,
-        unit
-      );
-
-      const total = await this.vocabularySev.getListVocabularyByUnit(unit);
+      const dataProcess = await this.getProcessListening(user, unit);
 
       responseData.success = true;
       responseData.data = new ListeningResponseChecked(
@@ -137,8 +138,7 @@ class ListeningComprehension extends BaseRouter {
         vocabulary?.audioDictionaryUS,
         answer,
         isExact,
-        answered.length,
-        total ? total.length : 0
+        dataProcess
       );
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
@@ -149,6 +149,20 @@ class ListeningComprehension extends BaseRouter {
         this.nameSpace
       );
     }
+  };
+  private getProcessListening = (
+    user: User,
+    unit: number
+  ): Promise<TProcessing> => {
+    return new Promise(async (resolve, reject) => {
+      const answered = await this.listeningServ.getAllQuestionHaveDoneByUnit(
+        user.id,
+        unit
+      );
+
+      const total = await this.vocabularySev.getListVocabularyByUnit(unit);
+      resolve({ answered: answered.length, total: total ? total.length : 0 });
+    });
   };
 }
 

@@ -7,7 +7,11 @@ import UnitService from "../services/unit.service";
 import BaseRouter from "./baseRouter";
 import { User } from "../models/User.model";
 import MultipleChoiceService from "../services/multipleChoice.service";
-import { MultipleChoiceResponseChecked } from "../models/MultipleChoice";
+import {
+  MultipleChoiceQuestion,
+  MultipleChoiceResponseChecked,
+} from "../models/MultipleChoice";
+import { TProcessing } from "../interfaces/types";
 
 @singleton()
 class MultipleChoiceRouter extends BaseRouter {
@@ -62,13 +66,25 @@ class MultipleChoiceRouter extends BaseRouter {
         user.id
       );
 
-      const data = await this.multipleChoiceServ.getMultipleChoiceQuestion(
+      const mainVoca = await this.multipleChoiceServ.getMultipleChoiceQuestion(
         questionsHaveDone,
         unit
       );
 
+      const subAnswer = await this.vocabularySev.getRandomVocabularies(
+        2,
+        unit,
+        mainVoca.id
+      );
+
+      const dataProcess = await this.getProcessMultipleChoice(user, unit);
+
       responseData.success = true;
-      responseData.data = data;
+      responseData.data = new MultipleChoiceQuestion(
+        mainVoca,
+        subAnswer,
+        dataProcess
+      );
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(
@@ -118,20 +134,15 @@ class MultipleChoiceRouter extends BaseRouter {
         );
       }
 
-      const answered = await this.multipleChoiceServ.getAllQuestionHaveDoneByUnit(
-        user.id,
-        unit
-      );
+      const dataProcess = await this.getProcessMultipleChoice(user, unit);
 
-      const total = await this.vocabularySev.getListVocabularyByUnit(unit);
       responseData.success = true;
       responseData.data = new MultipleChoiceResponseChecked(
         vocabulary,
         answer,
         isExact,
         unit,
-        answered.length,
-        total ? total.length : 0
+        dataProcess
       );
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
@@ -142,6 +153,19 @@ class MultipleChoiceRouter extends BaseRouter {
         this.nameSpace
       );
     }
+  };
+  private getProcessMultipleChoice = (
+    user: User,
+    unit: number
+  ): Promise<TProcessing> => {
+    return new Promise(async (resolve) => {
+      const answered = await this.multipleChoiceServ.getAllQuestionHaveDoneByUnit(
+        user.id,
+        unit
+      );
+      const total = await this.vocabularySev.getListVocabularyByUnit(unit);
+      resolve({ answered: answered.length, total: total ? total.length : 0 });
+    });
   };
 }
 

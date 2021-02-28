@@ -68,7 +68,7 @@ class ListeningService extends BaseService {
   getlisteningQuestion = (
     data: ListeningHaveDone[],
     unit: number = 1
-  ): Promise<ListeningQuestionResponses> => {
+  ): Promise<VocabularyModel> => {
     return new Promise(async (resolve, reject) => {
       const validData = await this.vocabularyServ.fillterVocabularyIsNotExistInArray(
         data,
@@ -89,7 +89,7 @@ class ListeningService extends BaseService {
           mainVoca = allVocabulariesOfUnit[index];
         }
       }
-      resolve(new ListeningQuestionResponses(mainVoca));
+      resolve(mainVoca);
     });
   };
 

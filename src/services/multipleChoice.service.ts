@@ -11,9 +11,7 @@ import { getRandomInt } from "../ultils/Ultil";
 
 @singleton()
 class MultipleChoiceService extends BaseService {
-  constructor(
-    private vocabularyServ: VocabularyService,
-  ) {
+  constructor(private vocabularyServ: VocabularyService) {
     super();
     this.nameSpace = "MultipleChoiceService";
   }
@@ -46,7 +44,7 @@ class MultipleChoiceService extends BaseService {
 
   getAllQuestionHaveDoneByUnit = (
     userId: number,
-    unit: number,
+    unit: number
   ): Promise<MultipleChoiceHaveDone[]> => {
     return new Promise((resolve, reject) => {
       this.connection.query(
@@ -71,10 +69,7 @@ class MultipleChoiceService extends BaseService {
     });
   };
 
-  getMultipleChoiceQuestion = (
-    data: any[],
-    unit: number = 1
-  ): Promise<MultipleChoiceQuestion> => {
+  getMultipleChoiceQuestion = (data: any[], unit: number = 1): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       const validData = await this.vocabularyServ.fillterVocabularyIsNotExistInArray(
         data,
@@ -95,12 +90,7 @@ class MultipleChoiceService extends BaseService {
           mainVoca = allVocabulariesOfUnit[index];
         }
       }
-      const subAnswer = await this.vocabularyServ.getRandomVocabularies(
-        2,
-        unit,
-        mainVoca.id
-      );
-      resolve(new MultipleChoiceQuestion(mainVoca, subAnswer));
+      resolve( mainVoca);
     });
   };
 

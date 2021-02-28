@@ -1,4 +1,4 @@
-import { numberOrNull, stringOrNull } from "../interfaces/types";
+import { numberOrNull, stringOrNull, TProcessing } from "../interfaces/types";
 import { VocabularyModel } from "./vocabulary";
 import { MultipleChoiceHaveDone } from "./MultipleChoice";
 import { getRandomInt, removeParenthesesBrackets } from "../ultils/Ultil";
@@ -21,14 +21,15 @@ export class ListeningQuestionResponses {
     character: "",
     index: 0,
   };
-  constructor(exact: VocabularyModel) {
+  processing: TProcessing;
+  constructor(exact: VocabularyModel, _process: TProcessing) {
     this.id = exact.id;
     this.audioUkUrl = exact.audioDictionaryUK;
     this.audioUsUrl = exact.audioDictionaryUK;
     const getRandomCharacters = (
       _vocabulary: string = exact.vocabulary
     ): TSuggestions => {
-      const vocabulary = removeParenthesesBrackets(_vocabulary)
+      const vocabulary = removeParenthesesBrackets(_vocabulary);
       let indexRandom = 0;
       let character: string;
       do {
@@ -42,6 +43,7 @@ export class ListeningQuestionResponses {
     };
 
     this.suggestions = getRandomCharacters();
+    this.processing = _process;
   }
 }
 
@@ -53,8 +55,8 @@ export class ListeningResponseChecked {
   audioUsUrl: stringOrNull = null;
   answer: string = "";
   isExact: boolean = false;
-  answered: number = 0;
-  total: number | null = 0;
+  processing: TProcessing;
+
   constructor(
     _id: number,
     _unit: number,
@@ -62,16 +64,14 @@ export class ListeningResponseChecked {
     _audioUsUrl: any,
     _answer: string,
     _isExact: boolean,
-    _answered: number,
-    _total: number,
+    _process: TProcessing
   ) {
-    this.id = _id
-    this.unit = _unit
-    this.audioUkUrl = _audioUkUrl
-    this.audioUsUrl = _audioUsUrl
-    this.answer = _answer
-    this.isExact = _isExact
-    this.answered = _answered
-    this.total = _total
+    this.id = _id;
+    this.unit = _unit;
+    this.audioUkUrl = _audioUkUrl;
+    this.audioUsUrl = _audioUsUrl;
+    this.answer = _answer;
+    this.isExact = _isExact;
+    this.processing = _process;
   }
 }
