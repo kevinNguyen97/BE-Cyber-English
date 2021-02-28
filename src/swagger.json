@@ -61,7 +61,7 @@
                 }
             }
         },
-        "/vocabulary/details": {
+        "/vocabulary/details/{unit}": {
             "parameters": [
                 {
                     "$ref": "#/definitions/auth"
@@ -72,6 +72,13 @@
                     "Vocabulary"
                 ],
                 "parameters": [
+                    {
+                        "name": "unit",
+                        "in": "path",
+                        "required": true,
+                        "description": "unit that we want to match",
+                        "type": "string"
+                    },
                     {
                         "name": "body details vocabulary",
                         "in": "body",
@@ -294,10 +301,10 @@
                                     "type": "number"
                                 },
                                 "vocabulary": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "answer": {
-                                    "type": "number"
+                                    "type": "string"
                                 }
                             }
                         }
@@ -357,10 +364,10 @@
                                     "type": "number"
                                 },
                                 "vocabulary": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "answer": {
-                                    "type": "number"
+                                    "type": "string"
                                 }
                             }
                         }
