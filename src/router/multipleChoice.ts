@@ -132,6 +132,12 @@ class MultipleChoiceRouter extends BaseRouter {
           user.id,
           unit
         );
+      }else {
+        await this.multipleChoiceServ.dispatchWrongAnswer(
+          idVocabulary,
+          user.id,
+          unit
+        );
       }
 
       const dataProcess = await this.getProcessMultipleChoice(user, unit);
@@ -163,8 +169,16 @@ class MultipleChoiceRouter extends BaseRouter {
         user.id,
         unit
       );
+      let numberOfReplies = 0;
+      for (const iterator of answered) {
+        numberOfReplies += iterator.countReplies;
+      }
       const total = await this.vocabularySev.getListVocabularyByUnit(unit);
-      resolve({ answered: answered.length, total: total ? total.length : 0 });
+      resolve({
+        answered: answered.length,
+        total: total ? total.length : 0,
+        numberOfReplies,
+      });
     });
   };
 }

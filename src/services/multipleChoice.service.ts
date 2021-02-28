@@ -21,7 +21,7 @@ class MultipleChoiceService extends BaseService {
   ): Promise<MultipleChoiceHaveDone[]> => {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `SELECT mcu.id as id, mcu.user_id, mcu.unit as unit_id, v.id as vocabulary_id
+        `SELECT mcu.id as id, mcu.user_id, mcu.unit as unit_id, v.id as vocabulary_id, mcu.count_replies, mcu.is_done
               FROM
                 mulitple_choice_user mcu
               LEFT JOIN vocabularies v ON
@@ -48,7 +48,7 @@ class MultipleChoiceService extends BaseService {
   ): Promise<MultipleChoiceHaveDone[]> => {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `SELECT mcu.id as id, mcu.user_id, mcu.unit as unit_id, v.id as vocabulary_id
+        `SELECT mcu.id as id, mcu.user_id, mcu.unit as unit_id, v.id as vocabulary_id, mcu.count_replies, mcu.is_done
               FROM
                 mulitple_choice_user mcu
               LEFT JOIN vocabularies v ON
@@ -90,7 +90,7 @@ class MultipleChoiceService extends BaseService {
           mainVoca = allVocabulariesOfUnit[index];
         }
       }
-      resolve( mainVoca);
+      resolve(mainVoca);
     });
   };
 
@@ -121,8 +121,35 @@ class MultipleChoiceService extends BaseService {
   ): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       this.connection.query(
-        `INSERT IGNORE INTO mulitple_choice_user (created,user_id,vocabulary_id,unit)
-            VALUES (${this.timeNow},${userId},${vocabularyId},${unit});`,
+        `INSERT IGNORE INTO mulitple_choice_user (created,modified,user_id,vocabulary_id,unit,count_replies,is_done)
+           VALUES (${this.timeNow},${this.timeNow},${userId},${vocabularyId},${unit},count_replies +1,1)
+           ON DUPLICATE KEY UPDATE
+              modified = ${this.timeNow},
+                 count_replies = IF(is_done != 1, count_replies+1,count_replies),
+              is_done = 1;`,
+        (err, result) => {
+          if (err) {
+            this.log(err, "");
+            return reject(err);
+          }
+          if (result) return resolve(Number(result.insertId));
+        }
+      );
+    });
+  };
+
+  dispatchWrongAnswer = (
+    vocabularyId: number,
+    userId: number,
+    unit: number
+  ): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+      this.connection.query(
+        `INSERT INTO mulitple_choice_user (created,modified,user_id,vocabulary_id,unit,count_replies)
+            VALUES (${this.timeNow},${this.timeNow},${userId},${vocabularyId},${unit}, 1)
+          ON DUPLICATE KEY UPDATE
+            modified = ${this.timeNow},
+            count_replies = IF(is_done != 1, count_replies+1,count_replies);`,
         (err, result) => {
           if (err) {
             this.log(err, "");

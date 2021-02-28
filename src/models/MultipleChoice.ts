@@ -7,12 +7,16 @@ export class MultipleChoiceHaveDone {
   userId: number = 0;
   unitId: number = 0;
   vocabularyId: number = 0;
+  countReplies: number = 0;
+  isDone: boolean = false;
   constructor(data: any) {
     if (data) {
       this.id = data.id;
       this.userId = data.user_id;
       this.unitId = data.unit_id;
       this.vocabularyId = data.vocabulary_id;
+      this.countReplies = data.count_replies;
+      this.isDone = !!data.is_done;
     }
   }
 }
