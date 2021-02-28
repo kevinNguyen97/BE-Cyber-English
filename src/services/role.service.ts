@@ -13,9 +13,9 @@ class RoleService {
     this.connection = this.dBService.getConnection();
   }
 
-  getRoleIdByName = (userRole) => {
+  getRoleIdByName = (userRole: any) => {
     if (this.allRole.length) {
-      const role = this.allRole.find((role) => role.name === userRole);
+      const role = this.allRole.find((_role) => _role.name === userRole);
       return new Promise((resolve) => resolve(role ? role.id : null));
     }
     return new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ class RoleService {
         let role: IRole | null = null;
         if (result && result.length > 0) {
           this.allRole = result;
-          role = result.find((role) => role.name === userRole);
+          role = result.find((_role) => _role.name === userRole);
         }
         resolve(role ? role.id : null);
       });
@@ -50,13 +50,13 @@ class RoleService {
     });
   };
 
-  checkUserRoleById = (user_id, role_name) => {
+  checkUserRoleById = (userId: any, roleName: any) => {
     return new Promise((resolve, reject) => {
       this.connection.query(
         `SELECT 1 FROM users ut
                     INNER JOIN role rt
                     ON rt.id=ut.user_role
-                    WHERE ut.id=${user_id} AND rt.name='${role_name}'`,
+                    WHERE ut.id=${userId} AND rt.name='${roleName}'`,
         (err, result) => {
           if (err) return reject(err);
           resolve(result && result.length > 0);
@@ -65,16 +65,16 @@ class RoleService {
     });
   };
 
-  checkUserRoleValid = (user_id, list_role_name) => {
-    const roleQuery = list_role_name
-      .map((role_name) => `rt.name='${role_name}'`)
+  checkUserRoleValid = (userId: any, listRoleName) => {
+    const roleQuery = listRoleName
+      .map((roleName) => `rt.name='${roleName}'`)
       .join(" OR ");
     return new Promise((resolve, reject) => {
       this.connection.query(
         `SELECT 1 FROM users ut
                     INNER JOIN role rt
                     ON rt.id=ut.user_role
-                    WHERE ut.id=${user_id} AND (${roleQuery})`,
+                    WHERE ut.id=${userId} AND (${roleQuery})`,
         (err, result) => {
           if (err) return reject(err);
           resolve(result && result.length > 0);

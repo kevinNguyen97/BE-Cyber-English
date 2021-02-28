@@ -1,43 +1,39 @@
 import "reflect-metadata";
 import { singleton } from "tsyringe";
 import BaseService from "./base.service";
-import {
-  MultipleChoiceQuestion,
-  MultipleChoiceHaveDone,
-} from "../models/MultipleChoice";
 import VocabularyService from "./vocabularies.service";
 import { VocabularyModel } from "../models/vocabulary";
-import { getRandomInt } from "../ultils/Ultil";
+import { getRandomInt, removeParenthesesBrackets } from "../ultils/Ultil";
+import {
+  ListeningHaveDone,
+  ListeningQuestionResponses,
+} from "../models/Listening";
 
 @singleton()
-class MultipleChoiceService extends BaseService {
-  constructor(
-    private vocabularyServ: VocabularyService,
-  ) {
+class ListeningService extends BaseService {
+  constructor(private vocabularyServ: VocabularyService) {
     super();
-    this.nameSpace = "MultipleChoiceService";
+    this.nameSpace = "ListeningService";
   }
 
   getAllQuestionHaveDoneByUser = (
     userId: number
-  ): Promise<MultipleChoiceHaveDone[]> => {
+  ): Promise<ListeningHaveDone[]> => {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `SELECT mcu.id as id, mcu.user_id, mcu.unit as unit_id, v.id as vocabulary_id
+        `SELECT lcu.id as id, lcu.user_id, lcu.unit as unit_id, v.id as vocabulary_id
               FROM
-                mulitple_choice_user mcu
+                listening_comprehension_user lcu
               LEFT JOIN vocabularies v ON
-                mcu.vocabulary_id = v.id
-              WHERE mcu.user_id = ${userId};`,
+                lcu.vocabulary_id = v.id
+              WHERE lcu.user_id = ${userId};`,
         (err, result) => {
           if (err) {
             reject(err);
             return;
           }
           resolve(
-            result
-              ? result.map((item: any) => new MultipleChoiceHaveDone(item))
-              : []
+            result ? result.map((item: any) => new ListeningHaveDone(item)) : []
           );
         }
       );
@@ -46,35 +42,33 @@ class MultipleChoiceService extends BaseService {
 
   getAllQuestionHaveDoneByUnit = (
     userId: number,
-    unit: number,
-  ): Promise<MultipleChoiceHaveDone[]> => {
+    unit: number
+  ): Promise<ListeningHaveDone[]> => {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `SELECT mcu.id as id, mcu.user_id, mcu.unit as unit_id, v.id as vocabulary_id
+        `SELECT lcu.id as id, lcu.user_id, lcu.unit as unit_id, v.id as vocabulary_id
               FROM
-                mulitple_choice_user mcu
+                listening_comprehension_user lcu
               LEFT JOIN vocabularies v ON
-                mcu.vocabulary_id = v.id
-              WHERE mcu.user_id = ${userId} AND mcu.unit = ${unit};`,
+                lcu.vocabulary_id = v.id
+              WHERE lcu.user_id = ${userId} AND lcu.unit = ${unit};`,
         (err, result) => {
           if (err) {
             reject(err);
             return;
           }
           resolve(
-            result
-              ? result.map((item: any) => new MultipleChoiceHaveDone(item))
-              : []
+            result ? result.map((item: any) => new ListeningHaveDone(item)) : []
           );
         }
       );
     });
   };
 
-  getMultipleChoiceQuestion = (
-    data: any[],
+  getlisteningQuestion = (
+    data: ListeningHaveDone[],
     unit: number = 1
-  ): Promise<MultipleChoiceQuestion> => {
+  ): Promise<ListeningQuestionResponses> => {
     return new Promise(async (resolve, reject) => {
       const validData = await this.vocabularyServ.fillterVocabularyIsNotExistInArray(
         data,
@@ -95,12 +89,7 @@ class MultipleChoiceService extends BaseService {
           mainVoca = allVocabulariesOfUnit[index];
         }
       }
-      const subAnswer = await this.vocabularyServ.getRandomVocabularies(
-        2,
-        unit,
-        mainVoca.id
-      );
-      resolve(new MultipleChoiceQuestion(mainVoca, subAnswer));
+      resolve(new ListeningQuestionResponses(mainVoca));
     });
   };
 
@@ -114,10 +103,12 @@ class MultipleChoiceService extends BaseService {
         ? await this.vocabularyServ.getListVocabularyByUnit(unit)
         : await this.vocabularyServ.getAllVocabularies();
       if (listData && listData.length) {
-        const isExact = !!listData.find(
-          (ele) => ele.id === id && ele.dictionaryEntry.trim() === answer
-        );
-        resolve(isExact);
+        const isExact = listData.find((ele) => {
+          const voca = removeParenthesesBrackets(ele.vocabulary).toLowerCase();
+          const target = removeParenthesesBrackets(answer).toLowerCase();
+          return ele.id === id && voca === target;
+        });
+        resolve(!!isExact);
       } else {
         resolve(false);
       }
@@ -131,7 +122,7 @@ class MultipleChoiceService extends BaseService {
   ): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       this.connection.query(
-        `INSERT IGNORE INTO mulitple_choice_user (created,user_id,vocabulary_id,unit)
+        `INSERT IGNORE INTO listening_comprehension_user (created,user_id,vocabulary_id,unit)
             VALUES (${this.timeNow},${userId},${vocabularyId},${unit});`,
         (err, result) => {
           if (err) {
@@ -145,4 +136,4 @@ class MultipleChoiceService extends BaseService {
   };
 }
 
-export default MultipleChoiceService;
+export default ListeningService;

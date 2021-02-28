@@ -1,5 +1,5 @@
 import { getFullMediaUrl } from "../helpers/mediaUrl";
-import { numberOrNull, stringOrNull } from "../interfaces/types";
+import { stringOrNull } from "../interfaces/types";
 export class VocabularyModel {
   id: number = 0;
   created: number = 0;

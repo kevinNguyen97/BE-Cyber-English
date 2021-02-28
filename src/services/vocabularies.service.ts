@@ -113,6 +113,23 @@ class VocabularyService extends BaseService {
     });
   };
 
+  getVocabularyDetailById = (
+    id: number,
+    unit?: number
+  ): Promise<VocabularyModel | null> => {
+    return new Promise(async (resolve, reject) => {
+      await this.getAllVocabularies();
+      const data = unit
+        ? this.vocabularyUnit[unit].find((item) => item.id === id)
+        : this.allVocabularies.find((item) => item.id === id);
+      if (data) {
+        resolve(data);
+      } else {
+        reject("invalid vocabulary id");
+      }
+    });
+  };
+
   getWordListbyUserId = (
     userId: number,
     pageSize: number = 0,
@@ -276,7 +293,6 @@ class VocabularyService extends BaseService {
       }
       for (let ele = 0; ele < quantity; ele++) {
         const index = getRandomInt(vocaUnit.length);
-        console.log(vocaUnit);
         const elem = vocaUnit[index];
         if (
           elem.id === ignoreId ||

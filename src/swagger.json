@@ -19,7 +19,11 @@
         },
         {
             "name": "Multiple Choice",
-            "description": "API for User"
+            "description": "API for Multiple Choice"
+        },
+        {
+            "name": "Listening",
+            "description": "API for Listening"
         }
     ],
     "consumes": [
@@ -253,7 +257,7 @@
                     "name": "unit",
                     "in": "path",
                     "required": true,
-                    "description": "unit that we want to match",
+                    "description": "unit that we want to multipleQuestion",
                     "type": "number"
                 },
                 {
@@ -280,7 +284,7 @@
                 ],
                 "parameters": [
                     {
-                        "name": "body add wordlist",
+                        "name": "body to check multiple choice",
                         "in": "body",
                         "required": false,
                         "schema": {
@@ -299,7 +303,70 @@
                         }
                     }
                 ],
-                "summary": "add vocabulary to wordlist",
+                "summary": "check exact multiple choice",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "bad request"
+                    }
+                }
+            }
+        },
+        "/listening/unit/{unit}": {
+            "parameters": [
+                {
+                    "name": "unit",
+                    "in": "path",
+                    "required": true,
+                    "description": "unit that we want to get listening question",
+                    "type": "number"
+                },
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Listening"
+                ],
+                "summary": "Get listening question in unit",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Listening"
+                ],
+                "parameters": [
+                    {
+                        "name": "body to check listening question",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "vocabulary": {
+                                    "type": "number"
+                                },
+                                "answer": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "summary": "check exact listening question",
                 "responses": {
                     "200": {
                         "$ref": "#/definitions/200"
