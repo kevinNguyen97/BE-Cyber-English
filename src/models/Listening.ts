@@ -1,11 +1,21 @@
-import { numberOrNull, stringOrNull, TProcessing } from "../interfaces/types";
+import { numberOrNull, stringOrNull } from "../interfaces/types";
 import { VocabularyModel } from "./vocabulary";
-import { MultipleChoiceHaveDone } from "./MultipleChoice";
+import { MultipleChoiceHaveDone, ProcessingData } from "./MultipleChoice";
 import { getRandomInt, removeParenthesesBrackets } from "../ultils/Ultil";
 import { regex } from "../constants";
 
-type TSuggestions = { character: string; index: number };
+class Suggestions {
+  character: string = "";
+  index: number = -1;
+  length: number = 0;
+  constructor(_character: string, _index: number, _length: number) {
+    this.character = _character;
+    this.index = _index;
+    this.length = _length;
+  }
+}
 
+// tslint:disable-next-line: max-classes-per-file
 export class ListeningHaveDone extends MultipleChoiceHaveDone {
   constructor(data: any) {
     super(data);
@@ -17,18 +27,19 @@ export class ListeningQuestionResponses {
   id: numberOrNull = null;
   audioUkUrl: stringOrNull = null;
   audioUsUrl: stringOrNull = null;
-  suggestions: TSuggestions = {
+  suggestions: Suggestions = {
     character: "",
     index: 0,
+    length: 0,
   };
-  processing: TProcessing;
-  constructor(exact: VocabularyModel, _process: TProcessing) {
+  processing: ProcessingData;
+  constructor(exact: VocabularyModel, _process: ProcessingData) {
     this.id = exact.id;
     this.audioUkUrl = exact.audioDictionaryUK;
     this.audioUsUrl = exact.audioDictionaryUK;
     const getRandomCharacters = (
       _vocabulary: string = exact.vocabulary
-    ): TSuggestions => {
+    ): Suggestions => {
       const vocabulary = removeParenthesesBrackets(_vocabulary);
       let indexRandom = 0;
       let character: string;
@@ -36,10 +47,7 @@ export class ListeningQuestionResponses {
         indexRandom = getRandomInt(vocabulary.length);
         character = vocabulary.charAt(indexRandom).trim();
       } while (!character);
-      return {
-        character,
-        index: indexRandom,
-      };
+      return new Suggestions(character, indexRandom, vocabulary.length);
     };
 
     this.suggestions = getRandomCharacters();
@@ -55,7 +63,7 @@ export class ListeningResponseChecked {
   audioUsUrl: stringOrNull = null;
   answer: string = "";
   isExact: boolean = false;
-  processing: TProcessing;
+  processing: ProcessingData;
 
   constructor(
     _id: number,
@@ -64,7 +72,7 @@ export class ListeningResponseChecked {
     _audioUsUrl: any,
     _answer: string,
     _isExact: boolean,
-    _process: TProcessing
+    _process: ProcessingData
   ) {
     this.id = _id;
     this.unit = _unit;

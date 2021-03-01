@@ -7,13 +7,15 @@ import UnitService from "../services/unit.service";
 import BaseRouter from "./baseRouter";
 import { User } from "../models/User.model";
 import listeningService from "../services/multipleChoice.service";
-import { MultipleChoiceResponseChecked } from "../models/MultipleChoice";
+import {
+  MultipleChoiceResponseChecked,
+  ProcessingData,
+} from "../models/MultipleChoice";
 import ListeningService from "../services/listening.service";
 import {
   ListeningQuestionResponses,
   ListeningResponseChecked,
 } from "../models/Listening";
-import { TProcessing } from "../interfaces/types";
 
 @singleton()
 class ListeningComprehension extends BaseRouter {
@@ -159,7 +161,7 @@ class ListeningComprehension extends BaseRouter {
   private getProcessListening = (
     user: User,
     unit: number
-  ): Promise<TProcessing> => {
+  ): Promise<ProcessingData> => {
     return new Promise(async (resolve, reject) => {
       const answered = await this.listeningServ.getAllQuestionHaveDoneByUnit(
         user.id,
@@ -170,11 +172,13 @@ class ListeningComprehension extends BaseRouter {
         numberOfReplies += iterator.countReplies;
       }
       const total = await this.vocabularySev.getListVocabularyByUnit(unit);
-      resolve({
-        answered: answered.length,
-        total: total ? total.length : 0,
-        numberOfReplies,
-      });
+      resolve(
+        new ProcessingData(
+          answered.length,
+          total ? total.length : 0,
+          numberOfReplies
+        )
+      );
     });
   };
 }

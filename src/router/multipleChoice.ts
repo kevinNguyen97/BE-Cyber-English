@@ -10,8 +10,8 @@ import MultipleChoiceService from "../services/multipleChoice.service";
 import {
   MultipleChoiceQuestion,
   MultipleChoiceResponseChecked,
+  ProcessingData,
 } from "../models/MultipleChoice";
-import { TProcessing } from "../interfaces/types";
 
 @singleton()
 class MultipleChoiceRouter extends BaseRouter {
@@ -132,7 +132,7 @@ class MultipleChoiceRouter extends BaseRouter {
           user.id,
           unit
         );
-      }else {
+      } else {
         await this.multipleChoiceServ.dispatchWrongAnswer(
           idVocabulary,
           user.id,
@@ -163,7 +163,7 @@ class MultipleChoiceRouter extends BaseRouter {
   private getProcessMultipleChoice = (
     user: User,
     unit: number
-  ): Promise<TProcessing> => {
+  ): Promise<ProcessingData> => {
     return new Promise(async (resolve) => {
       const answered = await this.multipleChoiceServ.getAllQuestionHaveDoneByUnit(
         user.id,
@@ -174,11 +174,13 @@ class MultipleChoiceRouter extends BaseRouter {
         numberOfReplies += iterator.countReplies;
       }
       const total = await this.vocabularySev.getListVocabularyByUnit(unit);
-      resolve({
-        answered: answered.length,
-        total: total ? total.length : 0,
-        numberOfReplies,
-      });
+      resolve(
+        new ProcessingData(
+          answered.length,
+          total ? total.length : 0,
+          numberOfReplies
+        )
+      );
     });
   };
 }

@@ -1,7 +1,19 @@
-import { numberOrNull, stringOrNull, TProcessing } from "../interfaces/types";
+import { numberOrNull, stringOrNull } from "../interfaces/types";
 import { getRandomInt } from "../ultils/Ultil";
 import { VocabularyModel } from "./vocabulary";
 
+export class ProcessingData {
+  corected: number = 0;
+  total: number = 0;
+  answered: number = 0;
+  constructor(_corected: number, _total: number, _answered: number) {
+    this.corected = _corected;
+    this.total = _total;
+    this.answered = _answered;
+  }
+}
+
+// tslint:disable-next-line: max-classes-per-file
 export class MultipleChoiceHaveDone {
   id: number = 0;
   userId: number = 0;
@@ -26,11 +38,11 @@ export class MultipleChoiceQuestion {
   id: numberOrNull = null;
   vocabulary: stringOrNull = null;
   answerList: stringOrNull[] = [];
-  processing: TProcessing;
+  processing: ProcessingData;
   constructor(
     exact: VocabularyModel,
     subQuestion: VocabularyModel[],
-    _process: TProcessing
+    _process: ProcessingData
   ) {
     this.id = exact.id;
     this.vocabulary = exact.vocabulary;
@@ -55,14 +67,14 @@ export class MultipleChoiceResponseChecked {
   vocabulary: string = "";
   answer: string = "";
   isExact: boolean = false;
-  processing: TProcessing;
+  processing: ProcessingData;
 
   constructor(
     _vocabulary: string,
     _answer: string,
     _isExact: boolean = false,
     _unit: number,
-    _process: TProcessing
+    _process: ProcessingData
   ) {
     this.vocabulary = _vocabulary;
     this.answer = _answer;
