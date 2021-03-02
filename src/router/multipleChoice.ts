@@ -30,6 +30,11 @@ class MultipleChoiceRouter extends BaseRouter {
       [this.checkAuthThenGetuser],
       this.getQuestion
     );
+    this.deleteMethod(
+      "/unit/:unit",
+      [this.checkAuthThenGetuser],
+      this.resetTracking
+    );
     this.postMethod(
       "/unit/:unit",
       [
@@ -85,6 +90,43 @@ class MultipleChoiceRouter extends BaseRouter {
         subAnswer,
         dataProcess
       );
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private resetTracking = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+
+      const unit = Number(req.params.unit);
+
+      const isExistUnit = await this.unitService.checkUnitsExist(unit);
+      if (!isExistUnit)
+        return this.handleError(
+          resp,
+          responseData,
+          [`unit ${unit} is not exist`],
+          ResponseCode.BAD_REQUEST
+        );
+
+      await this.multipleChoiceServ.resetTrackingsOnUnit(user.id, unit);
+
+      const dataProcess = await this.getProcessMultipleChoice(user, unit);
+
+      responseData.success = true;
+      responseData.data = dataProcess;
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(
@@ -160,6 +202,7 @@ class MultipleChoiceRouter extends BaseRouter {
       );
     }
   };
+
   private getProcessMultipleChoice = (
     user: User,
     unit: number

@@ -32,6 +32,11 @@ class ListeningComprehension extends BaseRouter {
       [this.checkAuthThenGetuser],
       this.getListening
     );
+    this.deleteMethod(
+      "/unit/:unit",
+      [this.checkAuthThenGetuser],
+      this.resetTracking
+    );
     this.postMethod(
       "/unit/:unit",
       [
@@ -75,6 +80,43 @@ class ListeningComprehension extends BaseRouter {
 
       responseData.success = true;
       responseData.data = new ListeningQuestionResponses(data, dataProcess);
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private resetTracking = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+
+      const unit = Number(req.params.unit);
+
+      const isExistUnit = await this.unitService.checkUnitsExist(unit);
+      if (!isExistUnit)
+        return this.handleError(
+          resp,
+          responseData,
+          [`unit ${unit} is not exist`],
+          ResponseCode.BAD_REQUEST
+        );
+
+      await this.listeningServ.resetTrackingsOnUnit(user.id, unit);
+
+      const dataProcess = await this.getProcessListening(user, unit);
+
+      responseData.success = true;
+      responseData.data = dataProcess;
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(

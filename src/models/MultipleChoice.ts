@@ -28,7 +28,7 @@ export class MultipleChoiceHaveDone {
       this.unitId = data.unit_id;
       this.vocabularyId = data.vocabulary_id;
       this.countReplies = data.count_replies;
-      this.isDone = !!data.is_done;
+      this.isDone = !!data.is_checked;
     }
   }
 }
