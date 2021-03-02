@@ -1,21 +1,22 @@
 import { getFullMediaUrl } from "../helpers/mediaUrl";
 import { stringOrNull } from "../interfaces/types";
+import { BaseCache, CacheModel } from "./cache";
 export class VocabularyModel {
   id: number = 0;
   created: number = 0;
   modified: number = 0;
-  vocabulary: string = '';
-  translate: string = '';
-  dictionaryEntry: string = '';
-  audioDictionaryUS: stringOrNull = '';
-  audioDictionaryUK: stringOrNull = '';
-  dictionaryEntryTranslate: string = '';
-  exampleSentences: string = '';
-  exampleSentencesTranslate: string = '';
-  audioExampleSentencesUS: stringOrNull = '';
-  audioExampleSentencesUK: stringOrNull = '';
+  vocabulary: string = "";
+  translate: string = "";
+  dictionaryEntry: string = "";
+  audioDictionaryUS: stringOrNull = "";
+  audioDictionaryUK: stringOrNull = "";
+  dictionaryEntryTranslate: string = "";
+  exampleSentences: string = "";
+  exampleSentencesTranslate: string = "";
+  audioExampleSentencesUS: stringOrNull = "";
+  audioExampleSentencesUK: stringOrNull = "";
   author: number | undefined | null = null;
-  orther: string = '';
+  orther: string = "";
   unit: number = 0;
   oldId: number = 0;
 
@@ -86,5 +87,28 @@ export class UserWorkList {
       this.isDeleted = !!data.is_deleted;
       this.orther = data.orther;
     }
+  }
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class VocabularyCache extends BaseCache<VocabularyModel> {
+  private unitData: any = {};
+  constructor(_data: VocabularyModel[] = []) {
+    super();
+    this.data = _data.map((item) => new CacheModel(item.id, item));
+    _data.forEach((item) => {
+      const isExistUnit = !!Object.keys(this.unitData).find(
+        (ele) => Number(ele) === item.unit
+      );
+      if (isExistUnit) {
+        this.unitData[item.unit].push(item);
+      } else {
+        this.unitData[item.unit] = [item];
+      }
+    });
+  }
+
+  getMediaByUnit(unit: number): VocabularyModel[] {
+    return this.unitData[unit] ? this.unitData[unit] : [];
   }
 }

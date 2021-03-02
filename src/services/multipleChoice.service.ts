@@ -2,16 +2,19 @@ import "reflect-metadata";
 import { singleton } from "tsyringe";
 import BaseService from "./base.service";
 import {
-  MultipleChoiceQuestion,
   MultipleChoiceHaveDone,
 } from "../models/MultipleChoice";
 import VocabularyService from "./vocabularies.service";
 import { VocabularyModel } from "../models/vocabulary";
 import { getRandomInt } from "../ultils/Ultil";
+import CacheService from "./cache.service";
 
 @singleton()
 class MultipleChoiceService extends BaseService {
-  constructor(private vocabularyServ: VocabularyService) {
+  constructor(
+    private vocabularyServ: VocabularyService,
+    private cacheServ: CacheService
+  ) {
     super();
     this.nameSpace = "MultipleChoiceService";
   }
@@ -101,8 +104,8 @@ class MultipleChoiceService extends BaseService {
   ): Promise<boolean> => {
     return new Promise<boolean>(async (resolve, reject) => {
       const listData = unit
-        ? await this.vocabularyServ.getListVocabularyByUnit(unit)
-        : await this.vocabularyServ.getAllVocabularies();
+        ? this.cacheServ.vocabulary.getMediaByUnit(unit)
+        : this.cacheServ.vocabulary.allData;
       if (listData && listData.length) {
         const isExact = !!listData.find(
           (ele) => ele.id === id && ele.dictionaryEntry.trim() === answer

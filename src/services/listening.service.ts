@@ -5,10 +5,14 @@ import VocabularyService from "./vocabularies.service";
 import { VocabularyModel } from "../models/vocabulary";
 import { getRandomInt, removeParenthesesBrackets } from "../ultils/Ultil";
 import { ListeningHaveDone } from "../models/Listening";
+import CacheService from "./cache.service";
 
 @singleton()
 class ListeningService extends BaseService {
-  constructor(private vocabularyServ: VocabularyService) {
+  constructor(
+    private vocabularyServ: VocabularyService,
+    private cacheServ: CacheService,
+  ) {
     super();
     this.nameSpace = "ListeningService";
   }
@@ -98,7 +102,7 @@ class ListeningService extends BaseService {
     return new Promise<boolean>(async (resolve, reject) => {
       const listData = unit
         ? await this.vocabularyServ.getListVocabularyByUnit(unit)
-        : await this.vocabularyServ.getAllVocabularies();
+        : await this.cacheServ.vocabulary.allData;
       if (listData && listData.length) {
         const isExact = listData.find((ele) => {
           const voca = removeParenthesesBrackets(ele.vocabulary).toLowerCase();

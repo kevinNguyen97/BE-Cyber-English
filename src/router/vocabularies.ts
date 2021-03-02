@@ -6,12 +6,14 @@ import VocabularyService from "../services/vocabularies.service";
 import UnitService from "../services/unit.service";
 import BaseRouter from "./baseRouter";
 import { User } from "../models/User.model";
+import CacheService from "../services/cache.service";
 
 @singleton()
 class VocabularyRouter extends BaseRouter {
   constructor(
     private vocabularySev: VocabularyService,
-    private unitService: UnitService
+    private unitService: UnitService,
+    private cacheServ: CacheService,
   ) {
     super();
     this.run();
@@ -167,7 +169,8 @@ class VocabularyRouter extends BaseRouter {
         pageIndex
       );
 
-      const vocabularies = await this.vocabularySev.getAllVocabularies();
+      const vocabularies = this.cacheServ.vocabulary.allData;
+
       const data = wordlist.map((item) => {
         const vocabulary = vocabularies.find(
           (voca) => voca.id === item.vocabularyId

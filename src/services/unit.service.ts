@@ -4,16 +4,15 @@ import DBService from "../config/mysql";
 import { singleton } from "tsyringe";
 import LoggerService from "../config/logger";
 import { UnitsModel } from "../models/Units.model";
+import BaseService from "./base.service";
 
 @singleton()
-class UnitService {
-  private nameSpace = "UnitService";
-  private connection: mysql.Pool;
+class UnitService extends BaseService{
   private listUnit: UnitsModel[] = [];
 
-  constructor(private dBService: DBService, private logger: LoggerService) {
-    this.log("");
-    this.connection = this.dBService.getConnection();
+  constructor() {
+    super();
+    this.nameSpace = "UnitService";
   }
 
   getAllUnit = (): Promise<UnitsModel[]> => {
@@ -34,10 +33,6 @@ class UnitService {
         });
       }
     });
-  };
-
-  log = (data: any, message: string = "") => {
-    this.logger.info(this.nameSpace, message, data);
   };
 
   checkUnitsExist = (unit: number): Promise<boolean> => {

@@ -20,7 +20,6 @@ class BaseRouter {
     this.isUserLoggedIn = this.auth.isUserLoggedIn;
     this.checkAuthThenGetuser = this.auth.checkThenGetuser;
     this.router = express.Router();
-    this.log("");
   }
   log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);

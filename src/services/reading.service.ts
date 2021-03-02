@@ -9,23 +9,16 @@ import {
   ReadingComprehensionQuestions,
   ReadingDiscussionQuestions,
 } from "../models/reading.model";
+import BaseService from "./base.service";
 
 @singleton()
-class ReadingService {
-  private nameSpace = "ReadingService";
-  private connection: mysql.Pool;
-
-  private listDiscussionQuestions: ReadingDiscussionQuestions[] = [];
+class ReadingService extends BaseService {
   private listReadingComprehensionQuestions: ReadingComprehensionQuestions[] = [];
 
-  constructor(private dBService: DBService, private logger: LoggerService) {
-    this.log("");
-    this.connection = this.dBService.getConnection();
+  constructor() {
+    super();
+    this.nameSpace = "ReadingService";
   }
-
-  log = (data: any, message: string = "") => {
-    this.logger.info(this.nameSpace, message, data);
-  };
 
   handleGetAllResult = (
     err: any,
@@ -35,7 +28,7 @@ class ReadingService {
     callBackMap = (item) => item
   ): void => {
     if (err) {
-      this.logger.error(this.nameSpace, "", err);
+      this.logErr( "", err);
       reject(err);
     }
     if (result && result?.length) {

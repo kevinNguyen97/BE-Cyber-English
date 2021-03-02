@@ -51,5 +51,3 @@ export const toPlural = (_str: string): string => {
 
   return str;
 };
-
-

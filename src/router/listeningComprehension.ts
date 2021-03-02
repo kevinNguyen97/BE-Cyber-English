@@ -6,9 +6,7 @@ import VocabularyService from "../services/vocabularies.service";
 import UnitService from "../services/unit.service";
 import BaseRouter from "./baseRouter";
 import { User } from "../models/User.model";
-import listeningService from "../services/multipleChoice.service";
 import {
-  MultipleChoiceResponseChecked,
   ProcessingData,
 } from "../models/MultipleChoice";
 import ListeningService from "../services/listening.service";

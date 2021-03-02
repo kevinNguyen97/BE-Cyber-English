@@ -4,74 +4,21 @@ import { UserWorkList, VocabularyModel } from "../models/vocabulary";
 import { getRandomInt, toSingular } from "../ultils/Ultil";
 import BaseService from "./base.service";
 import "ts-replace-all";
+import CacheService from "./cache.service";
 @singleton()
 class VocabularyService extends BaseService {
-  private allVocabularies: VocabularyModel[] = [];
-  private vocabularyUnit: any = {};
-  constructor() {
+  constructor(private cacheServ: CacheService) {
     super();
     this.nameSpace = "VocabularyService";
-    this.getAllVocabularies();
   }
-
-  handleGetAllResult = (
-    err: any,
-    result: any,
-    resolve: any,
-    reject: any,
-    callBackMap = (item) => item
-  ): void => {
-    if (err) {
-      this.log(err, "");
-      reject(err);
-    }
-    if (result && result?.length) {
-      const data = result.map(callBackMap);
-      resolve(data);
-    } else {
-      resolve(null);
-    }
-  };
-
-  getAllVocabularies = (): Promise<VocabularyModel[]> => {
-    return new Promise((resolve, reject) => {
-      if (this.allVocabularies && this.allVocabularies.length) {
-        resolve(this.allVocabularies);
-      } else {
-        this.connection.query(`SELECT * FROM vocabularies`, (err, result) => {
-          if (err) {
-            this.log(err, "");
-            reject(err);
-            return;
-          }
-          if (result && result?.length) {
-            this.allVocabularies = result.map(
-              (item: any) => new VocabularyModel(item)
-            );
-            this.vocabularyUnit = {};
-            this.allVocabularies.forEach((item) => {
-              const isExistUnit = !!Object.keys(this.vocabularyUnit).find(
-                (ele) => Number(ele) === item.unit
-              );
-              if (isExistUnit) {
-                this.vocabularyUnit[item.unit].push(item);
-              } else {
-                this.vocabularyUnit[item.unit] = [item];
-              }
-            });
-          }
-          resolve(this.allVocabularies.length ? this.allVocabularies : []);
-        });
-      }
-    });
-  };
 
   getListVocabularyByUnitID = (
     id: number
   ): Promise<VocabularyModel[] | null> => {
     return new Promise(async (resolve, reject) => {
-      await this.getAllVocabularies();
-      const data = this.allVocabularies.filter((item) => item.id === id);
+      const data = this.cacheServ.vocabulary.allData.filter(
+        (item) => item.id === id
+      );
       if (data) {
         resolve(data);
       } else {
@@ -84,16 +31,10 @@ class VocabularyService extends BaseService {
     unit: number
   ): Promise<VocabularyModel[] | null> => {
     return new Promise(async (resolve, reject) => {
-      await this.getAllVocabularies();
-      const data: VocabularyModel[] = await this.vocabularyUnit[unit];
-      if (data) {
-        resolve(data);
-      } else {
-        this.vocabularyUnit[unit] = this.allVocabularies.filter(
-          (item) => item.unit === unit
-        );
-        resolve(this.vocabularyUnit[unit] ? this.vocabularyUnit[unit] : null);
-      }
+      const data: VocabularyModel[] = this.cacheServ.vocabulary.getMediaByUnit(
+        unit
+      );
+      resolve(data ? data : null);
     });
   };
 
@@ -101,8 +42,7 @@ class VocabularyService extends BaseService {
     vocabulary: string
   ): Promise<VocabularyModel | null> => {
     return new Promise(async (resolve, reject) => {
-      await this.getAllVocabularies();
-      const data = this.allVocabularies.find((item) => {
+      const data = this.cacheServ.vocabulary.allData.find((item) => {
         return item.vocabulary
           ?.toLowerCase()
           .includes(vocabulary.toLowerCase());
@@ -120,7 +60,7 @@ class VocabularyService extends BaseService {
     unit: number
   ): Promise<VocabularyModel | null> => {
     return new Promise(async (resolve, reject) => {
-     const listData = await this.getListVocabularyByUnit(unit);
+      const listData = await this.getListVocabularyByUnit(unit);
       const data = listData?.find((item) => {
         const isInclude = toSingular(item.vocabulary?.toLowerCase()).includes(
           toSingular(vocabulary.toLowerCase())
@@ -145,10 +85,11 @@ class VocabularyService extends BaseService {
     unit?: number
   ): Promise<VocabularyModel | null> => {
     return new Promise(async (resolve, reject) => {
-      await this.getAllVocabularies();
       const data = unit
-        ? this.vocabularyUnit[unit].find((item) => item.id === id)
-        : this.allVocabularies.find((item) => item.id === id);
+        ? this.cacheServ.vocabulary
+            .getMediaByUnit(unit)
+            ?.find((item) => item.id === id)
+        : this.cacheServ.vocabulary.allData.find((item) => item.id === id);
       if (data) {
         resolve(data);
       } else {
@@ -228,8 +169,7 @@ class VocabularyService extends BaseService {
 
   checkVocabularyIsExistById = (vocabularyId: number): Promise<boolean> => {
     return new Promise<boolean>(async (resolve, reject) => {
-      await this.getAllVocabularies();
-      const data = this.allVocabularies.find(
+      const data = this.cacheServ.vocabulary.allData.find(
         (item) => item.id === vocabularyId
       );
       data ? resolve(true) : resolve(false);

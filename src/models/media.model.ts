@@ -1,15 +1,16 @@
 import { getFullMediaUrl } from "../helpers/mediaUrl";
 import { numberOrNull, stringOrNull } from "../interfaces/types";
+import { BaseCache, CacheModel } from "./cache";
 
 export class MediaModel {
-  id: numberOrNull = null;
-  created: numberOrNull = null;
-  modified: numberOrNull = null;
-  url: stringOrNull = null;
-  targetId: numberOrNull = null;
-  targetType: numberOrNull = null;
-  author: numberOrNull = null;
-  orther: stringOrNull = null;
+  id: number = 0;
+  created: number = 0;
+  modified: number = 0;
+  url: string = "";
+  targetId: number = 0;
+  targetType: number = 0;
+  author: number = 0;
+  orther: string = "";
 
   constructor(data?: any) {
     if (data) {
@@ -22,5 +23,13 @@ export class MediaModel {
       this.author = data?.author;
       this.orther = data?.orther;
     }
+  }
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class MediaCache extends BaseCache<MediaModel> {
+  constructor(_data: MediaModel[] = []) {
+    super();
+    this.data = _data.map((item) => new CacheModel(item.id, item));
   }
 }
