@@ -6,13 +6,14 @@ import { singleton } from "tsyringe";
 import JWTHelper, { TokenData } from "../helpers/jwt.helper";
 import { User } from "../models/User.model";
 import hasher from "wordpress-hash-node";
+import BaseService from "./base.service";
 
 @singleton()
-class UserService {
-  private connection: mysql.Pool;
+class UserService extends BaseService {
   private myHasher = hasher;
-  constructor(private dBService: DBService, private jwtHelper: JWTHelper) {
-    this.connection = this.dBService.getConnection();
+  constructor(private jwtHelper: JWTHelper) {
+    super();
+    this.nameSpace = "UserService";
   }
 
   login = (username: string, password: string): Promise<any> => {
@@ -81,8 +82,25 @@ class UserService {
     });
   };
 
- getUserByToken = async (token: string): Promise<TokenData> => {
+  getUserByToken = async (token: string): Promise<TokenData> => {
     return this.jwtHelper.verifyToken(token, "access-token-secret");
+  };
+
+  updateCurentUnit = (userId: number): Promise<any> => {
+    console.log('upodate curent unit')
+    return new Promise(async (resolve, reject) => {
+      this.connection.query(
+        `UPDATE users SET modified = ${this.timeNow}, current_unit = current_unit + 1
+          WHERE id = ${userId};`,
+        (err, result) => {
+          if (err) {
+            this.log(err, "");
+            return reject(err);
+          }
+          if (result) return resolve(result);
+        }
+      );
+    });
   };
 }
 

@@ -29,12 +29,12 @@ class VocabularyService extends BaseService {
 
   getListVocabularyByUnit = (
     unit: number
-  ): Promise<VocabularyModel[] | null> => {
+  ): Promise<VocabularyModel[]> => {
     return new Promise(async (resolve, reject) => {
       const data: VocabularyModel[] = this.cacheServ.vocabulary.getMediaByUnit(
         unit
       );
-      resolve(data ? data : null);
+      resolve(data);
     });
   };
 

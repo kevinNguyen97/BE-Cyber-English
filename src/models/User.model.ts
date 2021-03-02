@@ -24,10 +24,12 @@ export class User {
   userRoleName: string = "";
   isActiveAccount: boolean = false;
   isAdmin: boolean = false;
+  modified: number = 0;
   constructor(data: any) {
     if (data && data.id) {
       this.id = data.id;
       this.firstName = data.first_name;
+      this.modified = data.modified;
       this.lastName = data.last_name;
       this.userEmail = data.user_email;
       this.nickname = data.nickname;

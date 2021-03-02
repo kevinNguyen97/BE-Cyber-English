@@ -29,7 +29,7 @@ class MultipleChoiceService extends BaseService {
                 mulitple_choice_user mcu
               LEFT JOIN vocabularies v ON
                 mcu.vocabulary_id = v.id
-              WHERE mcu.user_id = ${userId};`,
+              WHERE mcu.user_id = ${userId} AND is_checked = 1;`,
         (err, result) => {
           if (err) {
             reject(err);
@@ -56,7 +56,7 @@ class MultipleChoiceService extends BaseService {
                 mulitple_choice_user mcu
               LEFT JOIN vocabularies v ON
                 mcu.vocabulary_id = v.id
-              WHERE mcu.user_id = ${userId} AND mcu.unit = ${unit};`,
+              WHERE mcu.user_id = ${userId} AND mcu.unit = ${unit} AND is_checked = 1;`,
         (err, result) => {
           if (err) {
             reject(err);
@@ -177,7 +177,6 @@ class MultipleChoiceService extends BaseService {
             this.log(err, "");
             return reject(err);
           }
-          console.log(result)
           if (result) return resolve(result);
         }
       );

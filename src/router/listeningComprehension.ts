@@ -6,10 +6,9 @@ import VocabularyService from "../services/vocabularies.service";
 import UnitService from "../services/unit.service";
 import BaseRouter from "./baseRouter";
 import { User } from "../models/User.model";
-import {
-  ProcessingData,
-} from "../models/MultipleChoice";
+import { ProcessingData } from "../models/MultipleChoice";
 import ListeningService from "../services/listening.service";
+import UserService from "../services/user.service";
 import {
   ListeningQuestionResponses,
   ListeningResponseChecked,
@@ -20,7 +19,8 @@ class ListeningComprehension extends BaseRouter {
   constructor(
     private vocabularySev: VocabularyService,
     private listeningServ: ListeningService,
-    private unitService: UnitService
+    private unitService: UnitService,
+    private userService: UserService
   ) {
     super();
     this.run();
@@ -178,6 +178,17 @@ class ListeningComprehension extends BaseRouter {
 
       const dataProcess = await this.getProcessListening(user, unit);
 
+      const canUpdateUnit = await this.unitService.canUpdateCurrentUnit(
+        user,
+        unit,
+        "listening",
+        dataProcess
+      );
+
+      if (canUpdateUnit && unit === user.currentUnit) {
+        this.userService.updateCurentUnit(user.id);
+      }
+
       responseData.success = true;
       responseData.data = new ListeningResponseChecked(
         idVocabulary,
@@ -207,6 +218,7 @@ class ListeningComprehension extends BaseRouter {
         user.id,
         unit
       );
+      const countCorected = answered.filter((item) => item.isDone);
       let numberOfReplies = 0;
       for (const iterator of answered) {
         numberOfReplies += iterator.countReplies;
@@ -214,7 +226,7 @@ class ListeningComprehension extends BaseRouter {
       const total = await this.vocabularySev.getListVocabularyByUnit(unit);
       resolve(
         new ProcessingData(
-          answered.length,
+          countCorected.length,
           total ? total.length : 0,
           numberOfReplies
         )

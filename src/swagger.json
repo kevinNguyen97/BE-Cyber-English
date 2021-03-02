@@ -289,6 +289,20 @@
                     }
                 }
             },
+            "delete": {
+                "tags": [
+                    "Multiple Choice"
+                ],
+                "summary": "reset point in Multiple choice of unit",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Multiple Choice"
@@ -352,6 +366,20 @@
                     }
                 }
             },
+            "delete": {
+                "tags": [
+                    "Listening"
+                ],
+                "summary": "reset point in Listening of unit",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Listening"
@@ -366,9 +394,6 @@
                             "properties": {
                                 "id": {
                                     "type": "number"
-                                },
-                                "vocabulary": {
-                                    "type": "string"
                                 },
                                 "answer": {
                                     "type": "string"

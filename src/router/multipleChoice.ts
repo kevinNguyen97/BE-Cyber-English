@@ -12,13 +12,15 @@ import {
   MultipleChoiceResponseChecked,
   ProcessingData,
 } from "../models/MultipleChoice";
+import UserService from "../services/user.service";
 
 @singleton()
 class MultipleChoiceRouter extends BaseRouter {
   constructor(
     private vocabularySev: VocabularyService,
     private multipleChoiceServ: MultipleChoiceService,
-    private unitService: UnitService
+    private unitService: UnitService,
+    private userService: UserService
   ) {
     super();
     this.run();
@@ -183,6 +185,17 @@ class MultipleChoiceRouter extends BaseRouter {
       }
 
       const dataProcess = await this.getProcessMultipleChoice(user, unit);
+      const canUpdateUnit = await this.unitService.canUpdateCurrentUnit(
+        user,
+        unit,
+        "mupliple",
+        dataProcess
+      );
+      console.log(canUpdateUnit);
+
+      if (canUpdateUnit && unit === user.currentUnit) {
+        this.userService.updateCurentUnit(user.id);
+      }
 
       responseData.success = true;
       responseData.data = new MultipleChoiceResponseChecked(
@@ -212,6 +225,7 @@ class MultipleChoiceRouter extends BaseRouter {
         user.id,
         unit
       );
+      const countCorected = answered.filter((item) => item.isDone);
       let numberOfReplies = 0;
       for (const iterator of answered) {
         numberOfReplies += iterator.countReplies;
@@ -219,7 +233,7 @@ class MultipleChoiceRouter extends BaseRouter {
       const total = await this.vocabularySev.getListVocabularyByUnit(unit);
       resolve(
         new ProcessingData(
-          answered.length,
+          countCorected.length,
           total ? total.length : 0,
           numberOfReplies
         )

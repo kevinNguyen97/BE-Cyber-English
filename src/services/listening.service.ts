@@ -27,7 +27,7 @@ class ListeningService extends BaseService {
                 listening_comprehension_user lcu
               LEFT JOIN vocabularies v ON
                 lcu.vocabulary_id = v.id
-              WHERE lcu.user_id = ${userId};`,
+              WHERE lcu.user_id = ${userId} AND is_checked = 1;`,
         (err, result) => {
           if (err) {
             reject(err);

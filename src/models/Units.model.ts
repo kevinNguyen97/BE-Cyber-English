@@ -10,6 +10,8 @@ export class UnitsModel {
   translate: stringOrNull = null;
   orther: stringOrNull = null;
   oldId: number = 0;
+  quantityMultipleChoiceAnswerRequired: number = -1;
+  quantityListeningAnswerRequired: number = -1;
   constructor(data?: any) {
     if (data) {
       this.id = data?.id;
@@ -21,6 +23,8 @@ export class UnitsModel {
       this.translate = data?.translate;
       this.orther = data?.orther;
       this.oldId = data?.old_id;
+      this.quantityListeningAnswerRequired = data?.quantity__listening_answer_required;
+      this.quantityMultipleChoiceAnswerRequired = data?.quantity__m_choice_answer_required
     }
   }
 }
