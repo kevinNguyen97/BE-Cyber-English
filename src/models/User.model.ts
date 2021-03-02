@@ -12,25 +12,27 @@ export class User {
     displayName: string = '';
     dateConnected: number = 0;
     userLogin: string = '';
+    currentUnit: number = 0;
     userPass: string = '';
     address: string = '';
     userRoleName: string = ''
     isActiveAccount: boolean = false;
     constructor(data: any) {
         if (data && data.id) {
-            this.id = data.id
-            this.firstName = data.first_name
-            this.lastName = data.last_name
-            this.userEmail = data.user_email
-            this.nickname = data.nickname
-            this.userRole = data.user_role
-            this.avatarUrl = data.avatar_url
-            this.displayName = data.display_name
-            this.dateConnected = data.date_connected
-            this.userLogin = data.user_login
-            this.userPass = data.user_pass
-            this.address = data.address
-            this.isActiveAccount = !!data.is_active_account
+            this.id = data.id;
+            this.firstName = data.first_name;
+            this.lastName = data.last_name;
+            this.userEmail = data.user_email;
+            this.nickname = data.nickname;
+            this.userRole = data.user_role;
+            this.avatarUrl = data.avatar_url;
+            this.displayName = data.display_name;
+            this.dateConnected = data.date_connected;
+            this.userLogin = data.user_login;
+            this.userPass = data.user_pass;
+            this.address = data.address;
+            this.isActiveAccount = !!data.is_active_account;
+            this.currentUnit = data.current_unit;
             this.getUserRoleName(data.user_role);
         }
     }

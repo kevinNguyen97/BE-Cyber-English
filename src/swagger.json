@@ -24,6 +24,10 @@
         {
             "name": "Listening",
             "description": "API for Listening"
+        },
+        {
+            "name": "Unit",
+            "description": "API for Unit"
         }
     ],
     "consumes": [
@@ -380,6 +384,27 @@
                     },
                     "404": {
                         "description": "bad request"
+                    }
+                }
+            }
+        },
+        "/unit/all": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Unit"
+                ],
+                "summary": "Get all unit",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
                     }
                 }
             }

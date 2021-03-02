@@ -16,37 +16,20 @@ class UnitService {
     this.connection = this.dBService.getConnection();
   }
 
-  handleGetAllResult = (
-    err: any,
-    result: any,
-    resolve: any,
-    reject: any,
-    callBackMap = (item) => item
-  ): void => {
-    if (err) {
-      this.log("", err);
-      reject(err);
-    }
-    if (result && result?.length) {
-      const data = result.map(callBackMap);
-      resolve(data);
-    } else {
-      resolve(null);
-    }
-  };
-
   getAllUnit = (): Promise<UnitsModel[]> => {
     return new Promise((resolve, reject) => {
       if (this.listUnit && this.listUnit.length) {
         resolve(this.listUnit);
       } else {
         this.connection.query(`SELECT * FROM units;`, (err, result) => {
-          this.handleGetAllResult(
-            err,
-            result,
-            resolve,
-            reject,
-            (item: any) => new UnitsModel(item)
+          if (err) {
+            this.log(err, "");
+            return reject(err);
+          }
+          resolve(
+            result && result.length
+              ? result.map((item: any) => new UnitsModel(item))
+              : []
           );
         });
       }
