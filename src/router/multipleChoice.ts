@@ -191,7 +191,6 @@ class MultipleChoiceRouter extends BaseRouter {
         "mupliple",
         dataProcess
       );
-      console.log(canUpdateUnit);
 
       if (canUpdateUnit && unit === user.currentUnit) {
         this.userService.updateCurentUnit(user.id);
