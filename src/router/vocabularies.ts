@@ -22,7 +22,7 @@ class VocabularyRouter extends BaseRouter {
   run() {
     this.getMethod(
       "/unit/:unit",
-      [this.isAuth],
+      [this.checkAuthThenGetuser],
       async (
         req: express.Request,
         resp: express.Response,
@@ -65,9 +65,10 @@ class VocabularyRouter extends BaseRouter {
         }
       }
     );
+
     this.postMethod(
       "/details/:unit",
-      [this.isAuth, this.check("vocabulary").isString()],
+      [this.checkAuthThenGetuser, this.check("vocabulary").isString()],
       this.getVocabularyDetails
     );
     this.getMethod(

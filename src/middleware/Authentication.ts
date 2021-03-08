@@ -35,6 +35,15 @@ class Authentication {
         this.userService
           .getUserById(userInfo.userId)
           .then((user) => {
+            const unit = Number(req.params.unit);
+            if (unit && user.currentUnit < unit) {
+              const obj = new ResponseData<any>();
+              obj.success = false;
+              obj.data = {
+                error_code: ["unauthorized"],
+              };
+              return res.status(ResponseCode.UNAUTHORIZED).json(obj);
+            }
             req.body.userData = user;
             next();
           })

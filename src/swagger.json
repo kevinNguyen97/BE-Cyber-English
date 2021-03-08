@@ -28,6 +28,10 @@
         {
             "name": "Unit",
             "description": "API for Unit"
+        },
+        {
+            "name": "flash card",
+            "description": "API for flash card"
         }
     ],
     "consumes": [
@@ -424,6 +428,87 @@
                     "Unit"
                 ],
                 "summary": "Get all unit",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            }
+        },
+        "/flash-card": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "flash card"
+                ],
+                "summary": "Get list flash card of user",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "flash card"
+                ],
+                "parameters": [
+                    {
+                        "name": "body to set Day remind flash card",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "vocabularyId": {
+                                    "type": "number"
+                                },
+                                "timeRemind": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "summary": "set Day remind flash card",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "bad request"
+                    }
+                }
+            }
+        },
+        "/flash-card/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "id flash card to delete",
+                    "type": "string"
+                },
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "delete": {
+                "tags": [
+                    "flash card"
+                ],
+                "summary": "delete flash card",
                 "responses": {
                     "200": {
                         "$ref": "#/definitions/200"

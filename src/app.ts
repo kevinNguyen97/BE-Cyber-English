@@ -14,6 +14,7 @@ import UserRouter from "./router/users";
 import MultipleChoiceRouter from "./router/multipleChoice";
 import ListeningComprehension from "./router/listeningComprehension";
 import UnitRouter from "./router/unit";
+import FlashCardRouter from "./router/flashCard";
 
 // const myrouter = {
 //   vocabularyRouter: container.resolve(ReadingRouter).router,
@@ -31,6 +32,7 @@ class AppRouter extends BaseRouter {
     private user: UserRouter,
     private multipleChoice: MultipleChoiceRouter,
     private unit: UnitRouter,
+    private flashCard: FlashCardRouter,
   ) {
     super();
     this.appRouter = express();
@@ -58,6 +60,7 @@ class AppRouter extends BaseRouter {
     this.appRouter.use("/listening", this.listening.router);
     this.appRouter.use("/reading", this.reading.router);
     this.appRouter.use("/multiple-choice", this.multipleChoice.router);
+    this.appRouter.use("/flash-card", this.flashCard.router);
     this.appRouter.use("/unit", this.unit.router);
     this.appRouter.use("/user", this.user.router);
   }

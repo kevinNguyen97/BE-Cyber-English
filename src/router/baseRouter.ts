@@ -5,6 +5,7 @@ import { ResponseCode, ResponseData } from "../models/response";
 import { check, ValidationChain, validationResult } from "express-validator";
 import { container } from "tsyringe";
 import Authentication from "../middleware/Authentication";
+import { timeStampSeconds } from "../ultils/Ultil";
 
 class BaseRouter {
   protected nameSpace = "";
@@ -15,15 +16,21 @@ class BaseRouter {
   public checkAuthThenGetuser: any;
   public isUserLoggedIn: any;
   check = check;
+
   constructor() {
     this.isAuth = this.auth.isAuth;
     this.isUserLoggedIn = this.auth.isUserLoggedIn;
     this.checkAuthThenGetuser = this.auth.checkThenGetuser;
     this.router = express.Router();
   }
+
   log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);
   };
+
+  get timeNow(): number {
+    return timeStampSeconds();
+  }
 
   handleError = (
     resp: express.Response,

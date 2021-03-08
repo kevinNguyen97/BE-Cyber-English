@@ -2,6 +2,7 @@ import { container, singleton } from "tsyringe";
 import DBService from "../config/mysql";
 import mysql from "mysql";
 import LoggerService from "../config/logger";
+import { timeStampSeconds } from "../ultils/Ultil";
 
 class BaseService {
   protected connection: mysql.Pool;
@@ -11,8 +12,9 @@ class BaseService {
   constructor() {
     this.connection = container.resolve(DBService).getConnection();
   }
+
   get timeNow(): number {
-    return Date.now();
+    return timeStampSeconds();
   }
 
   protected log = (data: any, message: string = "") => {

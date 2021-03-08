@@ -22,7 +22,7 @@ class ReadingRouter extends BaseRouter {
   init() {
     this.getMethod(
       "/unit/:unit",
-      [this.isAuth],
+      [this.checkAuthThenGetuser],
       async (
         req: express.Request,
         resp: express.Response,
