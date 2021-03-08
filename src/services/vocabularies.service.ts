@@ -27,9 +27,7 @@ class VocabularyService extends BaseService {
     });
   };
 
-  getListVocabularyByUnit = (
-    unit: number
-  ): Promise<VocabularyModel[]> => {
+  getListVocabularyByUnit = (unit: number): Promise<VocabularyModel[]> => {
     return new Promise(async (resolve, reject) => {
       const data: VocabularyModel[] = this.cacheServ.vocabulary.getMediaByUnit(
         unit
@@ -102,15 +100,16 @@ class VocabularyService extends BaseService {
     userId: number,
     pageSize: number = 0,
     pageIndex: number = 0
-  ): Promise<UserWorkList[]> => {
+  ): Promise<{ data: UserWorkList[]; total: number }> => {
     return new Promise<any>((resolve, reject) => {
       const subQueryPagin = pageSize
         ? `LIMIT ${pageIndex * pageSize},${pageSize}`
         : "";
 
       this.connection.query(
-        `SELECT * FROM user_worklist WHERE user_id = ${userId} ${subQueryPagin}`,
+        `SELECT *, (SELECT count(1) FROM user_worklist WHERE user_id = ${userId}) as totalWordList FROM user_worklist WHERE user_id = ${userId} ${subQueryPagin}`,
         (err, result) => {
+          let total = 0;
           if (err) {
             this.log(err, "");
             reject(err);
@@ -118,9 +117,10 @@ class VocabularyService extends BaseService {
             const userWorklist: UserWorkList[] = result.map(
               (item: any) => new UserWorkList(item)
             );
-            resolve(userWorklist);
+            total = Number(result[0].totalWordList);
+            resolve({ data: userWorklist, total });
           } else {
-            resolve([]);
+            resolve({ data: [], total });
           }
         }
       );

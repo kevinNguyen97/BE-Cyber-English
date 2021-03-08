@@ -13,7 +13,7 @@ class VocabularyRouter extends BaseRouter {
   constructor(
     private vocabularySev: VocabularyService,
     private unitService: UnitService,
-    private cacheServ: CacheService,
+    private cacheServ: CacheService
   ) {
     super();
     this.run();
@@ -163,15 +163,17 @@ class VocabularyRouter extends BaseRouter {
         ? Number(req.params.page_index)
         : 0;
 
-      const wordlist = await this.vocabularySev.getWordListbyUserId(
+      const dataWordlist = await this.vocabularySev.getWordListbyUserId(
         user.id,
         pageSize,
         pageIndex
       );
 
+      this.log(dataWordlist);
+
       const vocabularies = this.cacheServ.vocabulary.allData;
 
-      const data = wordlist.map((item) => {
+      const wordList = dataWordlist.data.map((item) => {
         const vocabulary = vocabularies.find(
           (voca) => voca.id === item.vocabularyId
         );
@@ -187,7 +189,14 @@ class VocabularyRouter extends BaseRouter {
         };
       });
       responseData.success = true;
-      responseData.data = data;
+      responseData.data = {
+        wordList,
+        pagination: {
+          pageSize,
+          pageIndex,
+          total: dataWordlist.total,
+        },
+      };
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(

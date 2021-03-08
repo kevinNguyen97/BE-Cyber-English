@@ -197,7 +197,8 @@ class ListeningComprehension extends BaseRouter {
         vocabulary?.audioDictionaryUS,
         answer,
         isExact,
-        dataProcess
+        dataProcess,
+        vocabulary?.vocabulary
       );
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {

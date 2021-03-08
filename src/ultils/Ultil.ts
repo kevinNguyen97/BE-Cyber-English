@@ -51,3 +51,6 @@ export const toPlural = (_str: string): string => {
 
   return str;
 };
+
+export const stringToBase64 = (str: string): string =>
+  new Buffer(str).toString("base64");
