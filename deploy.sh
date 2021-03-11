@@ -5,4 +5,3 @@ npm install
 npm run build
 cd dist
 pm2 start BECyberEnglish
-ENDSSH
