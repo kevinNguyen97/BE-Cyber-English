@@ -59,7 +59,6 @@ class FlashCardService extends BaseService {
             reject(err);
             return;
           }
-          console.log(result);
           resolve(!!result[0].is_exist);
         }
       );
