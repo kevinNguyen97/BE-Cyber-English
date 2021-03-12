@@ -1,5 +1,5 @@
 {
-  "name": "be-air-ticket-booking-nodejs",
+  "name": "be-cyber-english-nodejs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kevinNguyen97/BE-air-ticket-booking-NodeJs.git"
+    "url": "git+https://github.com/kevinNguyen97/BE-Cyber-English-NodeJs.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kevinNguyen97/BE-air-ticket-booking-NodeJs/issues"
+    "url": "https://github.com/kevinNguyen97/BE-Cyber-English-NodeJs/issues"
   },
-  "homepage": "https://github.com/kevinNguyen97/BE-air-ticket-booking-NodeJs#readme",
+  "homepage": "https://github.com/kevinNguyen97/BE-Cyber-English-NodeJs#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
