@@ -43,8 +43,8 @@ class AppRouter extends BaseRouter {
     this.appRouter.use(bodyParser.json({ limit: "50mb" }));
     /** Routes go here */
 
-    this.appRouter.use("/api/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    // this.appRouter.get("/api/swagger", swaggerUi.setup(swaggerDocument));
+    this.appRouter.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    // this.appRouter.get("/swagger", swaggerUi.setup(swaggerDocument));
 
     /** Error handling */
     this.appRouter.use((req, res, next) => {
@@ -56,13 +56,13 @@ class AppRouter extends BaseRouter {
     // static
     this.appRouter.use(express.static("public"));
 
-    this.appRouter.use("/api/vocabulary", this.vocabulary.router);
-    this.appRouter.use("/api/listening", this.listening.router);
-    this.appRouter.use("/api/reading", this.reading.router);
-    this.appRouter.use("/api/multiple-choice", this.multipleChoice.router);
-    this.appRouter.use("/api/flash-card", this.flashCard.router);
-    this.appRouter.use("/api/unit", this.unit.router);
-    this.appRouter.use("/api/user", this.user.router);
+    this.appRouter.use("/vocabulary", this.vocabulary.router);
+    this.appRouter.use("/listening", this.listening.router);
+    this.appRouter.use("/reading", this.reading.router);
+    this.appRouter.use("/multiple-choice", this.multipleChoice.router);
+    this.appRouter.use("/flash-card", this.flashCard.router);
+    this.appRouter.use("/unit", this.unit.router);
+    this.appRouter.use("/user", this.user.router);
   }
 }
 
