@@ -1,10 +1,6 @@
-import config, { enviroment } from "../config/config";
-import { baseMediaUrl, betaDomain } from "../constants";
+import config from "../config/config";
+import { baseMediaUrl } from "../constants";
 
 export const getFullMediaUrl = (path: string): string => {
-  const domain =
-  enviroment === "development"
-      ? `${config.server.hostName}:${config.server.port}`
-      : betaDomain;
-  return path ? domain + baseMediaUrl + path : '';
+  return path ? config.server.domainAssets + "/" + baseMediaUrl + path : "";
 };

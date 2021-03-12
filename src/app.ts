@@ -9,7 +9,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
 import ReadingRouter from "./router/reading";
 import BaseRouter from "./router/baseRouter";
-import config from './config/config';
+import config from "./config/config";
 import UserRouter from "./router/users";
 import MultipleChoiceRouter from "./router/multipleChoice";
 import ListeningComprehension from "./router/listeningComprehension";
@@ -32,7 +32,7 @@ class AppRouter extends BaseRouter {
     private user: UserRouter,
     private multipleChoice: MultipleChoiceRouter,
     private unit: UnitRouter,
-    private flashCard: FlashCardRouter,
+    private flashCard: FlashCardRouter
   ) {
     super();
     this.appRouter = express();
@@ -43,13 +43,25 @@ class AppRouter extends BaseRouter {
     this.appRouter.use(bodyParser.json({ limit: "50mb" }));
     /** Routes go here */
 
-    this.appRouter.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    this.appRouter.use(
+      "/swagger",
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument)
+    );
     // this.appRouter.get("/swagger", swaggerUi.setup(swaggerDocument));
 
     /** Error handling */
     this.appRouter.use((req, res, next) => {
-      const port= process.env.PORT || config.server.port;
-      this.log(`Request`, `doamin: ${req.hostname}${port} Request:${req.originalUrl}, " METHOD: ", ${req.method}`);
+      const port = process.env.PORT || config.server.port;
+      config.server.domainAssets = `${
+        req.hostname === "localhost"
+          ? req.hostname + ":" + config.server.port
+          : "https://" + req.hostname
+      }`;
+      this.log(
+        `Request`,
+        `doamin: ${req.hostname} - port:${port} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
+      );
       this.log("Request data:", req.body);
       next();
     });
