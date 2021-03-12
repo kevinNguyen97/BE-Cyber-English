@@ -8,8 +8,7 @@ import BaseRouter from "./baseRouter";
 import { User } from "../models/User.model";
 import CacheService from "../services/cache.service";
 import FlashCardService from "../services/flashCard.service";
-import { FlashCard, FlashCardData } from "../models/FlashCard";
-import Authentication from "../middleware/Authentication";
+import {  FlashCardData } from "../models/FlashCard";
 
 @singleton()
 class FlashCardRouter extends BaseRouter {
@@ -172,8 +171,6 @@ class FlashCardRouter extends BaseRouter {
       }
 
       const isExistVocabulary = await this.flashCardServ.checkIsExistId(id);
-
-console.log(isExistVocabulary)
 
       if (!isExistVocabulary) {
         return this.handleError(
