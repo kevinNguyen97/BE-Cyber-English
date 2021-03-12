@@ -33,6 +33,8 @@ const SERVER = {
   domainAssets: SERVER_DOMAIN_ASSETS,
 };
 
+console.log(SERVER)
+
 const config = {
   mysql: MYSQL,
   server: SERVER,
