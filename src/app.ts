@@ -53,11 +53,7 @@ class AppRouter extends BaseRouter {
     /** Error handling */
     this.appRouter.use((req, res, next) => {
       const port = process.env.PORT || config.server.port;
-      config.server.domainAssets = `${
-        req.hostname === "localhost"
-          ? req.hostname + ":" + config.server.port
-          : "https://" + req.hostname
-      }`;
+
       this.log(
         `Request`,
         `doamin: ${req.hostname} - port:${port} Request:${req.originalUrl}, " METHOD: ", ${req.method}`

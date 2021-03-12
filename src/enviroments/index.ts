@@ -7,7 +7,8 @@ const config = {
   MYSQL_CONNECTIONLIMIT: 10,
 
   SERVER_HOSTNAME: 'localhost',
-  SERVER_PORT: 3000
+  SERVER_PORT: 3000,
+  SERVER_DOMAIN_ASSETS:'https://api.cyber-english.tk'
 };
 
 export default config;
