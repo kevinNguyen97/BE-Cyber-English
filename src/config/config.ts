@@ -33,7 +33,7 @@ const SERVER = {
   domainAssets: SERVER_DOMAIN_ASSETS,
 };
 
-console.log(SERVER)
+console.log(process.env.SERVER_DOMAIN_ASSETS)
 
 const config = {
   mysql: MYSQL,
