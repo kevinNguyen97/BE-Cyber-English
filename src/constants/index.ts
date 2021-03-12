@@ -1,5 +1,5 @@
 export const baseMediaUrl = "media/";
-export const betaDomain = "https://www.api.cyber-english.tk/";
+export const betaDomain = "https://api.cyber-english.tk/";
 export const regex = {
   bracketParentheses: /\((.*?)\)/,
 };
