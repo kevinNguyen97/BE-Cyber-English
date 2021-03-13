@@ -3,7 +3,7 @@
       {
           "name": "BECyberEnglish",
           "script": "./index.js",
-          "exec_mode": "cluster",
+          "exec_mode": "fork",
           "instances": 1,
           "env": {
               "DB_USER": "root",
