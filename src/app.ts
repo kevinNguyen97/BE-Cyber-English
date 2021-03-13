@@ -15,6 +15,8 @@ import MultipleChoiceRouter from "./router/multipleChoice";
 import ListeningComprehension from "./router/listeningComprehension";
 import UnitRouter from "./router/unit";
 import FlashCardRouter from "./router/flashCard";
+import pm2Doc from "./pm2Config.json";
+
 
 // const myrouter = {
 //   vocabularyRouter: container.resolve(ReadingRouter).router,
@@ -61,6 +63,8 @@ class AppRouter extends BaseRouter {
       this.log("Request data:", req.body);
       next();
     });
+
+    console.log("demaoin: ",process.env.SERVER_DOMAIN_ASSETS)
     // static
     this.appRouter.use(express.static("public"));
 

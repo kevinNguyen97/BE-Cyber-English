@@ -1,18 +1,17 @@
 import dotenv from "dotenv";
 import myConfig from "../enviroments";
-import envConfig from "../config.env";
 
 dotenv.config();
 
-const MYSQL_HOST = envConfig.MYSQL_HOST || myConfig.MYSQL_HOST || "";
+const MYSQL_HOST = process.env.MYSQL_HOST || myConfig.MYSQL_HOST || "";
 const MYSQL_DATABASE =
-  envConfig.MYSQL_DATABASE || myConfig.MYSQL_DATABASE || "";
-const MYSQL_USER = envConfig.MYSQL_USER || myConfig.MYSQL_USER || "";
+  process.env.MYSQL_DATABASE || myConfig.MYSQL_DATABASE || "";
+const MYSQL_USER = process.env.MYSQL_USER || myConfig.MYSQL_USER || "";
 const MYSQL_PASSWORD =
-  envConfig.MYSQL_PASSWORD || myConfig.MYSQL_PASSWORD || "";
-const MYSQL_PORT = envConfig.MYSQL_PORT || myConfig.MYSQL_PORT || "";
+  process.env.MYSQL_PASSWORD || myConfig.MYSQL_PASSWORD || "";
+const MYSQL_PORT = process.env.MYSQL_PORT || myConfig.MYSQL_PORT || "";
 const MYSQL_CONNECTIONLIMIT =
-  envConfig.MYSQL_CONNECTIONLIMIT || myConfig.MYSQL_CONNECTIONLIMIT || 10;
+  process.env.MYSQL_CONNECTIONLIMIT || myConfig.MYSQL_CONNECTIONLIMIT || 10;
 
 const MYSQL = {
   host: MYSQL_HOST,
@@ -23,10 +22,10 @@ const MYSQL = {
   connectionLimit: Number(MYSQL_CONNECTIONLIMIT),
 };
 
-const SERVER_HOSTNAME = envConfig.SERVER_HOSTNAME || "localhost";
-const SERVER_PORT = envConfig.SERVER_PORT || myConfig.SERVER_PORT || 3000;
+const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || "localhost";
+const SERVER_PORT = process.env.SERVER_PORT || myConfig.SERVER_PORT || 3000;
 const SERVER_DOMAIN_ASSETS =
-  envConfig.SERVER_DOMAIN_ASSETS || myConfig.SERVER_DOMAIN_ASSETS;
+  process.env.SERVER_DOMAIN_ASSETS || myConfig.SERVER_DOMAIN_ASSETS;
 
 const SERVER = {
   hostName: SERVER_HOSTNAME,
@@ -34,7 +33,6 @@ const SERVER = {
   domainAssets: SERVER_DOMAIN_ASSETS,
 };
 
-console.log(envConfig.SERVER_DOMAIN_ASSETS);
 const config = {
   mysql: MYSQL,
   server: SERVER,
