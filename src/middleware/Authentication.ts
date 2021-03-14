@@ -36,7 +36,7 @@ class Authentication {
           .getUserById(userInfo.userId)
           .then((user) => {
             const unit = Number(req.params.unit);
-            if (unit && user.currentUnit < unit) {
+            if (unit && user.currentUnit < unit && !user.isAdmin) {
               const obj = new ResponseData<any>();
               obj.success = false;
               obj.data = {
