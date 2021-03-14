@@ -108,7 +108,7 @@ export class VocabularyCache extends BaseCache<VocabularyModel> {
     });
   }
 
-  getMediaByUnit(unit: number): VocabularyModel[] {
+  getVocabularyByUnit(unit: number): VocabularyModel[] {
     return this.unitData[unit] ? this.unitData[unit] : [];
   }
 }

@@ -4,7 +4,7 @@ import CacheService from "../services/cache.service";
 import RoleService from "../services/role.service";
 
 const getUserRoleName = (roleID: number): string => {
-  const data = container.resolve(CacheService).role.getMediaById(roleID);
+  const data = container.resolve(CacheService).role.getItemById(roleID);
   return data ? data.name : "";
 };
 export class User {

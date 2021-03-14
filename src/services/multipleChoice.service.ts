@@ -104,7 +104,7 @@ class MultipleChoiceService extends BaseService {
   ): Promise<boolean> => {
     return new Promise<boolean>(async (resolve, reject) => {
       const listData = unit
-        ? this.cacheServ.vocabulary.getMediaByUnit(unit)
+        ? this.cacheServ.vocabulary.getVocabularyByUnit(unit)
         : this.cacheServ.vocabulary.allData;
       if (listData && listData.length) {
         const isExact = !!listData.find(

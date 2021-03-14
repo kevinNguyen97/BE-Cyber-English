@@ -71,27 +71,38 @@ class VocabularyRouter extends BaseRouter {
       [this.checkAuthThenGetuser, this.check("vocabulary").isString()],
       this.getVocabularyDetails
     );
+
+    this.getMethod(
+      "/details/:unit/:id",
+      [this.checkAuthThenGetuser],
+      this.getVocabularyDetailsById
+    );
+
     this.getMethod(
       "/word-list/:page_size/:page_index",
       [this.checkAuthThenGetuser],
       this.getWordListbyUserId
     );
+
     this.postMethod(
       "/word-list",
       [this.checkAuthThenGetuser],
       this.addWordList
     );
+
     this.deleteMethod(
       "/word-list/:wordlist_id",
       [this.isAuth],
       this.deleteWordList
     );
+
     this.patchMethod(
       "/word-list/:wordlist_id",
       [this.isAuth],
       this.highlightWordList
     );
   }
+
   private getVocabularyDetails = async (
     req: express.Request,
     resp: express.Response,
@@ -131,6 +142,64 @@ class VocabularyRouter extends BaseRouter {
           resp,
           responseData,
           [`vocabulary is not exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      responseData.success = true;
+      responseData.data = vocabularyDetails;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private getVocabularyDetailsById = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const unit = Number(req.params.unit);
+      const vocabularyId = Number(req.params.id);
+
+      this.log(unit, `${vocabularyId}`);
+
+      if (!vocabularyId || !unit) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invalid vocabulary | unit`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const isExistUnit = await this.unitService.checkUnitsExist(unit);
+      if (!isExistUnit) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`unit ${unit} is not exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const vocabularyDetails = await this.vocabularySev.getVocabularyDetailById(
+        vocabularyId,
+        unit
+      );
+
+      if (!vocabularyDetails) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invaild and unit`],
           ResponseCode.BAD_REQUEST
         );
       }

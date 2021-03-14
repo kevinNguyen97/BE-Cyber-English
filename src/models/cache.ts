@@ -10,7 +10,7 @@ export class CacheModel<T> {
 // tslint:disable-next-line: max-classes-per-file
 export class BaseCache<T> {
   protected data: CacheModel<T>[] = [];
-  getMediaById(id: number): T | undefined {
+  getItemById(id: number): T | undefined {
     return this.data.find((item) => item.id === id)?.data;
   }
   get allData() {

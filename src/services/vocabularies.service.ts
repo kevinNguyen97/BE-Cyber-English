@@ -29,7 +29,7 @@ class VocabularyService extends BaseService {
 
   getListVocabularyByUnit = (unit: number): Promise<VocabularyModel[]> => {
     return new Promise(async (resolve, reject) => {
-      const data: VocabularyModel[] = this.cacheServ.vocabulary.getMediaByUnit(
+      const data: VocabularyModel[] = this.cacheServ.vocabulary.getVocabularyByUnit(
         unit
       );
       resolve(data);
@@ -85,7 +85,7 @@ class VocabularyService extends BaseService {
     return new Promise(async (resolve, reject) => {
       const data = unit
         ? this.cacheServ.vocabulary
-            .getMediaByUnit(unit)
+            .getVocabularyByUnit(unit)
             ?.find((item) => item.id === id)
         : this.cacheServ.vocabulary.allData.find((item) => item.id === id);
       if (data) {

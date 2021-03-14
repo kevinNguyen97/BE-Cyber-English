@@ -41,7 +41,7 @@
         "application/json"
     ],
     "paths": {
-        "/vocabulary/unit/{unit}": {
+        "/api/vocabulary/unit/{unit}": {
             "parameters": [
                 {
                     "name": "unit",
@@ -69,7 +69,7 @@
                 }
             }
         },
-        "/vocabulary/details/{unit}": {
+        "/api/vocabulary/details/{unit}": {
             "parameters": [
                 {
                     "$ref": "#/definitions/auth"
@@ -112,7 +112,44 @@
                 }
             }
         },
-        "/vocabulary/word-list/{page_size}/{page_index}": {
+        "/api/vocabulary/details/{unit}/{id}": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Vocabulary"
+                ],
+                "parameters": [
+                    {
+                        "name": "unit",
+                        "in": "path",
+                        "required": true,
+                        "description": "unit that we want to match",
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "id vocebulary to get detail",
+                        "type": "string"
+                    }
+                ],
+                "summary": "Get detail vocabulary",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "vocabulary is not exist1"
+                    }
+                }
+            }
+        },
+        "/api/vocabulary/word-list/{page_size}/{page_index}": {
             "parameters": [
                 {
                     "$ref": "#/definitions/auth"
@@ -149,7 +186,7 @@
                 }
             }
         },
-        "/vocabulary/word-list": {
+        "/api/vocabulary/word-list": {
             "parameters": [
                 {
                     "$ref": "#/definitions/auth"
@@ -185,7 +222,7 @@
                 }
             }
         },
-        "/vocabulary/word-list/{wordlist_id}": {
+        "/api/vocabulary/word-list/{wordlist_id}": {
             "parameters": [
                 {
                     "$ref": "#/definitions/auth"
@@ -238,7 +275,7 @@
                 }
             }
         },
-        "/reading/unit/{unit}": {
+        "/api/reading/unit/{unit}": {
             "parameters": [
                 {
                     "name": "unit",
@@ -266,7 +303,7 @@
                 }
             }
         },
-        "/multiple-choice/unit/{unit}": {
+        "/api/multiple-choice/unit/{unit}": {
             "parameters": [
                 {
                     "name": "unit",
@@ -343,7 +380,7 @@
                 }
             }
         },
-        "/listening/unit/{unit}": {
+        "/api/listening/unit/{unit}": {
             "parameters": [
                 {
                     "name": "unit",
@@ -417,7 +454,7 @@
                 }
             }
         },
-        "/unit/all": {
+        "/api/unit/all": {
             "parameters": [
                 {
                     "$ref": "#/definitions/auth"
@@ -438,7 +475,7 @@
                 }
             }
         },
-        "/flash-card": {
+        "/api/flash-card": {
             "parameters": [
                 {
                     "$ref": "#/definitions/auth"
@@ -491,7 +528,7 @@
                 }
             }
         },
-        "/flash-card/{id}": {
+        "/api/flash-card/{id}": {
             "parameters": [
                 {
                     "name": "id",
@@ -519,7 +556,7 @@
                 }
             }
         },
-        "/user/login": {
+        "/api/user/login": {
             "post": {
                 "tags": [
                     "User"
