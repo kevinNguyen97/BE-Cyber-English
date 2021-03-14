@@ -1,4 +1,5 @@
 import { numberOrNull, stringOrNull } from "../interfaces/types";
+import { stringToBase64 } from "../ultils/Ultil";
 import { MediaModel } from "./media.model";
 import { UnitsModel } from "./Units.model";
 
@@ -48,7 +49,6 @@ export class ReadingDiscussionQuestions {
   unit: numberOrNull = null;
   questtion: stringOrNull = null;
   translate: stringOrNull = null;
-  isExact: boolean = false;
   orther: stringOrNull = null;
 
   constructor(data: any) {
@@ -60,7 +60,7 @@ export class ReadingDiscussionQuestions {
       this.unit = data?.unit;
       this.questtion = data?.questtion;
       this.translate = data?.translate;
-      this.isExact = !!data?.is_exact;
+
       this.orther = data?.orther;
     }
   }
@@ -84,6 +84,7 @@ export class ReadingComprehensionQuestions {
   questtion: stringOrNull = null;
   translate: stringOrNull = null;
   orther: stringOrNull = null;
+  isExact: boolean = false;
 
   constructor(data: any) {
     if (data) {
@@ -95,6 +96,7 @@ export class ReadingComprehensionQuestions {
       this.questtion = data?.questtion;
       this.translate = data?.translate;
       this.orther = data?.orther;
+      this.isExact = !!data?.is_exact;
     }
   }
 
@@ -103,6 +105,7 @@ export class ReadingComprehensionQuestions {
       id: this.id,
       questtion: this.questtion,
       translate: this.translate,
+      code: stringToBase64(this.isExact.toString()),
     };
   };
 }
