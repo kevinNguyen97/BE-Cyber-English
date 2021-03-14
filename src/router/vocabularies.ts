@@ -169,8 +169,6 @@ class VocabularyRouter extends BaseRouter {
       const unit = Number(req.params.unit);
       const vocabularyId = Number(req.params.id);
 
-      this.log(unit, `${vocabularyId}`);
-
       if (!vocabularyId || !unit) {
         return this.handleError(
           resp,
@@ -238,8 +236,6 @@ class VocabularyRouter extends BaseRouter {
         pageSize,
         pageIndex
       );
-
-      this.log(dataWordlist);
 
       const vocabularies = this.cacheServ.vocabulary.allData;
 

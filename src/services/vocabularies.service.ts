@@ -113,7 +113,7 @@ class VocabularyService extends BaseService {
           if (err) {
             this.log(err, "");
             reject(err);
-          } else if (result) {
+          } else if (result && result.length) {
             const userWorklist: UserWorkList[] = result.map(
               (item: any) => new UserWorkList(item)
             );

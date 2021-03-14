@@ -21,7 +21,6 @@ const MYSQL = {
   port: Number(MYSQL_PORT),
   connectionLimit: Number(MYSQL_CONNECTIONLIMIT),
 };
-
 const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || "localhost";
 const SERVER_PORT = process.env.SERVER_PORT || myConfig.SERVER_PORT || 3000;
 const SERVER_DOMAIN_ASSETS =

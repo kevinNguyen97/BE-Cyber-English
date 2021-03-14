@@ -35,15 +35,15 @@
             },
             "env_staging": {
                 "NODE_ENV": "staging",
-                "MYSQL_DATABASE": "r4b8weicc0brc2ug",
-                "MYSQL_HOST": "d6rii63wp64rsfb5.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-                "MYSQL_USER": "klc5xu2y827rszj7",
-                "MYSQL_PASSWORD": "l1ev5gbwzda2965l",
+                "MYSQL_DATABASE": "staging_cyber_english",
+                "MYSQL_HOST": "61.14.233.134",
+                "MYSQL_USER": "englishStaging",
+                "MYSQL_PASSWORD": "cyberEngl1sh@123",
                 "MYSQL_PORT": 3306,
                 "MYSQL_CONNECTIONLIMIT": 10,
-                "SERVER_HOSTNAME": "localhost",
+                "SERVER_HOSTNAME": "61.14.233.134",
                 "SERVER_PORT": 3000,
-                "SERVER_DOMAIN_ASSETS": "http://staging:3000"
+                "SERVER_DOMAIN_ASSETS": "http://61.14.233.134:3001"
             }
         }
     ]
