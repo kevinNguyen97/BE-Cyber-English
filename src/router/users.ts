@@ -12,7 +12,7 @@ import { User, UserLoginResponse } from "../models/User.model";
 class UserRouter extends BaseRouter {
   constructor(
     // private auth: Authentication,
-    private userSev: UserService,
+    private userSev: UserService
   ) {
     super();
     this.init();
@@ -23,96 +23,97 @@ class UserRouter extends BaseRouter {
     // code
     this.postMethod(
       "/login",
-      [check("username").isString(), check("password").isString()],
-      async (
-        req: express.Request,
-        resp: express.Response,
-        next: express.NextFunction,
-        responseData: ResponseData<any>
-      ) => {
-        try {
-          const username = req.body.username;
-          const password = req.body.password;
-
-          const dataLogin: any = await this.userSev.login(username, password);
-          const user: User = dataLogin.user;
-          if (!dataLogin.usernameIsCorrect) {
-            return this.handleError(
-              resp,
-              responseData,
-              [
-                `incorrect_username`,
-              ],
-              ResponseCode.BAD_REQUEST
-            );
-          }
-          if (!dataLogin.passwordIsCorrect) {
-            return this.handleError(
-              resp,
-              responseData,
-              [
-                `incorrect_password`,
-              ],
-              ResponseCode.BAD_REQUEST
-            );
-          }
-          if (user) {
-            const token: string | undefined = await this.userSev.getToken(user);
-            responseData.success = true;
-            responseData.data = new UserLoginResponse(token, user);
-
-            return resp.status(ResponseCode.OK).json(responseData);
-          } else {
-            responseData.success = false;
-            responseData.data = null;
-            return resp.status(ResponseCode.UNAUTHORIZED).json(responseData);
-          }
-        } catch (error) {
-          return handleError(
-            resp,
-            ResponseCode.INTERNAL_SERVER_ERROR,
-            error,
-            this.nameSpace
-          );
-        }
-      }
-    );
-    this.postMethod(
-      "/details",
-      [this.isAuth, this.check("vocabulary").isString()],
-      this.getVocabularyDetails
+      [
+        check("username").isString(),
+        check("password").isString(),
+        check("facebookID").isString(),
+        check("facebookEmail").isEmpty(),
+      ],
+      this.handleLogin
     );
   }
-  getVocabularyDetails = async (
+
+  private handleLogin = async (
     req: express.Request,
     resp: express.Response,
     next: express.NextFunction,
     responseData: ResponseData<any>
   ) => {
-    const vocabulary = String(req.body.vocabulary).trim();
+    try {
+      const username = req.body.username.trim();
+      const password = req.body.password.trim();
+      const facebookID = Number(req.body.facebookID.trim());
+      const facebookEmail = req.body.facebookEmail;
 
-    if (!vocabulary) {
-      return this.handleError(
+      if (!username && !facebookID) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`required login by userName of facebookID`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+      let user: User;
+      if (username) {
+        const dataLogin: any = await this.userSev.login(username, password);
+        user = dataLogin.user;
+        if (!dataLogin.usernameIsCorrect) {
+          return this.handleError(
+            resp,
+            responseData,
+            [`incorrect_username`],
+            ResponseCode.BAD_REQUEST
+          );
+        }
+        if (!dataLogin.passwordIsCorrect) {
+          return this.handleError(
+            resp,
+            responseData,
+            [`incorrect_password`],
+            ResponseCode.BAD_REQUEST
+          );
+        }
+      } else {
+        const dataLogin = await this.userSev.loginByFacebookID(facebookID);
+        let dataLoginFromCyber;
+        if (!dataLogin.existFacebookId) {
+          dataLoginFromCyber = await this.userSev.loginCyberLearn(
+            facebookID,
+            facebookEmail
+          );
+          if (!dataLoginFromCyber || !dataLoginFromCyber.id) {
+            return this.handleError(
+              resp,
+              responseData,
+              [`facebool is not exist in our system`],
+              ResponseCode.BAD_REQUEST
+            );
+          }
+          user = await this.userSev.storageCyberLearnLogin(dataLoginFromCyber);
+        } else {
+          user = dataLogin.user;
+        }
+      }
+
+      if (user) {
+        const token: string | undefined = await this.userSev.getToken(user);
+        responseData.success = true;
+        responseData.data = new UserLoginResponse(token, user);
+
+        return resp.status(ResponseCode.OK).json(responseData);
+      } else {
+        responseData.success = false;
+        responseData.data = null;
+        return resp.status(ResponseCode.UNAUTHORIZED).json(responseData);
+      }
+    } catch (error) {
+      return handleError(
         resp,
-        responseData,
-        [`invalid vocabulary`],
-        ResponseCode.BAD_REQUEST
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
       );
     }
-
-    const vocabularyDetails = null
-    if (!vocabulary) {
-      return this.handleError(
-        resp,
-        responseData,
-        [`vocabulary is not exist`],
-        ResponseCode.BAD_REQUEST
-      );
-    }
-
-    responseData.success = true;
-    responseData.data = vocabularyDetails;
-    return resp.status(ResponseCode.OK).json(responseData);
   };
 }
 

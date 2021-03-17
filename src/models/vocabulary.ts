@@ -1,4 +1,4 @@
-import { getFullMediaUrl } from "../helpers/mediaUrl";
+import { getFullMediaUrl } from "../helpers/assestsURL";
 import { stringOrNull } from "../interfaces/types";
 import { BaseCache, CacheModel } from "./cache";
 export class VocabularyModel {

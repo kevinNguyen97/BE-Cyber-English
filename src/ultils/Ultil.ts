@@ -1,4 +1,6 @@
 import { irregular, plural, regex, singular, uncountable } from "../constants";
+import { container } from 'tsyringe';
+import CacheService from "../services/cache.service";
 
 export const getRandomFloat = (max: number, min: number = 0): number =>
   Math.random() * (max - min) + min;
@@ -58,3 +60,8 @@ export const stringToBase64 = (str: string): string =>
 export const timeStampMillisSeconds = () => Date.now();
 // tslint:disable-next-line: no-bitwise
 export const timeStampSeconds = () => (Date.now() / 1000) | 0;
+
+export const getUserRoleName = (roleID: number): string => {
+  const data = container.resolve(CacheService).role.getItemById(roleID);
+  return data ? data.name : "";
+};

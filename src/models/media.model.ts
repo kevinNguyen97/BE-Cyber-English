@@ -1,5 +1,4 @@
-import { getFullMediaUrl } from "../helpers/mediaUrl";
-import { numberOrNull, stringOrNull } from "../interfaces/types";
+import { getFullMediaUrl } from "../helpers/assestsURL";
 import { BaseCache, CacheModel } from "./cache";
 
 export class MediaModel {

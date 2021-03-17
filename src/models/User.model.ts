@@ -1,49 +1,45 @@
-import { container } from "tsyringe";
 import ROLE from "../constants/role.constant";
-import CacheService from "../services/cache.service";
-import RoleService from "../services/role.service";
+import { getUserRoleName } from '../ultils/Ultil';
 
-const getUserRoleName = (roleID: number): string => {
-  const data = container.resolve(CacheService).role.getItemById(roleID);
-  return data ? data.name : "";
-};
 export class User {
   id: number = 0;
-  firstName: string = "";
-  lastName: string = "";
+  fullame: string = "";
   userEmail: string = "";
-  nickname: string = "";
   userRole: number = 0;
-  avatarUrl: string = "";
-  displayName: string = "";
   dateConnected: number = 0;
+  facebookID: number = 0;
+  cyberID: string = "";
   userLogin: string = "";
-  currentUnit: number = 0;
   userPass: string = "";
-  address: string = "";
-  userRoleName: string = "";
+  currentUnit: number = 0;
+  avatarUrl: string = "";
   isActiveAccount: boolean = false;
-  isAdmin: boolean = false;
+  orther: any;
+  created: number = 0;
   modified: number = 0;
+  isAdmin: boolean = false;
+  userRoleName: string = "";
+  displayName: string = "";
+
   constructor(data: any) {
     if (data && data.id) {
       this.id = data.id;
-      this.firstName = data.first_name;
       this.modified = data.modified;
-      this.lastName = data.last_name;
       this.userEmail = data.user_email;
-      this.nickname = data.nickname;
       this.userRole = data.user_role;
       this.avatarUrl = data.avatar_url;
       this.displayName = data.display_name;
       this.dateConnected = data.date_connected;
       this.userLogin = data.user_login;
       this.userPass = data.user_pass;
-      this.address = data.address;
       this.isActiveAccount = !!data.is_active_account;
       this.currentUnit = data.current_unit;
+      this.created = data.created;
+      this.cyberID = data.cyber_id;
+      this.facebookID = data.facebook_id;
+      this.fullame = data.full_name;
       this.userRoleName = getUserRoleName(this.userRole);
-        this.isAdmin = this.userRoleName === ROLE.ADMIN;
+      this.isAdmin = this.userRoleName === ROLE.ADMIN;
     }
   }
 }
@@ -51,24 +47,56 @@ export class User {
 // tslint:disable-next-line: max-classes-per-file
 export class UserLoginResponse {
   id: number | null = null;
-  firstName: string = "";
-  lastName: string = "";
+  fullName: string = "";
   displayName: string = "";
   userEmail: string = "";
   userRole: number = 0;
   userRoleName: string = "";
-  country: string = "";
   authKey: string = "";
-  constructor(authKey: string = "", data?: User) {
+  constructor(authKey: string = "", data?: User ) {
     if (data) {
       this.authKey = authKey;
       this.id = data.id;
-      this.firstName = data.firstName;
-      this.lastName = data.lastName;
+      this.fullName = data.fullame;
       this.displayName = data.displayName;
       this.userEmail = data.userEmail;
       this.userRole = data.userRole;
       this.userRoleName = data.userRoleName;
+    }
+  }
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class UserLoginFromCyberLearn {
+  id: string = "";
+  email: string = "";
+  hoTen: string = "";
+  biDanh: string = "";
+  soDT: string = "";
+  avatar: string = "";
+  urls: string = "";
+  facebookId: string = "";
+  facebookEmail: string = "";
+  thongTinMoRong: string = "";
+  maNhomQuyen: string = "";
+  danhSachLopHoc: string = "";
+  ngayTao: string = "";
+
+  constructor(data: any) {
+    if (data) {
+      this.id = data.id;
+      this.email = data.email;
+      this.hoTen = data.hoTen;
+      this.biDanh = data.biDanh;
+      this.soDT = data.soDT;
+      this.avatar = data.avatar;
+      this.urls = data.urls;
+      this.facebookId = data.facebookId;
+      this.facebookEmail = data.facebookEmail;
+      this.thongTinMoRong = data.thongTinMoRong;
+      this.maNhomQuyen = data.maNhomQuyen;
+      this.danhSachLopHoc = data.danhSachLopHoc;
+      this.ngayTao = data.ngayTao;
     }
   }
 }

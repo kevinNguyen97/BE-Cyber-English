@@ -65,7 +65,6 @@ class AppRouter extends BaseRouter {
     });
 
     // static
-    this.appRouter.use(express.static("public"));
 
     this.appRouter.use("/api/vocabulary", this.vocabulary.router);
     this.appRouter.use("/api/listening", this.listening.router);

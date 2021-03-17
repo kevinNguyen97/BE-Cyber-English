@@ -15,12 +15,14 @@ class BaseRouter {
   public isAuth: any;
   public checkAuthThenGetuser: any;
   public isUserLoggedIn: any;
+  public checkIsAdmin: any;
   check = check;
 
   constructor() {
     this.isAuth = this.auth.isAuth;
     this.isUserLoggedIn = this.auth.isUserLoggedIn;
     this.checkAuthThenGetuser = this.auth.checkThenGetuser;
+    this.checkIsAdmin = this.auth.checkIsAdmin;
     this.router = express.Router();
   }
 
