@@ -577,6 +577,12 @@
                                 },
                                 "password": {
                                     "type": "string"
+                                },
+                                "facebookID": {
+                                    "type": "string"
+                                },
+                                "facebookEmail": {
+                                    "type": "string"
                                 }
                             }
                         }
