@@ -43,6 +43,17 @@ class CacheService extends BaseService {
     }
   };
 
+  refreshVocabularyCache = async () => {
+    try {
+      this.log("", "start refresh cache getAllVocabularies");
+      const data = await this.getAllVocabularies();
+      this.vocabulary = new VocabularyCache(data);
+      this.log("", "finish refresh cache VocabularyCache");
+    } catch (error) {
+      this.logErr(error);
+    }
+  };
+
   getRoleCache = async () => {
     try {
       this.log("", "start cache getAllRole");

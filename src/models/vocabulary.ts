@@ -112,3 +112,12 @@ export class VocabularyCache extends BaseCache<VocabularyModel> {
     return this.unitData[unit] ? this.unitData[unit] : [];
   }
 }
+
+export type T_VocabularyContent = {
+  vocabulary: string;
+  vocabularyTranslate: string;
+  dictionaryEntry: string;
+  dictionaryEntryTranslate: string;
+  exampleSentences: string;
+  exampleSentencesTranslate: string;
+};

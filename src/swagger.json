@@ -30,8 +30,12 @@
             "description": "API for Unit"
         },
         {
-            "name": "flash card",
-            "description": "API for flash card"
+            "name": "Flash card",
+            "description": "API for Flash card"
+        },
+        {
+            "name": "Admin",
+            "description": "admin management"
         }
     ],
     "consumes": [
@@ -483,9 +487,9 @@
             ],
             "get": {
                 "tags": [
-                    "flash card"
+                    "Flash card"
                 ],
-                "summary": "Get list flash card of user",
+                "summary": "Get list Flash card of user",
                 "responses": {
                     "200": {
                         "$ref": "#/definitions/200"
@@ -497,11 +501,11 @@
             },
             "patch": {
                 "tags": [
-                    "flash card"
+                    "Flash card"
                 ],
                 "parameters": [
                     {
-                        "name": "body to set Day remind flash card",
+                        "name": "body to set Day remind Flash card",
                         "in": "body",
                         "required": false,
                         "schema": {
@@ -517,7 +521,7 @@
                         }
                     }
                 ],
-                "summary": "set Day remind flash card",
+                "summary": "set Day remind Flash card",
                 "responses": {
                     "200": {
                         "$ref": "#/definitions/200"
@@ -534,7 +538,7 @@
                     "name": "id",
                     "in": "path",
                     "required": true,
-                    "description": "id flash card to delete",
+                    "description": "id Flash card to delete",
                     "type": "string"
                 },
                 {
@@ -543,9 +547,9 @@
             ],
             "delete": {
                 "tags": [
-                    "flash card"
+                    "Flash card"
                 ],
-                "summary": "delete flash card",
+                "summary": "delete Flash card",
                 "responses": {
                     "200": {
                         "$ref": "#/definitions/200"
@@ -595,6 +599,65 @@
                     },
                     "404": {
                         "description": "Failed. unit not found."
+                    }
+                }
+            }
+        },
+        "/api/vocabulary/update-content/{vocabularyId}": {
+            "parameters": [
+                {
+                    "name": "vocabularyId",
+                    "in": "path",
+                    "required": true,
+                    "description": "vopcabulary",
+                    "type": "number"
+                },
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "patch": {
+                "tags": [
+                    "Vocabulary",
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "name": "body content vocabulary",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "vocabulary": {
+                                    "type": "string"
+                                },
+                                "vocabularyTranslate": {
+                                    "type": "string"
+                                },
+                                "dictionaryEntry": {
+                                    "type": "string"
+                                },
+                                "dictionaryEntryTranslate": {
+                                    "type": "string"
+                                },
+                                "exampleSentences": {
+                                    "type": "string"
+                                },
+                                "exampleSentencesTranslate": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "summary": "admin update vocabulary content",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "bad request"
                     }
                 }
             }

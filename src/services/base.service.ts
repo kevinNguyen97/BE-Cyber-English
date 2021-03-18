@@ -11,12 +11,13 @@ class BaseService {
   private logger: LoggerService = container.resolve(LoggerService);
   constructor() {
     this.connection = container.resolve(DBService).getConnection();
-
   }
 
   get timeNow(): number {
     return timeStampSeconds();
   }
+
+  refreshData = () => {};
 
   protected log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);

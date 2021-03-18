@@ -7,6 +7,8 @@ import UnitService from "../services/unit.service";
 import BaseRouter from "./baseRouter";
 import { User } from "../models/User.model";
 import CacheService from "../services/cache.service";
+import { T_VocabularyContent } from "../models/vocabulary";
+import { doubleQuotationMark } from "../ultils/Ultil";
 
 @singleton()
 class VocabularyRouter extends BaseRouter {
@@ -100,6 +102,20 @@ class VocabularyRouter extends BaseRouter {
       "/word-list/:wordlist_id",
       [this.isAuth],
       this.highlightWordList
+    );
+
+    this.patchMethod(
+      "/update-content/:vocabularyId",
+      [
+        this.checkIsAdmin,
+        this.check("vocabulary").isString(),
+        this.check("vocabularyTranslate").isString(),
+        this.check("dictionaryEntry").isString(),
+        this.check("dictionaryEntryTranslate").isString(),
+        this.check("exampleSentences").isString(),
+        this.check("exampleSentencesTranslate").isString(),
+      ],
+      this.updateVocabulary
     );
   }
 
@@ -449,6 +465,89 @@ class VocabularyRouter extends BaseRouter {
       );
       responseData.success = true;
       responseData.data = wordListHighlight;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private updateVocabulary = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const vocabularyId = Number(req.params.vocabularyId);
+      const user = req.body.userData;
+
+      const body: T_VocabularyContent = {
+        vocabulary: req.body.vocabulary
+          ? doubleQuotationMark(req.body.vocabulary.trim())
+          : "",
+        vocabularyTranslate: req.body.vocabularyTranslate
+          ? doubleQuotationMark(req.body.vocabularyTranslate.trim())
+          : "",
+        dictionaryEntry: req.body.dictionaryEntry
+          ? doubleQuotationMark(req.body.dictionaryEntry.trim())
+          : "",
+        dictionaryEntryTranslate: req.body.dictionaryEntryTranslate
+          ? doubleQuotationMark(req.body.dictionaryEntryTranslate.trim())
+          : "",
+        exampleSentences: req.body.exampleSentences
+          ? doubleQuotationMark(req.body.exampleSentences.trim())
+          : "",
+        exampleSentencesTranslate: req.body.exampleSentencesTranslate
+          ? doubleQuotationMark(req.body.exampleSentencesTranslate.trim())
+          : "",
+      };
+      console.log(body);
+
+      if (!vocabularyId) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invalid vocabulary Id`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const isExistVoca = await this.vocabularySev.checkVocabularyIsExistById(
+        vocabularyId
+      );
+
+      if (!isExistVoca) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`wordlist is exist`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const vocabularyUpdated = await this.vocabularySev.updateVocabularyById(
+        vocabularyId,
+        body
+      );
+
+      if (!vocabularyUpdated) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`updateing faild`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      this.cacheServ.refreshVocabularyCache();
+
+      responseData.success = true;
+      responseData.data = vocabularyUpdated;
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(

@@ -1,6 +1,7 @@
 import { irregular, plural, regex, singular, uncountable } from "../constants";
-import { container } from 'tsyringe';
+import { container } from "tsyringe";
 import CacheService from "../services/cache.service";
+import "ts-replace-all";
 
 export const getRandomFloat = (max: number, min: number = 0): number =>
   Math.random() * (max - min) + min;
@@ -65,3 +66,5 @@ export const getUserRoleName = (roleID: number): string => {
   const data = container.resolve(CacheService).role.getItemById(roleID);
   return data ? data.name : "";
 };
+
+export const doubleQuotationMark = (str: string) => str.replaceAll("'", "''");

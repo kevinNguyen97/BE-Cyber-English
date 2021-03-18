@@ -1,6 +1,10 @@
 import "reflect-metadata";
 import { singleton } from "tsyringe";
-import { UserWorkList, VocabularyModel } from "../models/vocabulary";
+import {
+  T_VocabularyContent,
+  UserWorkList,
+  VocabularyModel,
+} from "../models/vocabulary";
 import { getRandomInt, toSingular } from "../ultils/Ultil";
 import BaseService from "./base.service";
 import "ts-replace-all";
@@ -273,6 +277,36 @@ class VocabularyService extends BaseService {
       resolve(data);
     });
   };
+
+  updateVocabularyById = (
+    id: number,
+    body: T_VocabularyContent
+  ): Promise<any> =>
+    new Promise(async (resolve, reject) => {
+      const feildTranslate = "`translate`";
+      this.connection.query(
+        `UPDATE vocabularies
+        SET modified=${this.timeNow},dictionary_entry_translate='${body.dictionaryEntryTranslate}',
+            vocabulary='${body.vocabulary}',example_sentences='${body.exampleSentences}',
+            ${feildTranslate}='${body.vocabularyTranslate}',example_sentences_translate='${body.exampleSentencesTranslate}',
+            dictionary_entry='${body.dictionaryEntry}'
+        WHERE id=${id};`,
+        (err, result) => {
+          if (err) {
+            this.log(err, "");
+            return reject(err);
+          }
+          if (result) {
+            return resolve({
+              id,
+              ...body,
+            });
+          } else {
+            return resolve(null);
+          }
+        }
+      );
+    });
 }
 
 export default VocabularyService;
