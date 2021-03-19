@@ -506,7 +506,6 @@ class VocabularyRouter extends BaseRouter {
           ? doubleQuotationMark(req.body.exampleSentencesTranslate.trim())
           : "",
       };
-      console.log(body);
 
       if (!vocabularyId) {
         return this.handleError(

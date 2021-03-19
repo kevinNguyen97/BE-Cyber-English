@@ -479,6 +479,28 @@
                 }
             }
         },
+        "/api/unit/all-unit-detail": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Unit",
+                    "Admin"
+                ],
+                "summary": "Get all unit just for admin",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            }
+        },
         "/api/flash-card": {
             "parameters": [
                 {
