@@ -99,7 +99,14 @@ class UserService extends BaseService {
       );
     });
 
-  loginByFacebookID = (facebookID: number): Promise<any> =>
+  loginByFacebookID = (
+    facebookID: number
+  ): Promise<{
+    usernameIsCorrect: boolean;
+    passwordIsCorrect: boolean;
+    existFacebookId: boolean;
+    user: User;
+  }> =>
     new Promise((resolve, reject) => {
       this.connection.query(
         `SELECT * FROM users WHERE facebook_id='${facebookID}'`,
