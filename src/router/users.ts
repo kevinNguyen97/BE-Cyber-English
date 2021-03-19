@@ -45,16 +45,8 @@ class UserRouter extends BaseRouter {
       const facebookID = Number(req.body.facebookID.trim());
       const facebookEmail = req.body.facebookEmail;
 
-      if (!username && !facebookID) {
-        return this.handleError(
-          resp,
-          responseData,
-          [`required login by userName of facebookID`],
-          ResponseCode.BAD_REQUEST
-        );
-      }
       let user: User;
-      if (username) {
+      if (username && password) {
         const dataLogin: any = await this.userSev.login(username, password);
         user = dataLogin.user;
         if (!dataLogin.usernameIsCorrect) {
@@ -73,7 +65,7 @@ class UserRouter extends BaseRouter {
             ResponseCode.BAD_REQUEST
           );
         }
-      } else {
+      } else if (facebookID) {
         const dataLogin = await this.userSev.loginByFacebookID(facebookID);
         let dataLoginFromCyber;
         if (!dataLogin.existFacebookId) {
@@ -85,7 +77,7 @@ class UserRouter extends BaseRouter {
             return this.handleError(
               resp,
               responseData,
-              [`facebool is not exist in our system`],
+              [`facebook is not exist in system`],
               ResponseCode.BAD_REQUEST
             );
           }
@@ -93,6 +85,13 @@ class UserRouter extends BaseRouter {
         } else {
           user = dataLogin.user;
         }
+      } else {
+        return this.handleError(
+          resp,
+          responseData,
+          [`required login by userName of facebookID`],
+          ResponseCode.BAD_REQUEST
+        );
       }
 
       if (user) {
