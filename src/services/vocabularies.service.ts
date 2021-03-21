@@ -217,7 +217,7 @@ class VocabularyService extends BaseService {
   highlightWordList = (worklistId: number): Promise<number> => {
     return new Promise(async (resolve, reject) => {
       this.connection.query(
-        `UPDATE user_worklist SET modified=${this.timeNow},is_deleted=0,is_highlight=1 WHERE id=${worklistId};`,
+        `UPDATE user_worklist SET modified=${this.timeNow},is_deleted=0,is_highlight=if(is_highlight=0,1,0) WHERE id=${worklistId};`,
         (err, result) => {
           if (err) {
             this.log(err, "");

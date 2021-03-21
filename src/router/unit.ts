@@ -28,9 +28,13 @@ class UnitRouter extends BaseRouter {
       this.getAllUnitDetail
     );
     this.patchMethod(
-      "/update-content",
-      [this.checkIsAdmin],
-      this.updatenitTitle
+      "/update-content:unit",
+      [this.checkIsAdmin,
+      this.check('title').isString().isEmpty(),
+      this.check('translate').isString().isEmpty(),
+      this.check('').isString().isEmpty(),
+      this.check('').isString().isEmpty(),],
+      this.updatUnitTitle
     );
   }
 
@@ -70,7 +74,6 @@ class UnitRouter extends BaseRouter {
     responseData: ResponseData<any>
   ) => {
     try {
-      const user: User = req.body.userData;
 
       const listUnits = await this.unitService.getAllUnit();
 
@@ -89,24 +92,38 @@ class UnitRouter extends BaseRouter {
     }
   };
 
-  private updatenitTitle = async (
+  private updatUnitTitle = async (
     req: express.Request,
     resp: express.Response,
     next: express.NextFunction,
     responseData: ResponseData<any>
   ) => {
     try {
-      const user: User = req.body.userData;
+      const unit = Number(req.params.unit);
 
-      const currentUnit = user.currentUnit;
+      if (!unit)
+      return this.handleError(
+        resp,
+        responseData,
+        [`invaild unit ${unit}`],
+        ResponseCode.BAD_REQUEST
+      );
+
+      const isExistUnit = await this.unitService.checkUnitsExist(unit)
+
+      if (!isExistUnit)
+      return this.handleError(
+        resp,
+        responseData,
+        [`unit ${unit} is not exist`],
+        ResponseCode.BAD_REQUEST
+      );
+
       const listUnits = await this.unitService.getAllUnit();
 
-      const dataResponse = listUnits
-        .map((unit) => new UnitsResponse(unit, unit.unit <= currentUnit))
-        .sort((a, b) => a.unit - b.unit);
 
       responseData.success = true;
-      responseData.data = dataResponse;
+      responseData.data = true;
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(
