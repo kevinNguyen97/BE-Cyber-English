@@ -1,6 +1,6 @@
 export const baseMediaUrl = "/media/";
 export const baseAvatarUrl = "/img/avatar";
-export const cyberLearnFacebookLoginURI = '/quyen/checkuser/'
+export const cyberLearnFacebookLoginURI = '/quyen/checkuser'
 export const regex = {
   bracketParentheses: /\((.*?)\)/,
 };
