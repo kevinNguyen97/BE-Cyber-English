@@ -37,15 +37,15 @@
             },
             "env_staging": {
                 "NODE_ENV": "staging",
-                "MYSQL_DATABASE": "staging_cyber_english",
+                "MYSQL_DATABASE": "cyber_english",
                 "MYSQL_HOST": "61.14.233.134",
                 "MYSQL_USER": "englishStaging",
                 "MYSQL_PASSWORD": "cyberEngl1sh@123",
                 "MYSQL_PORT": 3306,
                 "MYSQL_CONNECTIONLIMIT": 10,
-                "SERVER_HOSTNAME": "http://be.cyber-english.tk",
+                "SERVER_HOSTNAME": "http://be.eng.cybersoft.edu.vn",
                 "SERVER_PORT": 3000,
-                "SERVER_DOMAIN_ASSETS": "http://be.cyber-english.tk",
+                "SERVER_DOMAIN_ASSETS": "http://be.eng.cybersoft.edu.vn",
                 "URL_CHECK_LOGIN": "https://apicrm.cybersoft.edu.vn/api"
             }
         }
