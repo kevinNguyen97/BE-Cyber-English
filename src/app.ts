@@ -44,29 +44,18 @@ class AppRouter extends BaseRouter {
     this.appRouter.use(bodyParser.urlencoded({ extended: false }));
     this.appRouter.use(bodyParser.json({ limit: "50mb" }));
     /** Routes go here */
-    if (process.env.NODE_ENV !== "production") {
-      this.appRouter.use(
-        "/api/swagger",
-        swaggerUi.serve,
-        swaggerUi.setup(swaggerDocument)
-      );
-    }
+    this.appRouter.use(
+      "/api/swagger",
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument)
+    );
 
     // this.appRouter.get("/api/swagger", swaggerUi.setup(swaggerDocument));
 
     /** Error handling */
     this.appRouter.use((req, res, next) => {
       const port = process.env.PORT || config.server.port;
-      if (
-        process.env.NODE_ENV === "production" &&
-        req.hostname !== "eng.cybersoft.edu.vn"
-      ) {
-        const responseData = new ResponseData();
-        responseData.data = null;
-        responseData.success = false;
-        responseData.errorCodes = ["auth"];
-        return res.status(401).json(responseData);
-      }
+
       this.log(
         `Request`,
         `${req.hostname} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
