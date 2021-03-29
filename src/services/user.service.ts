@@ -9,6 +9,7 @@ import { cyberLearnFacebookLoginURI } from "../constants";
 import axios from "axios";
 import CacheService from "./cache.service";
 import { Role } from "../models/role.model";
+import {  plusUnitTimestampOnDays } from "../helpers/time";
 
 @singleton()
 class UserService extends BaseService {
@@ -102,8 +103,6 @@ class UserService extends BaseService {
   loginByFacebookID = (
     facebookID: number
   ): Promise<{
-    usernameIsCorrect: boolean;
-    passwordIsCorrect: boolean;
     existFacebookId: boolean;
     user: User;
   }> =>
@@ -113,8 +112,6 @@ class UserService extends BaseService {
         async (err, result) => {
           if (err) return reject(err);
           const data = {
-            usernameIsCorrect: false,
-            passwordIsCorrect: false,
             existFacebookId: false,
             user: new User(null),
           };
@@ -127,13 +124,41 @@ class UserService extends BaseService {
       );
     });
 
-  loginCyberLearn = async (
-    fbID: number,
+  loginByFacebookEmail = (
+    facebookEmail: string
+  ): Promise<{
+    existFacebookEmail: boolean;
+    user: User;
+  }> =>
+    new Promise((resolve, reject) => {
+      this.connection.query(
+        `SELECT * FROM users WHERE user_email='${facebookEmail}'`,
+        async (err, result) => {
+          if (err) return reject(err);
+          const data = {
+            existFacebookEmail: false,
+            user: new User(null),
+          };
+          if (result && result.length > 0) {
+            data.existFacebookEmail = true;
+            data.user = new User(result[0]);
+          }
+          resolve(data);
+        }
+      );
+    });
+
+  loginCyberLearnByEmail = async (
     email?: string
   ): Promise<UserLoginFromCyberLearn | null> =>
     new Promise((resolve) => {
       const url =
-        config.extenalServer + cyberLearnFacebookLoginURI + fbID + "/" + email;
+        config.extenalServer +
+        cyberLearnFacebookLoginURI +
+        "/" +
+        null +
+        "/" +
+        email;
       axios
         .get(url)
         .then((res) => {
@@ -161,7 +186,8 @@ class UserService extends BaseService {
   };
 
   storageCyberLearnLogin = async (
-    user: UserLoginFromCyberLearn
+    user: UserLoginFromCyberLearn,
+    facebookId: string | number
   ): Promise<User> =>
     new Promise((resolve, reject) => {
       const role = this.getRoleID(user.maNhomQuyen);
@@ -170,13 +196,15 @@ class UserService extends BaseService {
         user.email,
         role.id,
         this.timeNow,
-        user.facebookId,
+        facebookId,
         user.id,
         this.timeNow,
         this.timeNow,
+        plusUnitTimestampOnDays(this.timeNow, 40),
+        JSON.stringify(user),
       ];
       this.connection.query(
-        `INSERT INTO users (full_name,user_email,user_role,date_connected,facebook_id,cyber_id,created,modified)
+        `INSERT INTO users (full_name,user_email,user_role,date_connected,facebook_id,cyber_id,created,modified, date_expired, orther)
           VALUES (?);`,
         [tempData],
         (err, result) => {

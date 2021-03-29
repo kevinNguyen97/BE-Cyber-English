@@ -17,7 +17,7 @@ import UnitRouter from "./router/unit";
 import FlashCardRouter from "./router/flashCard";
 import pm2ProdDoc from "./pm2Config.prod.json";
 import pm2stagingDoc from "./pm2Config.staging.json";
-
+import { ResponseData } from "./models/response";
 
 // const myrouter = {
 //   vocabularyRouter: container.resolve(ReadingRouter).router,
@@ -39,29 +39,39 @@ class AppRouter extends BaseRouter {
   ) {
     super();
     this.appRouter = express();
-    this.appRouter.use(cors());
     /** Parse the body of the request */
     this.appRouter.use(cors());
     this.appRouter.use(bodyParser.urlencoded({ extended: false }));
     this.appRouter.use(bodyParser.json({ limit: "50mb" }));
     /** Routes go here */
+    if (process.env.NODE_ENV !== "production") {
+      this.appRouter.use(
+        "/api/swagger",
+        swaggerUi.serve,
+        swaggerUi.setup(swaggerDocument)
+      );
+    }
 
-    this.appRouter.use(
-      "/api/swagger",
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument)
-    );
     // this.appRouter.get("/api/swagger", swaggerUi.setup(swaggerDocument));
 
     /** Error handling */
     this.appRouter.use((req, res, next) => {
       const port = process.env.PORT || config.server.port;
-
+      if (
+        process.env.NODE_ENV === "production" &&
+        req.hostname !== "eng.cybersoft.edu.vn"
+      ) {
+        const responseData = new ResponseData();
+        responseData.data = null;
+        responseData.success = false;
+        responseData.errorCodes = ["auth"];
+        return res.status(401).json(responseData);
+      }
       this.log(
         `Request`,
-        `doamin: ${req.hostname} - port:${port} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
+        `${req.hostname} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
       );
-      this.log("Request data:", req.body);
+      this.log("Request data:", JSON.stringify(req.body));
       next();
     });
 

@@ -23,17 +23,17 @@ class UserRouter extends BaseRouter {
     // code
     this.postMethod(
       "/login",
-      [
-        check("username").isString(),
-        check("password").isString(),
-        check("facebookID").isString(),
-        check("facebookEmail").isEmpty(),
-      ],
+      [check("facebookID").notEmpty(), check("facebookEmail").notEmpty()],
       this.handleLogin
+    );
+    this.postMethod(
+      "/admin-login",
+      [check("username").notEmpty(), check("password").notEmpty()],
+      this.handleAdminLogin
     );
   }
 
-  private handleLogin = async (
+  private handleAdminLogin = async (
     req: express.Request,
     resp: express.Response,
     next: express.NextFunction,
@@ -42,37 +42,90 @@ class UserRouter extends BaseRouter {
     try {
       const username = req.body.username.trim();
       const password = req.body.password.trim();
-      const facebookID = Number(req.body.facebookID.trim());
-      const facebookEmail = req.body.facebookEmail;
 
       let user: User;
-      if (username && password) {
-        const dataLogin: any = await this.userSev.login(username, password);
-        user = dataLogin.user;
-        if (!dataLogin.usernameIsCorrect) {
-          return this.handleError(
-            resp,
-            responseData,
-            [`incorrect_username`],
-            ResponseCode.BAD_REQUEST
+      const dataLogin: any = await this.userSev.login(username, password);
+      user = dataLogin.user;
+      if (!dataLogin.usernameIsCorrect) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`incorrect_username`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+      if (!dataLogin.passwordIsCorrect) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`incorrect_password`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      if (!user.isAdmin) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`UNAUTHORIZED`],
+          ResponseCode.UNAUTHORIZED
+        );
+      }
+
+      if (user) {
+        const token: string | undefined = await this.userSev.getToken(user);
+        responseData.success = true;
+        responseData.data = new UserLoginResponse(token, user);
+
+        return resp.status(ResponseCode.OK).json(responseData);
+      } else {
+        responseData.success = false;
+        responseData.data = null;
+        return resp.status(ResponseCode.UNAUTHORIZED).json(responseData);
+      }
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private handleLogin = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const facebookID = req.body.facebookID.trim();
+      const facebookEmail = req.body.facebookEmail.trim();
+      const emailRegisted = req.body.email.trim();
+
+      if (!facebookID || !facebookEmail) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`facebook email or facebook id is invaild`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      let user: User;
+      const dataLogin = await this.userSev.loginByFacebookID(facebookID);
+      let dataLoginFromCyber;
+      if (!dataLogin.existFacebookId) {
+        dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
+          facebookEmail
+        );
+        this.log(dataLoginFromCyber, "step1");
+        if ((!dataLoginFromCyber || !dataLoginFromCyber.id) && emailRegisted) {
+          dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
+            emailRegisted
           );
-        }
-        if (!dataLogin.passwordIsCorrect) {
-          return this.handleError(
-            resp,
-            responseData,
-            [`incorrect_password`],
-            ResponseCode.BAD_REQUEST
-          );
-        }
-      } else if (facebookID) {
-        const dataLogin = await this.userSev.loginByFacebookID(facebookID);
-        let dataLoginFromCyber;
-        if (!dataLogin.existFacebookId) {
-          dataLoginFromCyber = await this.userSev.loginCyberLearn(
-            facebookID,
-            facebookEmail
-          );
+          this.log(dataLoginFromCyber, "step2");
           if (!dataLoginFromCyber || !dataLoginFromCyber.id) {
             return this.handleError(
               resp,
@@ -81,17 +134,20 @@ class UserRouter extends BaseRouter {
               ResponseCode.BAD_REQUEST
             );
           }
-          user = await this.userSev.storageCyberLearnLogin(dataLoginFromCyber);
-        } else {
-          user = dataLogin.user;
+        } else if (!dataLoginFromCyber || !dataLoginFromCyber.id) {
+          return this.handleError(
+            resp,
+            responseData,
+            [`facebook is not exist in system`],
+            ResponseCode.BAD_REQUEST
+          );
         }
-      } else {
-        return this.handleError(
-          resp,
-          responseData,
-          [`required login by userName of facebookID`],
-          ResponseCode.BAD_REQUEST
+        user = await this.userSev.storageCyberLearnLogin(
+          dataLoginFromCyber,
+          facebookID
         );
+      } else {
+        user = dataLogin.user;
       }
 
       if (user) {

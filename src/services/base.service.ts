@@ -17,7 +17,9 @@ class BaseService {
     return timeStampSeconds();
   }
 
-  refreshData = () => {};
+  refreshData = () => {
+
+  };
 
   protected log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);
