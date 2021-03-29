@@ -94,13 +94,13 @@ class VocabularyRouter extends BaseRouter {
 
     this.deleteMethod(
       "/word-list/:wordlist_id",
-      [this.isAuth],
+      [this.checkAuthThenGetuser],
       this.deleteWordList
     );
 
     this.patchMethod(
       "/word-list/:wordlist_id",
-      [this.isAuth],
+      [this.checkAuthThenGetuser],
       this.highlightWordList
     );
 

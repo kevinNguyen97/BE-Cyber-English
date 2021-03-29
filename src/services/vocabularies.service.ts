@@ -156,7 +156,7 @@ class VocabularyService extends BaseService {
   ): Promise<boolean> => {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `SELECT * FROM user_worklist WHERE user_id = ${userId} AND vocabulary_id = ${vocabularyId}`,
+        `SELECT * FROM user_worklist WHERE user_id = ${userId} AND vocabulary_id = ${vocabularyId} AND is_deleted = 0`,
         (err, result) => {
           if (err) {
             this.log(err, "");
@@ -187,7 +187,11 @@ class VocabularyService extends BaseService {
     return new Promise(async (resolve, reject) => {
       this.connection.query(
         `INSERT INTO user_worklist (created,modified,vocabulary_id,user_id,is_highlight,is_deleted)
-        VALUES (${this.timeNow},${this.timeNow},${vocabularyId},${userId},false,false);`,
+        VALUES (${this.timeNow},${this.timeNow},${vocabularyId},${userId},false,false)
+      ON DUPLICATE KEY UPDATE
+        modified = ${this.timeNow},
+        is_deleted = false,
+        is_highlight = false;`,
         (err, result) => {
           if (err) {
             this.log(err, "");

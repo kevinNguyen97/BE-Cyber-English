@@ -1,5 +1,6 @@
 import ROLE from "../constants/role.constant";
-import { getUserRoleName } from '../ultils/Ultil';
+import { calculateDaysRemaining } from "../helpers/time";
+import { getUserRoleName, timeStampSeconds } from '../ultils/Ultil';
 
 export class User {
   id: number = 0;
@@ -7,6 +8,7 @@ export class User {
   userEmail: string = "";
   userRole: number = 0;
   dateConnected: number = 0;
+  dateExpired: number = 0;
   facebookID: number = 0;
   cyberID: string = "";
   userLogin: string = "";
@@ -20,6 +22,7 @@ export class User {
   isAdmin: boolean = false;
   userRoleName: string = "";
   displayName: string = "";
+  dateRemaining: number = 0;
 
   constructor(data: any) {
     if (data && data.id) {
@@ -38,8 +41,10 @@ export class User {
       this.cyberID = data.cyber_id;
       this.facebookID = data.facebook_id;
       this.fullame = data.full_name;
+      this.dateExpired = data.date_expired;
       this.userRoleName = getUserRoleName(this.userRole);
       this.isAdmin = this.userRoleName === ROLE.ADMIN;
+      this.dateRemaining = calculateDaysRemaining(timeStampSeconds(),this.dateExpired)
     }
   }
 }
@@ -53,6 +58,8 @@ export class UserLoginResponse {
   userRole: number = 0;
   userRoleName: string = "";
   authKey: string = "";
+  dateRemaining: number = 0;
+
   constructor(authKey: string = "", data?: User ) {
     if (data) {
       this.authKey = authKey;
@@ -62,6 +69,7 @@ export class UserLoginResponse {
       this.userEmail = data.userEmail;
       this.userRole = data.userRole;
       this.userRoleName = data.userRoleName;
+      this.dateRemaining = data.dateRemaining;
     }
   }
 }
