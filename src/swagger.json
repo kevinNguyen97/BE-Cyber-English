@@ -582,6 +582,27 @@
                 }
             }
         },
+        "/api/user/infor": {
+            "parameters": [
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "get user information",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "Failed. unit not found."
+                    }
+                }
+            }
+        },
         "/api/user/admin-login": {
             "post": {
                 "tags": [

@@ -39,7 +39,7 @@ export class UnitsResponse {
   title: stringOrNull = null;
   translate: stringOrNull = null;
   orther: stringOrNull = null;
-  isLock: boolean = true;
+  isLocked: boolean = true;
   constructor(unit: UnitsModel, _isLock: boolean = true) {
     this.id = unit.id;
     this.created = unit.created;
@@ -49,6 +49,6 @@ export class UnitsResponse {
     this.title = unit.title;
     this.translate = unit.translate;
     this.orther = unit.orther;
-    this.isLock = _isLock;
+    this.isLocked = _isLock;
   }
 }

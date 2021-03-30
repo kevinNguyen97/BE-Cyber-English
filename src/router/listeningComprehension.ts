@@ -41,8 +41,8 @@ class ListeningComprehension extends BaseRouter {
       "/unit/:unit",
       [
         this.checkAuthThenGetuser,
-        this.check("id").isInt(),
-        this.check("answer").isString(),
+        this.check("id").notEmpty(),
+        this.check("answer").notEmpty(),
       ],
       this.checkAnswer
     );
