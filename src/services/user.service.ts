@@ -205,7 +205,10 @@ class UserService extends BaseService {
       ];
       this.connection.query(
         `INSERT INTO users (full_name,user_email,user_role,date_connected,facebook_id,cyber_id,created,modified, date_expired, orther)
-          VALUES (?);`,
+          VALUES (?)
+        ON DUPLICATE KEY UPDATE
+          modified = ${this.timeNow},
+          facebook_id = ${facebookId}`,
         [tempData],
         (err, result) => {
           if (err) return reject(err);
