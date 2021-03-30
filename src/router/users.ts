@@ -23,7 +23,7 @@ class UserRouter extends BaseRouter {
     // code
     this.postMethod(
       "/login",
-      [check("facebookID").notEmpty(), check("facebookEmail").notEmpty()],
+      [check("facebookID").notEmpty(), check("facebookEmail")],
       this.handleLogin
     );
 
@@ -128,11 +128,11 @@ class UserRouter extends BaseRouter {
       const facebookEmail = req.body.facebookEmail.trim();
       const emailRegisted = req.body.email.trim();
 
-      if (!facebookID || !facebookEmail) {
+      if (!facebookID || (!facebookEmail && !emailRegisted)) {
         return this.handleError(
           resp,
           responseData,
-          [`facebook email or facebook id is invaild`],
+          [`required facebookid, and (facebookEmail or email)`],
           ResponseCode.BAD_REQUEST
         );
       }
@@ -144,12 +144,10 @@ class UserRouter extends BaseRouter {
         dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
           facebookEmail
         );
-        this.log(dataLoginFromCyber, "step1");
         if ((!dataLoginFromCyber || !dataLoginFromCyber.id) && emailRegisted) {
           dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
             emailRegisted
           );
-          this.log(dataLoginFromCyber, "step2");
           if (!dataLoginFromCyber || !dataLoginFromCyber.id) {
             return this.handleError(
               resp,
