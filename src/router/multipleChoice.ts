@@ -41,9 +41,9 @@ class MultipleChoiceRouter extends BaseRouter {
       "/unit/:unit",
       [
         this.checkAuthThenGetuser,
-        this.check("id").isInt(),
-        this.check("vocabulary").isString(),
-        this.check("answer").isString(),
+        this.check("id").notEmpty(),
+        this.check("vocabulary").notEmpty(),
+        this.check("answer").notEmpty(),
       ],
       this.checkAnswer
     );
@@ -151,8 +151,8 @@ class MultipleChoiceRouter extends BaseRouter {
       const unit = Number(req.params.unit);
 
       const idVocabulary = Number(req.body.id);
-      const vocabulary = req.body.vocabulary.trim();
-      const answer = req.body.answer.trim();
+      const vocabulary = req.body.vocabulary ? req.body.vocabulary.trim() : "";
+      const answer = req.body.answer ? req.body.answer.trim() : "";
 
       if (!idVocabulary || !answer || !unit)
         return this.handleError(
@@ -185,6 +185,7 @@ class MultipleChoiceRouter extends BaseRouter {
       }
 
       const dataProcess = await this.getProcessMultipleChoice(user, unit);
+
       const canUpdateUnit = await this.unitService.canUpdateCurrentUnit(
         user,
         unit,

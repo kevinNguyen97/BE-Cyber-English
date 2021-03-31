@@ -56,7 +56,7 @@ class MultipleChoiceService extends BaseService {
                 mulitple_choice_user mcu
               LEFT JOIN vocabularies v ON
                 mcu.vocabulary_id = v.id
-              WHERE mcu.user_id = ${userId} AND mcu.unit = ${unit} AND is_checked = 1;`,
+              WHERE mcu.user_id = ${userId} AND mcu.unit = ${unit};`,
         (err, result) => {
           if (err) {
             reject(err);
@@ -125,10 +125,10 @@ class MultipleChoiceService extends BaseService {
     return new Promise(async (resolve, reject) => {
       this.connection.query(
         `INSERT IGNORE INTO mulitple_choice_user (created,modified,user_id,vocabulary_id,unit,count_replies,is_checked)
-           VALUES (${this.timeNow},${this.timeNow},${userId},${vocabularyId},${unit},count_replies +1,1)
+           VALUES (${this.timeNow},${this.timeNow},${userId},${vocabularyId},${unit},count_replies + 1,1)
            ON DUPLICATE KEY UPDATE
               modified = ${this.timeNow},
-                 count_replies = IF(is_checked != 1, count_replies+1,count_replies),
+              count_replies = IF(is_checked != 1, count_replies + 1, count_replies),
               is_checked = 1;`,
         (err, result) => {
           if (err) {
@@ -152,7 +152,7 @@ class MultipleChoiceService extends BaseService {
             VALUES (${this.timeNow},${this.timeNow},${userId},${vocabularyId},${unit}, 1)
           ON DUPLICATE KEY UPDATE
             modified = ${this.timeNow},
-            count_replies = IF(is_checked != 1, count_replies+1,count_replies);`,
+            count_replies = IF(is_checked != 1, count_replies + 1, count_replies);`,
         (err, result) => {
           if (err) {
             this.log(err, "");
