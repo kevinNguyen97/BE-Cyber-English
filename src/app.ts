@@ -15,14 +15,8 @@ import MultipleChoiceRouter from "./router/multipleChoice";
 import ListeningComprehension from "./router/listeningComprehension";
 import UnitRouter from "./router/unit";
 import FlashCardRouter from "./router/flashCard";
-import pm2ProdDoc from "./pm2Config.prod.json";
+import pm2ProdDoc from "./pm2Config.prod.json"; 
 import pm2stagingDoc from "./pm2Config.staging.json";
-import { ResponseData } from "./models/response";
-
-// const myrouter = {
-//   vocabularyRouter: container.resolve(ReadingRouter).router,
-//   readingRouter: container.resolve(VocabularyRouter).router,
-// };
 
 @singleton()
 class AppRouter extends BaseRouter {

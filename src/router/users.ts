@@ -7,6 +7,7 @@ import { handleError, ResponseCode, ResponseData } from "../models/response";
 import UserService from "../services/user.service";
 import BaseRouter from "./baseRouter";
 import { User, UserLoginResponse } from "../models/User.model";
+import config from "../config/config";
 
 @singleton()
 class UserRouter extends BaseRouter {
@@ -124,11 +125,13 @@ class UserRouter extends BaseRouter {
     responseData: ResponseData<any>
   ) => {
     try {
-      const facebookID = req.body.facebookID.trim();
-      const facebookEmail = req.body.facebookEmail.trim();
-      const emailRegisted = req.body.email.trim();
+      const facebookID = req.body.facebookID ? Number(req.body.facebookID) : 0;
+      const facebookEmail = req.body.facebookEmail
+        ? req.body.facebookEmail.trim()
+        : "";
+      const emailRegisted = req.body.email ? req.body.email.trim() : "";
 
-      if (!facebookID || (!facebookEmail && !emailRegisted)) {
+      if ((!facebookID && !facebookEmail) || (!facebookID && !emailRegisted)) {
         return this.handleError(
           resp,
           responseData,
@@ -136,43 +139,51 @@ class UserRouter extends BaseRouter {
           ResponseCode.BAD_REQUEST
         );
       }
-
-      let user: User;
+      let user: User | null = null;
       const dataLogin = await this.userSev.loginByFacebookID(facebookID);
       let dataLoginFromCyber;
       if (!dataLogin.existFacebookId) {
-        dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
-          facebookEmail
+        dataLoginFromCyber = await this.userSev.loginCyberLearnByFacebookId(
+          facebookID
         );
-        if ((!dataLoginFromCyber || !dataLoginFromCyber.id) && emailRegisted) {
-          dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
-            emailRegisted
-          );
-          if (!dataLoginFromCyber || !dataLoginFromCyber.id) {
-            return this.handleError(
-              resp,
-              responseData,
-              [`facebook is not exist in system`],
-              ResponseCode.BAD_REQUEST
-            );
-          }
-        } else if (!dataLoginFromCyber || !dataLoginFromCyber.id) {
-          return this.handleError(
-            resp,
-            responseData,
-            [`facebook is not exist in system`],
-            ResponseCode.BAD_REQUEST
-          );
-        }
+      }
+
+      if (
+        !dataLogin.existFacebookId &&
+        (!dataLoginFromCyber || !dataLoginFromCyber.id) &&
+        emailRegisted &&
+        !config.isProduction
+      ) {
+        dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
+          emailRegisted
+        );
+      }
+
+      if (
+        !dataLogin.existFacebookId &&
+        !dataLoginFromCyber &&
+        !dataLoginFromCyber?.id
+      ) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`facebook is not exist in system`],
+          ResponseCode.BAD_REQUEST
+        );
+      } else if (
+        !dataLogin.existFacebookId &&
+        dataLoginFromCyber &&
+        dataLoginFromCyber.id
+      ) {
         user = await this.userSev.storageCyberLearnLogin(
           dataLoginFromCyber,
           facebookID
         );
       } else {
-        user = dataLogin.user;
+        user = dataLogin?.user;
       }
 
-      if (user) {
+      if (user && user.id && user.isActiveAccount) {
         const token: string | undefined = await this.userSev.getToken(user);
         responseData.success = true;
         responseData.data = new UserLoginResponse(token, user);

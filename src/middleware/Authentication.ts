@@ -51,7 +51,7 @@ class Authentication {
             const obj = new ResponseData<any>();
             obj.success = false;
             obj.data = {
-              error_code: ["unauthorized"],
+              error_code: ["invaild user "],
             };
             res.status(ResponseCode.UNAUTHORIZED).json(obj);
           });
@@ -60,7 +60,7 @@ class Authentication {
         const obj = new ResponseData<any>();
         obj.success = false;
         obj.data = {
-          error_code: ["unauthorized"],
+          error_code: ["Token Expired"],
         };
         if (err.error_name === "TokenExpiredError") {
           obj.data.error_code = ["Token Expired"];

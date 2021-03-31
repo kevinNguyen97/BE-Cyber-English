@@ -9,7 +9,7 @@ import { cyberLearnFacebookLoginURI } from "../constants";
 import axios from "axios";
 import CacheService from "./cache.service";
 import { Role } from "../models/role.model";
-import {  plusUnitTimestampOnDays } from "../helpers/time";
+import { plusUnitTimestampOnDays } from "../helpers/time";
 
 @singleton()
 class UserService extends BaseService {
@@ -175,6 +175,33 @@ class UserService extends BaseService {
         .catch((err) => resolve(err));
     });
 
+  loginCyberLearnByFacebookId = async (
+    facebookId: number
+  ): Promise<UserLoginFromCyberLearn | null> =>
+    new Promise((resolve) => {
+      const url =
+        config.extenalServer +
+        cyberLearnFacebookLoginURI +
+        "/" +
+        facebookId +
+        "/" +
+        null;
+      axios
+        .get(url)
+        .then((res) => {
+          if (
+            res.data &&
+            Number(res.data.statusCode) === 200 &&
+            res.data.content
+          ) {
+            resolve(new UserLoginFromCyberLearn(res.data.content));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch((err) => resolve(err));
+    });
+
   private getRoleID = (roleName: string): Role => {
     const role = this.cacheServ.role.allData.find(
       (item) => item.name.toLowerCase() === roleName.toLowerCase()
@@ -220,6 +247,7 @@ class UserService extends BaseService {
             data.userEmail = user.email;
             data.userRole = role.id;
             data.userRoleName = role.name;
+            data.isActiveAccount = true
             return resolve(data);
           }
         }
