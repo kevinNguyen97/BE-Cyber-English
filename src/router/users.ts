@@ -26,12 +26,36 @@ class UserRouter extends BaseRouter {
       [check("facebookID").notEmpty(), check("facebookEmail")],
       this.handleLogin
     );
+
+    this.getMethod("/infor", [this.checkAuthThenGetuser], this.handleInforUser);
+
     this.postMethod(
       "/admin-login",
       [check("username").notEmpty(), check("password").notEmpty()],
       this.handleAdminLogin
     );
   }
+
+  private handleInforUser = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+      responseData.success = true;
+      responseData.data = new UserLoginResponse("", user);
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
 
   private handleAdminLogin = async (
     req: express.Request,
