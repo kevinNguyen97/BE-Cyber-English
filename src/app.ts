@@ -18,11 +18,6 @@ import FlashCardRouter from "./router/flashCard";
 import pm2ProdDoc from "./pm2Config.prod.json"; 
 import pm2stagingDoc from "./pm2Config.staging.json";
 
-// const myrouter = {
-//   vocabularyRouter: container.resolve(ReadingRouter).router,
-//   readingRouter: container.resolve(VocabularyRouter).router,
-// };
-
 @singleton()
 class AppRouter extends BaseRouter {
   appRouter = express();

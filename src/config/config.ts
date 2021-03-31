@@ -33,6 +33,7 @@ const config = {
   mysql: MYSQL,
   server: SERVER,
   extenalServer,
+  isProduction: process.env.NODE_ENV === "production",
 };
 
 export default config;
