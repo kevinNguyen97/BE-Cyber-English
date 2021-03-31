@@ -7,6 +7,7 @@ import { handleError, ResponseCode, ResponseData } from "../models/response";
 import UserService from "../services/user.service";
 import BaseRouter from "./baseRouter";
 import { User, UserLoginResponse } from "../models/User.model";
+import config from "../config/config";
 
 @singleton()
 class UserRouter extends BaseRouter {
@@ -150,17 +151,14 @@ class UserRouter extends BaseRouter {
       if (
         !dataLogin.existFacebookId &&
         (!dataLoginFromCyber || !dataLoginFromCyber.id) &&
-        emailRegisted
+        emailRegisted &&
+        !config.isProduction
       ) {
         dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
           emailRegisted
         );
       }
-      console.log(
-        !dataLogin.existFacebookId,
-        dataLoginFromCyber,
-        dataLoginFromCyber?.id
-      );
+
       if (
         !dataLogin.existFacebookId &&
         !dataLoginFromCyber &&
@@ -184,7 +182,7 @@ class UserRouter extends BaseRouter {
       } else {
         user = dataLogin?.user;
       }
-console.log(user )
+
       if (user && user.id && user.isActiveAccount) {
         const token: string | undefined = await this.userSev.getToken(user);
         responseData.success = true;
