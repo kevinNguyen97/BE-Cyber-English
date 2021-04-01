@@ -58,6 +58,7 @@ export class UserLoginResponse {
   userRole: number = 0;
   userRoleName: string = "";
   authKey: string = "";
+  curentUnit: number = 1;
   dateRemaining: number = 0;
 
   constructor(authKey: string = "", data?: User ) {
@@ -70,6 +71,7 @@ export class UserLoginResponse {
       this.userRole = data.userRole;
       this.userRoleName = data.userRoleName;
       this.dateRemaining = data.dateRemaining;
+      this.curentUnit = data.currentUnit
     }
   }
 }
