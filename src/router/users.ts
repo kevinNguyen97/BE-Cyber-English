@@ -201,7 +201,7 @@ class UserRouter extends BaseRouter {
       } else {
         responseData.success = false;
         responseData.data = null;
-        return resp.status(ResponseCode.UNAUTHORIZED).json(responseData);
+        return resp.status(ResponseCode.BAD_REQUEST).json(responseData);
       }
     } catch (error) {
       return handleError(
