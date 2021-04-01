@@ -139,6 +139,7 @@ class UserRouter extends BaseRouter {
           ResponseCode.BAD_REQUEST
         );
       }
+
       let user: User | null = null;
       const dataLogin = await this.userSev.loginByFacebookID(facebookID);
       let dataLoginFromCyber;
