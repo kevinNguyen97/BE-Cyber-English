@@ -151,6 +151,16 @@ class UserRouter extends BaseRouter {
       if (
         !dataLogin.existFacebookId &&
         (!dataLoginFromCyber || !dataLoginFromCyber.id) &&
+        facebookEmail
+      ) {
+        dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
+          facebookEmail
+        );
+      }
+
+      if (
+        !dataLogin.existFacebookId &&
+        (!dataLoginFromCyber || !dataLoginFromCyber.id) &&
         emailRegisted
       ) {
         dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
@@ -191,7 +201,7 @@ class UserRouter extends BaseRouter {
       } else {
         responseData.success = false;
         responseData.data = null;
-        return resp.status(ResponseCode.UNAUTHORIZED).json(responseData);
+        return resp.status(ResponseCode.BAD_REQUEST).json(responseData);
       }
     } catch (error) {
       return handleError(

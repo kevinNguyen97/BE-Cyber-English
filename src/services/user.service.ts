@@ -156,7 +156,7 @@ class UserService extends BaseService {
         config.extenalServer +
         cyberLearnFacebookLoginURI +
         "/" +
-        null +
+        'none' +
         "/" +
         email;
       axios
@@ -185,7 +185,7 @@ class UserService extends BaseService {
         "/" +
         facebookId +
         "/" +
-        null;
+        'none';
       axios
         .get(url)
         .then((res) => {
