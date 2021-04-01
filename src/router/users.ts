@@ -151,6 +151,16 @@ class UserRouter extends BaseRouter {
       if (
         !dataLogin.existFacebookId &&
         (!dataLoginFromCyber || !dataLoginFromCyber.id) &&
+        facebookEmail
+      ) {
+        dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(
+          facebookEmail
+        );
+      }
+
+      if (
+        !dataLogin.existFacebookId &&
+        (!dataLoginFromCyber || !dataLoginFromCyber.id) &&
         emailRegisted
       ) {
         dataLoginFromCyber = await this.userSev.loginCyberLearnByEmail(

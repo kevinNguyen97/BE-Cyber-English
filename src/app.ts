@@ -15,7 +15,7 @@ import MultipleChoiceRouter from "./router/multipleChoice";
 import ListeningComprehension from "./router/listeningComprehension";
 import UnitRouter from "./router/unit";
 import FlashCardRouter from "./router/flashCard";
-import pm2ProdDoc from "./pm2Config.prod.json"; 
+import pm2ProdDoc from "./pm2Config.prod.json";
 import pm2stagingDoc from "./pm2Config.staging.json";
 
 @singleton()
