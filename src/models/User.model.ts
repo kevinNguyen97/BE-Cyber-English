@@ -1,6 +1,6 @@
 import ROLE from "../constants/role.constant";
 import { calculateDaysRemaining } from "../helpers/time";
-import { getUserRoleName, timeStampSeconds } from '../ultils/Ultil';
+import { getUserRoleName, timeStampSeconds } from "../ultils/Ultil";
 
 export class User {
   id: number = 0;
@@ -44,7 +44,10 @@ export class User {
       this.dateExpired = data.date_expired;
       this.userRoleName = getUserRoleName(this.userRole);
       this.isAdmin = this.userRoleName === ROLE.ADMIN;
-      this.dateRemaining = calculateDaysRemaining(timeStampSeconds(),this.dateExpired)
+      this.dateRemaining = calculateDaysRemaining(
+        timeStampSeconds(),
+        this.dateExpired
+      );
     }
   }
 }
@@ -60,8 +63,9 @@ export class UserLoginResponse {
   authKey: string = "";
   curentUnit: number = 1;
   dateRemaining: number = 0;
+  isFirstTimeLogin: boolean = false;
 
-  constructor(authKey: string = "", data?: User ) {
+  constructor(authKey: string = "", data?: User, _isFirstTimeLogin = false) {
     if (data) {
       this.authKey = authKey;
       this.id = data.id;
@@ -71,7 +75,8 @@ export class UserLoginResponse {
       this.userRole = data.userRole;
       this.userRoleName = data.userRoleName;
       this.dateRemaining = data.dateRemaining;
-      this.curentUnit = data.currentUnit
+      this.curentUnit = data.currentUnit;
+      this.isFirstTimeLogin = _isFirstTimeLogin;
     }
   }
 }
