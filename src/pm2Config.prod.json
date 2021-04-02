@@ -16,8 +16,15 @@
                 "SERVER_HOSTNAME": "https://eng.cybersoft.edu.vn",
                 "SERVER_PORT": 2000,
                 "SERVER_DOMAIN_ASSETS": "https://eng.cybersoft.edu.vn",
-                "URL_CHECK_LOGIN": "https://apicrm.cybersoft.edu.vn/api"
+                "URL_CHECK_LOGIN": "https://apicrm.cybersoft.edu.vn/api",
+                "ASSETS_PORT": 2001
             }
+        },
+        {
+            "name": "serveFileEnglish",
+            "script": "./assestService.js",
+            "exec_mode": "fork",
+            "instances": 1
         }
     ]
 }

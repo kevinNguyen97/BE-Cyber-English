@@ -3,7 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 
 import express from "express";
-import { singleton } from "tsyringe";
+import { container, singleton } from "tsyringe";
 import VocabularyRouter from "./router/vocabularies";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
@@ -17,11 +17,13 @@ import UnitRouter from "./router/unit";
 import FlashCardRouter from "./router/flashCard";
 import pm2ProdDoc from "./pm2Config.prod.json";
 import pm2stagingDoc from "./pm2Config.staging.json";
+import LoggerService from "./config/logger";
 
 @singleton()
-class AppRouter extends BaseRouter {
+class AppRouter {
   appRouter = express();
-
+  private logger: LoggerService = container.resolve(LoggerService);
+  private nameSpace = "App"
   constructor(
     private vocabulary: VocabularyRouter,
     private listening: ListeningComprehension,
@@ -31,7 +33,6 @@ class AppRouter extends BaseRouter {
     private unit: UnitRouter,
     private flashCard: FlashCardRouter
   ) {
-    super();
     this.appRouter = express();
     /** Parse the body of the request */
     this.appRouter.use(cors());
@@ -49,10 +50,9 @@ class AppRouter extends BaseRouter {
     /** Error handling */
     this.appRouter.use((req, res, next) => {
       const port = process.env.PORT || config.server.port;
-
       this.log(
         `Request`,
-        `${req.hostname} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
+        `${req.ip} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
       );
       this.log("Request data:", JSON.stringify(req.body));
       next();
@@ -68,6 +68,11 @@ class AppRouter extends BaseRouter {
     this.appRouter.use("/api/unit", this.unit.router);
     this.appRouter.use("/api/user", this.user.router);
   }
+
+  log = (data: any, message: string = "") => {
+    this.logger.info(this.nameSpace, message, data);
+  };
+
 }
 
 export default AppRouter;
