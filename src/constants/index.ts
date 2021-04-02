@@ -1,4 +1,4 @@
-export const baseMediaUrl = "/assets/media/";
+export const baseMediaUrl = "/media/";
 export const baseAvatarUrl = "/img/avatar";
 export const cyberLearnFacebookLoginURI = '/quyen/checkuser'
 export const regex = {
