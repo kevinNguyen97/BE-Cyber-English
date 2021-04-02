@@ -19,12 +19,6 @@
                 "URL_CHECK_LOGIN": "https://apicrm.cybersoft.edu.vn/api",
                 "ASSETS_PORT": 2001
             }
-        },
-        {
-            "name": "serveFileEnglish",
-            "script": "./assestService.js",
-            "exec_mode": "fork",
-            "instances": 1
         }
     ]
 }

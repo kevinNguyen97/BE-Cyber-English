@@ -10,7 +10,7 @@ import { container } from "tsyringe";
 class AssetsRouter {
   assetsRouter = express();
   private logger: LoggerService = container.resolve(LoggerService);
-  private nameSpace = "assets servicw";
+  private nameSpace = "assets service";
   constructor() {
     this.assetsRouter = express();
     /** Parse the body of the request */
