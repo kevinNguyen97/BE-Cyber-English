@@ -20,11 +20,13 @@ const MYSQL = {
 const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || "localhost";
 const SERVER_PORT = process.env.SERVER_PORT || 3000;
 const SERVER_DOMAIN_ASSETS = process.env.SERVER_DOMAIN_ASSETS || "";
+const ASSETS_PORT = process.env.ASSETS_PORT || 3001
 
 const SERVER = {
   hostName: SERVER_HOSTNAME,
   port: SERVER_PORT,
   domainAssets: SERVER_DOMAIN_ASSETS,
+  assestPort: ASSETS_PORT
 };
 
 const extenalServer = process.env.URL_CHECK_LOGIN;

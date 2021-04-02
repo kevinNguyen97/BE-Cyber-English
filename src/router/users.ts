@@ -141,6 +141,7 @@ class UserRouter extends BaseRouter {
       }
 
       let user: User | null = null;
+      let isFirstTimeLogin = false;
       const dataLogin = await this.userSev.loginByFacebookID(facebookID);
       let dataLoginFromCyber;
       if (!dataLogin.existFacebookId) {
@@ -189,6 +190,7 @@ class UserRouter extends BaseRouter {
           dataLoginFromCyber,
           facebookID
         );
+        isFirstTimeLogin = true;
       } else {
         user = dataLogin?.user;
       }
@@ -196,7 +198,7 @@ class UserRouter extends BaseRouter {
       if (user && user.id && user.isActiveAccount) {
         const token: string | undefined = await this.userSev.getToken(user);
         responseData.success = true;
-        responseData.data = new UserLoginResponse(token, user);
+        responseData.data = new UserLoginResponse(token, user, isFirstTimeLogin);
 
         return resp.status(ResponseCode.OK).json(responseData);
       } else {

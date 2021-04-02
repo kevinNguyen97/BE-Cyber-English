@@ -16,7 +16,8 @@
                 "SERVER_HOSTNAME": "https://be.cyber-english.tk",
                 "SERVER_PORT": 4000,
                 "SERVER_DOMAIN_ASSETS": "https://be.cyber-english.tk",
-                "URL_CHECK_LOGIN": "https://apicrm.cybersoft.edu.vn/api"
+                "URL_CHECK_LOGIN": "https://apicrm.cybersoft.edu.vn/api",
+                "ASSETS_PORT": 4001
             }
         }
     ]
