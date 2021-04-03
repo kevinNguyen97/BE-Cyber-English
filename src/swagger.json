@@ -739,6 +739,64 @@
                     }
                 }
             }
+        },
+        "/api/vocabulary/new/{unit}": {
+            "parameters": [
+                {
+                    "name": "unit",
+                    "in": "path",
+                    "required": true,
+                    "description": "vopcabulary",
+                    "type": "number"
+                },
+                {
+                    "$ref": "#/definitions/auth"
+                }
+            ],
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "name": "body content vocabulary",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "vocabulary": {
+                                    "type": "string"
+                                },
+                                "vocabularyTranslate": {
+                                    "type": "string"
+                                },
+                                "dictionaryEntry": {
+                                    "type": "string"
+                                },
+                                "dictionaryEntryTranslate": {
+                                    "type": "string"
+                                },
+                                "exampleSentences": {
+                                    "type": "string"
+                                },
+                                "exampleSentencesTranslate": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "summary": "admin add new vocabulary",
+                "responses": {
+                    "200": {
+                        "$ref": "#/definitions/200"
+                    },
+                    "404": {
+                        "description": "bad request"
+                    }
+                }
+            }
         }
     },
     "definitions": {

@@ -311,6 +311,44 @@ class VocabularyService extends BaseService {
         }
       );
     });
+
+  newVocabulary = (
+    unit,
+    userId: number,
+    dataBody: T_VocabularyContent
+  ): Promise<number> =>
+    new Promise((resolve, reject) => {
+      const dataInsert = [
+        this.timeNow,
+        this.timeNow,
+        dataBody.dictionaryEntryTranslate,
+        dataBody.vocabulary,
+        dataBody.exampleSentences,
+        dataBody.vocabularyTranslate,
+        dataBody.exampleSentencesTranslate,
+        dataBody.dictionaryEntry,
+        userId,
+        unit,
+      ];
+      const feildTranslate = "`translate`";
+      this.connection.query(
+        `INSERT INTO vocabularies (modified,created,dictionary_entry_translate,vocabulary,example_sentences,
+              ${feildTranslate},example_sentences_translate,dictionary_entry,author, unit)
+            VALUES (?);`,
+        [dataInsert],
+        (err, result) => {
+          if (err) {
+            this.log(err, "");
+            return reject(err);
+          }
+          if (result && result.insertId) {
+            return resolve(result.insertId);
+          } else {
+            return resolve(0);
+          }
+        }
+      );
+    });
 }
 
 export default VocabularyService;

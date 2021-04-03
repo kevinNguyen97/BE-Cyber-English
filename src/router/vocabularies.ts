@@ -117,6 +117,20 @@ class VocabularyRouter extends BaseRouter {
       ],
       this.updateVocabulary
     );
+
+    this.postMethod(
+      "/new/:unit",
+      [
+        this.checkIsAdmin,
+        this.check("vocabulary").isString(),
+        this.check("vocabularyTranslate").isString(),
+        this.check("dictionaryEntry").isString(),
+        this.check("dictionaryEntryTranslate").isString(),
+        this.check("exampleSentences").isString(),
+        this.check("exampleSentencesTranslate").isString(),
+      ],
+      this.newVocabulary
+    );
   }
 
   private getVocabularyDetails = async (
@@ -547,6 +561,88 @@ class VocabularyRouter extends BaseRouter {
 
       responseData.success = true;
       responseData.data = vocabularyUpdated;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private newVocabulary = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+      const unit = Number(req.params.unit);
+      const body: T_VocabularyContent = {
+        vocabulary: req.body.vocabulary
+          ? doubleQuotationMark(req.body.vocabulary.trim())
+          : "",
+        vocabularyTranslate: req.body.vocabularyTranslate
+          ? doubleQuotationMark(req.body.vocabularyTranslate.trim())
+          : "",
+        dictionaryEntry: req.body.dictionaryEntry
+          ? doubleQuotationMark(req.body.dictionaryEntry.trim())
+          : "",
+        dictionaryEntryTranslate: req.body.dictionaryEntryTranslate
+          ? doubleQuotationMark(req.body.dictionaryEntryTranslate.trim())
+          : "",
+        exampleSentences: req.body.exampleSentences
+          ? doubleQuotationMark(req.body.exampleSentences.trim())
+          : "",
+        exampleSentencesTranslate: req.body.exampleSentencesTranslate
+          ? doubleQuotationMark(req.body.exampleSentencesTranslate.trim())
+          : "",
+      };
+
+      let isVaildInput = false;
+
+      for (const elem of Object.values(body)) {
+        if (elem) {
+          isVaildInput = true;
+          break;
+        }
+      }
+
+      if (!isVaildInput) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invalid input`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const vocabularyId = await this.vocabularySev.newVocabulary(
+        unit,
+        user.id,
+        body
+      );
+
+      if (!vocabularyId) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`can't not create vocabulary`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      this.cacheServ.refreshVocabularyCache();
+
+      responseData.success = true;
+      responseData.data = {
+        id: vocabularyId,
+        unit,
+        ...body,
+      };
       return resp.status(ResponseCode.OK).json(responseData);
     } catch (error) {
       return handleError(
