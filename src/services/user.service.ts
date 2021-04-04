@@ -227,7 +227,7 @@ class UserService extends BaseService {
         user.id,
         this.timeNow,
         this.timeNow,
-        plusUnitTimestampOnDays(this.timeNow, 40),
+        plusUnitTimestampOnDays(this.timeNow, 150),
         JSON.stringify(user),
       ];
       this.connection.query(

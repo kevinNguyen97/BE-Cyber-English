@@ -23,7 +23,7 @@ import LoggerService from "./config/logger";
 class AppRouter {
   appRouter = express();
   private logger: LoggerService = container.resolve(LoggerService);
-  private nameSpace = "App"
+  private nameSpace = "App";
   constructor(
     private vocabulary: VocabularyRouter,
     private listening: ListeningComprehension,
@@ -59,6 +59,7 @@ class AppRouter {
     });
 
     // static
+    this.appRouter.use("/assets", express.static("public"));
 
     this.appRouter.use("/api/vocabulary", this.vocabulary.router);
     this.appRouter.use("/api/listening", this.listening.router);

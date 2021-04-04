@@ -37,7 +37,7 @@ export class ListeningQuestionResponses {
   constructor(exact: VocabularyModel, _process: ProcessingData) {
     this.id = exact.id;
     this.audioUkUrl = exact.audioDictionaryUK;
-    this.audioUsUrl = exact.audioDictionaryUK;
+    this.audioUsUrl = exact.audioDictionaryUS;
     this.code =  stringToBase64(exact.vocabulary)
     // const getRandomCharacters = (
     //   _vocabulary: string = exact.vocabulary
