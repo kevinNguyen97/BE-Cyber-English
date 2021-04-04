@@ -1,58 +1,52 @@
 import "reflect-metadata";
 import { singleton } from "tsyringe";
+import { logger } from "../helpers/default.logger";
+import { loggerRequest } from "../helpers/request.logger";
 
 @singleton()
 class LoggerService {
   info = (namespace: string, message: string, object?: any) => {
     if (object) {
-      console.info(
-        `[${this.getTimeStamp()}] [INFO] [${namespace}] ${message}`,
-        object
-      );
+      logger.info(`[[${namespace}] ${message}`, object);
     } else {
-      console.info(`[${this.getTimeStamp()}] [INFO] [${namespace}] ${message}`);
+      logger.info(`[${namespace}] ${message}`);
     }
   };
 
   warn = (namespace: string, message: string, object?: any) => {
     if (object) {
-      console.warn(
-        `[${this.getTimeStamp()}] [WARN] [${namespace}] ${message}`,
-        object
-      );
+      logger.warn(`[[${namespace}] ${message}`, object);
     } else {
-      console.warn(`[${this.getTimeStamp()}] [WARN] [${namespace}] ${message}`);
+      logger.warn(`[${namespace}] ${message}`);
     }
   };
 
   error = (namespace: string, message: string, object?: any) => {
     if (object) {
-      console.error(
-        `[${this.getTimeStamp()}] [ERROR] [${namespace}] ${message}`,
-        object
-      );
+      logger.error(`[[${namespace}] ${message}`, object);
     } else {
-      console.error(
-        `[${this.getTimeStamp()}] [ERROR] [${namespace}] ${message}`
-      );
+      logger.error(`[[${namespace}] ${message}`);
     }
   };
 
   debug = (namespace: string, message: string, object?: any) => {
     if (object) {
-      console.debug(
-        `[${this.getTimeStamp()}] [DEBUG] [${namespace}] ${message}`,
-        object
-      );
+      logger.debug(`[[${namespace}] ${message}`, object);
     } else {
-      console.debug(
-        `[${this.getTimeStamp()}] [DEBUG] [${namespace}] ${message}`
-      );
+      logger.debug(`[[${namespace}] ${message}`);
     }
   };
+}
 
-  private getTimeStamp = (): string => {
-    return new Date().toISOString();
+// tslint:disable-next-line: max-classes-per-file
+@singleton()
+export class LoggerRequest {
+  request = (ip: string, originalUrl: string, method: string, object?: any) => {
+    loggerRequest.info(
+      `${ip} Request:${originalUrl}, " METHOD: ", ${method}`,
+      "Request data:",
+      JSON.stringify(object)
+    );
   };
 }
 

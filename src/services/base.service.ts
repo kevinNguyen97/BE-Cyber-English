@@ -18,7 +18,6 @@ class BaseService {
   }
 
   refreshData = () => {
-
   };
 
   protected log = (data: any, message: string = "") => {

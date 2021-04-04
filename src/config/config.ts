@@ -22,6 +22,13 @@ const SERVER_PORT = process.env.SERVER_PORT || 3000;
 const SERVER_DOMAIN_ASSETS = process.env.SERVER_DOMAIN_ASSETS || "";
 const ASSETS_PORT = process.env.ASSETS_PORT || 3001
 
+const LogConfig = {
+  logDir: process.env.LOG_DIR || 'logs',
+  logLevel: process.env.LOG_LEVEL || 'info',
+  logFile: process.env.LOG_FILE || 'appEvent.log',
+  logFileRequest: process.env.LOG_FILE || 'request.log',
+}
+
 const SERVER = {
   hostName: SERVER_HOSTNAME,
   port: SERVER_PORT,
@@ -35,6 +42,7 @@ const config = {
   mysql: MYSQL,
   server: SERVER,
   extenalServer,
+  LogConfig,
   isProduction: process.env.NODE_ENV === "production",
 };
 

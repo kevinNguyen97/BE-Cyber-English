@@ -19,6 +19,7 @@ export class VocabularyModel {
   orther: string = "";
   unit: number = 0;
   oldId: number = 0;
+  isDeleted: boolean = false;
 
   constructor(data: any = null) {
     if (data) {
@@ -40,6 +41,7 @@ export class VocabularyModel {
         audio_dictionary_UK,
         audio_example_Sentences_US,
         audio_example_Sentences_UK,
+        is_deleted,
       } = data;
       this.id = id;
       this.created = created;
@@ -62,6 +64,7 @@ export class VocabularyModel {
       this.audioExampleSentencesUK = getFullMediaUrl(
         audio_example_Sentences_UK
       );
+      this.isDeleted = !!is_deleted;
     }
   }
 }
@@ -109,7 +112,9 @@ export class VocabularyCache extends BaseCache<VocabularyModel> {
   }
 
   getVocabularyByUnit(unit: number): VocabularyModel[] {
-    return this.unitData[unit] ? this.unitData[unit] : [];
+    return this.unitData[unit]
+      ? this.unitData[unit].filter((ele) => ele.isDeleted === false)
+      : [];
   }
 }
 

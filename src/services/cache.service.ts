@@ -83,7 +83,7 @@ class CacheService extends BaseService {
 
   private getAllVocabularies = (): Promise<VocabularyModel[]> => {
     return new Promise((resolve, reject) => {
-      this.connection.query(`SELECT * FROM vocabularies`, (err, result) => {
+      this.connection.query(`SELECT * FROM vocabularies;`, (err, result) => {
         if (err) {
           this.log(err, "");
           return reject(err);
