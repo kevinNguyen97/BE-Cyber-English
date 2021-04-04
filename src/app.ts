@@ -51,13 +51,8 @@ class AppRouter {
 
     /** Error handling */
     this.appRouter.use((req, res, next) => {
-      const port = process.env.PORT || config.server.port;
-      // this.log(
-      //   `Request`,
-      //   `${req.ip} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
-      // );
-      this.logger.request(req.ip, req.originalUrl, req.method, req.body);
-      // this.log("Request data:", JSON.stringify(req.body));
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
+      this.logger.request(ip, req.originalUrl, req.method, req.body);
       next();
     });
 

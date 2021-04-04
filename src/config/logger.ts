@@ -35,7 +35,7 @@ class LoggerService {
     }
   };
 
-  request = (ip: string, originalUrl: string, method: string, object?: any) => {
+  request = (ip: any, originalUrl: string, method: string, object?: any) => {
     logger.info(
       `${ip} Request:${originalUrl}, " METHOD: ", ${method}`,
       "Request data:",
