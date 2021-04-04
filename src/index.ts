@@ -15,20 +15,3 @@ appRouter.appRouter.listen(config.server.port, () =>
     }`
   )
 );
-
-// ,
-//         {
-//             "name": "serveFileStaging",
-//             "script": "./assestService.js",
-//             "exec_mode": "fork",
-//             "instances": 1
-//         }
-
-
-// ,
-//         {
-//             "name": "serveFileEnglish",
-//             "script": "./assestService.js",
-//             "exec_mode": "fork",
-//             "instances": 1
-//         }
