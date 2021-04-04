@@ -25,8 +25,6 @@ const ASSETS_PORT = process.env.ASSETS_PORT || 3001
 const LogConfig = {
   logDir: process.env.LOG_DIR || 'logs',
   logLevel: process.env.LOG_LEVEL || 'info',
-  logFile: process.env.LOG_FILE || 'appEvent.log',
-  logFileRequest: process.env.LOG_FILE || 'request.log',
 }
 
 const SERVER = {

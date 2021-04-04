@@ -16,14 +16,13 @@ import UnitRouter from "./router/unit";
 import FlashCardRouter from "./router/flashCard";
 import pm2ProdDoc from "./pm2Config.prod.json";
 import pm2stagingDoc from "./pm2Config.staging.json";
-import LoggerService, { LoggerRequest } from "./config/logger";
+import LoggerService from "./config/logger";
 import { getFullDateTime } from "./ultils/Ultil";
 
 @singleton()
 class AppRouter {
   appRouter = express();
   private logger: LoggerService = container.resolve(LoggerService);
-  private loggerRequest: LoggerRequest = container.resolve(LoggerRequest);
   private nameSpace = "App";
   constructor(
     private vocabulary: VocabularyRouter,
@@ -57,7 +56,7 @@ class AppRouter {
       //   `Request`,
       //   `${req.ip} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
       // );
-      this.loggerRequest.request(req.ip, req.originalUrl, req.method, req.body);
+      this.logger.request(req.ip, req.originalUrl, req.method, req.body);
       // this.log("Request data:", JSON.stringify(req.body));
       next();
     });

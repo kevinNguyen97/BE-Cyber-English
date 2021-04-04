@@ -17,7 +17,9 @@
                 "SERVER_PORT": 2000,
                 "SERVER_DOMAIN_ASSETS": "https://eng.cybersoft.edu.vn",
                 "URL_CHECK_LOGIN": "https://apicrm.cybersoft.edu.vn/api",
-                "ASSETS_PORT": 2001
+                "ASSETS_PORT": 2001,
+                "LOG_DIR": "/home/centos/cyber_english/logs/prod",
+                "LOG_LEVEL": "info"
             }
         }
     ]

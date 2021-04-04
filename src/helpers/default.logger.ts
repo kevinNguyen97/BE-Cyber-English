@@ -1,22 +1,23 @@
 import { configure, getLogger } from 'log4js';
 import config from '../config/config';
+import { getDateTime } from '../ultils/Ultil';
 
 
 // appenders
 configure({
   appenders: {
     console: { type: 'stdout', layout: { type: 'colored' } },
-    dateFile: {
-      type: 'dateFile',
-      filename: `${config.LogConfig.logDir}/${config.LogConfig.logFile}`,
+    fileAppender: {
+      type: 'file',
+      keepFileExt: true,
       layout: { type: 'basic' },
       compress: true,
+      filename: `${config.LogConfig.logDir}/${getDateTime().split(' ').join('-').trim()}.txt`,
       daysToKeep: 14,
-      keepFileExt: true
     }
   },
   categories: {
-    default: { appenders: ['console', 'dateFile'], level: config.LogConfig.logLevel }
+    default: { appenders: ['console','fileAppender'], level: 'info' }
   }
 });
 
