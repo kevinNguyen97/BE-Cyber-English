@@ -56,7 +56,7 @@ export const toPlural = (_str: string): string => {
 };
 
 export const stringToBase64 = (str: string): string =>
-  new Buffer(str).toString("base64");
+  Buffer.from(str).toString("base64");
 
 export const timeStampMillisSeconds = () => Date.now();
 // tslint:disable-next-line: no-bitwise
