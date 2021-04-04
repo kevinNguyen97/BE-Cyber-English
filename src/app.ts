@@ -8,7 +8,6 @@ import VocabularyRouter from "./router/vocabularies";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
 import ReadingRouter from "./router/reading";
-import BaseRouter from "./router/baseRouter";
 import config from "./config/config";
 import UserRouter from "./router/users";
 import MultipleChoiceRouter from "./router/multipleChoice";
@@ -18,6 +17,7 @@ import FlashCardRouter from "./router/flashCard";
 import pm2ProdDoc from "./pm2Config.prod.json";
 import pm2stagingDoc from "./pm2Config.staging.json";
 import LoggerService from "./config/logger";
+import { getFullDateTime } from "./ultils/Ultil";
 
 @singleton()
 class AppRouter {
@@ -45,21 +45,24 @@ class AppRouter {
       swaggerUi.setup(swaggerDocument)
     );
 
+
+    getFullDateTime()
     // this.appRouter.get("/api/swagger", swaggerUi.setup(swaggerDocument));
 
     /** Error handling */
     this.appRouter.use((req, res, next) => {
       const port = process.env.PORT || config.server.port;
-      this.log(
-        `Request`,
-        `${req.ip} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
-      );
-      this.log("Request data:", JSON.stringify(req.body));
+      // this.log(
+      //   `Request`,
+      //   `${req.ip} Request:${req.originalUrl}, " METHOD: ", ${req.method}`
+      // );
+      this.logger.request(req.ip, req.originalUrl, req.method, req.body);
+      // this.log("Request data:", JSON.stringify(req.body));
       next();
     });
 
     // static
-    this.appRouter.use("/assets", express.static("public"));
+    this.appRouter.use("/assets", express.static("../public"));
 
     this.appRouter.use("/api/vocabulary", this.vocabulary.router);
     this.appRouter.use("/api/listening", this.listening.router);
@@ -73,7 +76,6 @@ class AppRouter {
   log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);
   };
-
 }
 
 export default AppRouter;

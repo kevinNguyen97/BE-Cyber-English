@@ -218,6 +218,7 @@ class UserService extends BaseService {
   ): Promise<User> =>
     new Promise((resolve, reject) => {
       const role = this.getRoleID(user.maNhomQuyen);
+      const dateExpired = plusUnitTimestampOnDays(this.timeNow, 150);
       const tempData = [
         user.hoTen,
         user.email,
@@ -227,7 +228,7 @@ class UserService extends BaseService {
         user.id,
         this.timeNow,
         this.timeNow,
-        plusUnitTimestampOnDays(this.timeNow, 150),
+        dateExpired,
         JSON.stringify(user),
       ];
       this.connection.query(
@@ -247,7 +248,8 @@ class UserService extends BaseService {
             data.userEmail = user.email;
             data.userRole = role.id;
             data.userRoleName = role.name;
-            data.isActiveAccount = true
+            data.isActiveAccount = true;
+            data.dateExpired = dateExpired;
             return resolve(data);
           }
         }

@@ -131,6 +131,12 @@ class VocabularyRouter extends BaseRouter {
       ],
       this.newVocabulary
     );
+
+    this.deleteMethod(
+      "/vocabulary/:id",
+      [this.checkIsAdmin],
+      this.newVocabulary
+    );
   }
 
   private getVocabularyDetails = async (

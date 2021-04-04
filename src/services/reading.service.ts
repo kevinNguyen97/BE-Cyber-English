@@ -1,9 +1,5 @@
 import "reflect-metadata";
-import mysql from "mysql";
-import DBService from "../config/mysql";
 import { singleton } from "tsyringe";
-import LoggerService from "../config/logger";
-import { UnitsModel } from "../models/Units.model";
 import {
   ParagraphModel,
   ReadingComprehensionQuestions,

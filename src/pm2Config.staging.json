@@ -17,7 +17,9 @@
                 "SERVER_PORT": 4000,
                 "SERVER_DOMAIN_ASSETS": "https://be.cyber-english.tk",
                 "URL_CHECK_LOGIN": "https://apicrm.cybersoft.edu.vn/api",
-                "ASSETS_PORT": 4001
+                "ASSETS_PORT": 4001,
+                "LOG_DIR": "/home/centos/cyber_english/logs/staging",
+                "LOG_LEVEL": "info"
             }
         }
     ]
