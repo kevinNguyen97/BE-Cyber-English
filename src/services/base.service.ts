@@ -3,7 +3,6 @@ import DBService from "../config/mysql";
 import mysql from "mysql";
 import LoggerService from "../config/logger";
 import { timeStampSeconds } from "../ultils/Ultil";
-import CacheService from "./cache.service";
 
 class BaseService {
   protected connection: mysql.Pool;
@@ -16,9 +15,6 @@ class BaseService {
   get timeNow(): number {
     return timeStampSeconds();
   }
-
-  refreshData = () => {
-  };
 
   protected log = (data: any, message: string = "") => {
     this.logger.info(this.nameSpace, message, data);

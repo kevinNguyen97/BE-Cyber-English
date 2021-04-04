@@ -1,16 +1,23 @@
 "use strict";
-
 import { singleton } from "tsyringe";
 import { ResponseCode, ResponseData } from "../models/response";
 import UserService from "../services/user.service";
+import LoggerService from "../config/logger";
 
 @singleton()
 class Authentication {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private logger: LoggerService
+  ) {}
   isAuth = async (req: any, res: any, next: any) => {
     const token = req.headers["auth-key"];
     this.userService.getUserByToken(token).then(
       (userInfo) => {
+        this.logger.info(
+          "userRequest",
+          `userID: ${userInfo.userId} - Method: ${req.method} - Path: ${req.originalUrl}`
+        );
         req.auth_user = userInfo;
         next();
       },
@@ -32,11 +39,18 @@ class Authentication {
     const token = req.headers["auth-key"];
     this.userService.getUserByToken(token).then(
       (userInfo) => {
+        this.logger.info(
+          "userRequest",
+          `userID: ${userInfo.userId} - Method: ${req.method} - Path: ${req.originalUrl}`
+        );
         this.userService
           .getUserById(userInfo.userId)
           .then((user) => {
             const unit = Number(req.params.unit);
-            if ((unit && user.currentUnit < unit && !user.isAdmin) || (!user.isAdmin && !user.dateRemaining)) {
+            if (
+              (unit && user.currentUnit < unit && !user.isAdmin) ||
+              (!user.isAdmin && !user.dateRemaining)
+            ) {
               const obj = new ResponseData<any>();
               obj.success = false;
               obj.data = {
@@ -74,6 +88,10 @@ class Authentication {
     const token = req.headers["auth-key"];
     this.userService.getUserByToken(token).then(
       (userInfo) => {
+        this.logger.info(
+          "adminRequest",
+          `userID: ${userInfo.userId} - Method: ${req.method} - Path: ${req.originalUrl}`
+        );
         this.userService
           .getUserById(userInfo.userId)
           .then((user) => {
