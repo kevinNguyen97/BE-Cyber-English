@@ -17,7 +17,6 @@ import FlashCardRouter from "./router/flashCard";
 import pm2ProdDoc from "./pm2Config.prod.json";
 import pm2stagingDoc from "./pm2Config.staging.json";
 import LoggerService from "./config/logger";
-import { getFullDateTime } from "./ultils/Ultil";
 
 @singleton()
 class AppRouter {
@@ -45,8 +44,6 @@ class AppRouter {
       swaggerUi.setup(swaggerDocument)
     );
 
-
-    getFullDateTime()
     // this.appRouter.get("/api/swagger", swaggerUi.setup(swaggerDocument));
 
     /** Error handling */

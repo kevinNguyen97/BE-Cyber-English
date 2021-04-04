@@ -69,5 +69,5 @@ export const getUserRoleName = (roleID: number): string => {
 
 export const doubleQuotationMark = (str: string) => str.replaceAll("'", "''");
 
-export const getDateTime = () => new Date().toDateString();
-export const getFullDateTime = () => new Date().toISOString();
+export const getDateTime = () => new Date().toLocaleDateString();
+export const getFullDateTime = () => new Date().toLocaleString();
