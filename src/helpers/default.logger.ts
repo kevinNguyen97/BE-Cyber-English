@@ -12,7 +12,7 @@ configure({
       keepFileExt: true,
       layout: { type: 'basic' },
       compress: true,
-      filename: `${config.LogConfig.logDir}/${getDateTime().split(' ').join('-').trim()}.txt`,
+      filename: `${config.LogConfig.logDir}/${getDateTime().split('/').join('-').trim()}.txt`,
       daysToKeep: 14,
     }
   },
