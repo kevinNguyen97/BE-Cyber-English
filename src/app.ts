@@ -8,7 +8,6 @@ import VocabularyRouter from "./router/vocabularies";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
 import ReadingRouter from "./router/reading";
-import config from "./config/config";
 import UserRouter from "./router/users";
 import MultipleChoiceRouter from "./router/multipleChoice";
 import ListeningComprehension from "./router/listeningComprehension";
