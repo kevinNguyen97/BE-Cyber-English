@@ -30,12 +30,55 @@ class UserRouter extends BaseRouter {
 
     this.getMethod("/infor", [this.checkAuthThenGetuser], this.handleInforUser);
 
+    this.getMethod(
+      "/users/:page_size/:page_index",
+      [this.checkIsAdmin],
+      this.handleGetUserPagin
+    );
+
     this.postMethod(
       "/admin-login",
       [check("username").notEmpty(), check("password").notEmpty()],
       this.handleAdminLogin
     );
   }
+  private handleGetUserPagin = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+
+      const pageSize: number = Number(req.params.page_size)
+        ? Number(req.params.page_size)
+        : 0;
+      const pageIndex: number = Number(req.params.page_index)
+        ? Number(req.params.page_index)
+        : 0;
+      const userList = await this.userSev.getUsersPagin(pageSize, pageIndex);
+
+      if (!userList) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invaild paginator data`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+      responseData.success = true;
+      responseData.data = userList;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
 
   private handleInforUser = async (
     req: express.Request,
@@ -198,7 +241,11 @@ class UserRouter extends BaseRouter {
       if (user && user.id && user.isActiveAccount) {
         const token: string | undefined = await this.userSev.getToken(user);
         responseData.success = true;
-        responseData.data = new UserLoginResponse(token, user, isFirstTimeLogin);
+        responseData.data = new UserLoginResponse(
+          token,
+          user,
+          isFirstTimeLogin
+        );
 
         return resp.status(ResponseCode.OK).json(responseData);
       } else {

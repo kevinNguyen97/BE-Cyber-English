@@ -52,6 +52,50 @@ export class User {
   }
 }
 
+export class UserResponse {
+  id: number = 0;
+  fullame: string = "";
+  userEmail: string = "";
+  userRole: number = 0;
+  dateConnected: number = 0;
+  dateExpired: number = 0;
+  userLogin: string = "";
+  currentUnit: number = 0;
+  avatarUrl: string = "";
+  isActiveAccount: boolean = false;
+  orther: any;
+  created: number = 0;
+  modified: number = 0;
+  isAdmin: boolean = false;
+  userRoleName: string = "";
+  displayName: string = "";
+  dateRemaining: number = 0;
+
+  constructor(data: any) {
+    if (data && data.id) {
+      this.id = data.id;
+      this.modified = data.modified;
+      this.userEmail = data.user_email;
+      this.userRole = data.user_role;
+      this.avatarUrl = data.avatar_url;
+      this.displayName = data.display_name;
+      this.dateConnected = data.date_connected;
+      this.userLogin = data.user_login;
+      this.isActiveAccount = !!data.is_active_account;
+      this.currentUnit = data.current_unit;
+      this.created = data.created;
+      this.fullame = data.full_name;
+      this.dateExpired = data.date_expired;
+      this.userRoleName = getUserRoleName(this.userRole);
+      this.isAdmin = this.userRoleName === ROLE.ADMIN;
+      this.dateRemaining = calculateDaysRemaining(
+        timeStampSeconds(),
+        this.dateExpired
+      );
+    }
+  }
+}
+
 // tslint:disable-next-line: max-classes-per-file
 export class UserLoginResponse {
   id: number | null = null;
