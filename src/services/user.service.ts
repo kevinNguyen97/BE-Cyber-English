@@ -1,3 +1,4 @@
+import { UserResponse } from './../models/User.model';
 import "reflect-metadata";
 import { singleton } from "tsyringe";
 import JWTHelper, { TokenData } from "../helpers/jwt.helper";
@@ -156,7 +157,7 @@ class UserService extends BaseService {
         config.extenalServer +
         cyberLearnFacebookLoginURI +
         "/" +
-        'none' +
+        "none" +
         "/" +
         email;
       axios
@@ -185,7 +186,7 @@ class UserService extends BaseService {
         "/" +
         facebookId +
         "/" +
-        'none';
+        "none";
       axios
         .get(url)
         .then((res) => {
@@ -252,6 +253,32 @@ class UserService extends BaseService {
             data.dateExpired = dateExpired;
             return resolve(data);
           }
+        }
+      );
+    });
+
+  getUsersPagin = async (
+    pageSize: number,
+    pageIndex: number
+  ): Promise<{ users: User[]; pagination: object }| null> =>
+    new Promise((resolve, reject) => {
+      const subQueryPagin = pageSize
+        ? `LIMIT ${pageIndex * pageSize},${pageSize}`
+        : "";
+      this.connection.query(
+        `SELECT *, (SELECT count(1) FROM users) as totalUser FROM users ${subQueryPagin}`,
+        (err, result) => {
+          if (err) return reject(err);
+          if (result && result.length > 0)
+            resolve({
+              users: result.map((item) => new UserResponse(item)),
+              pagination: {
+                total: result[0].totalUser,
+                pageIndex,
+                pageSize,
+              },
+            });
+          else reject(null);
         }
       );
     });

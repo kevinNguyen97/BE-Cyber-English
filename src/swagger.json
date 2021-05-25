@@ -1,814 +1,791 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "version": "1.0.0",
-        "title": "My API"
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "My API"
+  },
+  "tags": [
+    {
+      "name": "Vocabulary",
+      "description": "API for vcabulary"
     },
-    "tags": [
-        {
-            "name": "Vocabulary",
-            "description": "API for vcabulary"
-        },
-        {
-            "name": "Reading",
-            "description": "API for Reading"
-        },
-        {
-            "name": "User",
-            "description": "API for User"
-        },
-        {
-            "name": "Multiple Choice",
-            "description": "API for Multiple Choice"
-        },
-        {
-            "name": "Listening",
-            "description": "API for Listening"
-        },
-        {
-            "name": "Unit",
-            "description": "API for Unit"
-        },
-        {
-            "name": "Flash card",
-            "description": "API for Flash card"
-        },
-        {
-            "name": "Admin",
-            "description": "admin management"
-        }
-    ],
-    "consumes": [
-        "application/json"
-    ],
-    "produces": [
-        "application/json"
-    ],
-    "paths": {
-        "/api/vocabulary/unit/{unit}": {
-            "parameters": [
-                {
-                    "name": "unit",
-                    "in": "path",
-                    "required": true,
-                    "description": "unit that we want to match",
-                    "type": "string"
-                },
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Vocabulary"
-                ],
-                "summary": "Get all vocabulary in unit",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            }
-        },
-        "/api/vocabulary/details/{unit}": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "post": {
-                "tags": [
-                    "Vocabulary"
-                ],
-                "parameters": [
-                    {
-                        "name": "unit",
-                        "in": "path",
-                        "required": true,
-                        "description": "unit that we want to match",
-                        "type": "string"
-                    },
-                    {
-                        "name": "body details vocabulary",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "vocabulary": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "summary": "Get detail vocabulary",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "vocabulary is not exist1"
-                    }
-                }
-            }
-        },
-        "/api/vocabulary/details/{unit}/{id}": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Vocabulary"
-                ],
-                "parameters": [
-                    {
-                        "name": "unit",
-                        "in": "path",
-                        "required": true,
-                        "description": "unit that we want to match",
-                        "type": "string"
-                    },
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "description": "id vocebulary to get detail",
-                        "type": "string"
-                    }
-                ],
-                "summary": "Get detail vocabulary",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "vocabulary is not exist1"
-                    }
-                }
-            }
-        },
-        "/api/vocabulary/word-list/{page_size}/{page_index}": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Vocabulary"
-                ],
-                "parameters": [
-                    {
-                        "name": "page_size",
-                        "in": "path",
-                        "required": true,
-                        "description": "page size",
-                        "type": "number"
-                    },
-                    {
-                        "name": "page_index",
-                        "in": "path",
-                        "required": true,
-                        "description": "page index",
-                        "type": "number"
-                    }
-                ],
-                "summary": "Get detail vocabulary",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "vocabulary is not exist1"
-                    }
-                }
-            }
-        },
-        "/api/vocabulary/word-list": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "post": {
-                "tags": [
-                    "Vocabulary"
-                ],
-                "parameters": [
-                    {
-                        "name": "body add wordlist",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "vocabulary_id": {
-                                    "type": "number"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "summary": "add vocabulary to wordlist",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "bad request"
-                    }
-                }
-            }
-        },
-        "/api/vocabulary/word-list/{wordlist_id}": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "delete": {
-                "tags": [
-                    "Vocabulary"
-                ],
-                "parameters": [
-                    {
-                        "name": "wordlist_id",
-                        "in": "path",
-                        "required": true,
-                        "description": "wordlist id",
-                        "type": "number"
-                    }
-                ],
-                "summary": "delete wordlist",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "bad request"
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "Vocabulary"
-                ],
-                "parameters": [
-                    {
-                        "name": "wordlist_id",
-                        "in": "path",
-                        "required": true,
-                        "description": "wordlist id",
-                        "type": "number"
-                    }
-                ],
-                "summary": "highlight wordlist",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "bad request"
-                    }
-                }
-            }
-        },
-        "/api/reading/unit/{unit}": {
-            "parameters": [
-                {
-                    "name": "unit",
-                    "in": "path",
-                    "required": true,
-                    "description": "unit that we want to match",
-                    "type": "string"
-                },
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Reading"
-                ],
-                "summary": "Get all Reading in unit",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            }
-        },
-        "/api/multiple-choice/unit/{unit}": {
-            "parameters": [
-                {
-                    "name": "unit",
-                    "in": "path",
-                    "required": true,
-                    "description": "unit that we want to multipleQuestion",
-                    "type": "number"
-                },
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Multiple Choice"
-                ],
-                "summary": "Get question Multiple choice in unit",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Multiple Choice"
-                ],
-                "summary": "reset point in Multiple choice of unit",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Multiple Choice"
-                ],
-                "parameters": [
-                    {
-                        "name": "body to check multiple choice",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "number"
-                                },
-                                "vocabulary": {
-                                    "type": "string"
-                                },
-                                "answer": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "summary": "check exact multiple choice",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "bad request"
-                    }
-                }
-            }
-        },
-        "/api/listening/unit/{unit}": {
-            "parameters": [
-                {
-                    "name": "unit",
-                    "in": "path",
-                    "required": true,
-                    "description": "unit that we want to get listening question",
-                    "type": "number"
-                },
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Listening"
-                ],
-                "summary": "Get listening question in unit",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Listening"
-                ],
-                "summary": "reset point in Listening of unit",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Listening"
-                ],
-                "parameters": [
-                    {
-                        "name": "body to check listening question",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "number"
-                                },
-                                "answer": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "summary": "check exact listening question",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "bad request"
-                    }
-                }
-            }
-        },
-        "/api/unit/all": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Unit"
-                ],
-                "summary": "Get all unit",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            }
-        },
-        "/api/unit/all-unit-detail": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Unit",
-                    "Admin"
-                ],
-                "summary": "Get all unit just for admin",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            }
-        },
-        "/api/flash-card": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Flash card"
-                ],
-                "summary": "Get list Flash card of user",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "Flash card"
-                ],
-                "parameters": [
-                    {
-                        "name": "body to set Day remind Flash card",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "vocabularyId": {
-                                    "type": "number"
-                                },
-                                "timeRemind": {
-                                    "type": "number"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "summary": "set Day remind Flash card",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "bad request"
-                    }
-                }
-            }
-        },
-        "/api/flash-card/{id}": {
-            "parameters": [
-                {
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "description": "id Flash card to delete",
-                    "type": "string"
-                },
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "delete": {
-                "tags": [
-                    "Flash card"
-                ],
-                "summary": "delete Flash card",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            }
-        },
-        "/api/user/infor": {
-            "parameters": [
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "get user information",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            }
-        },
-        "/api/user/admin-login": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "ndDN",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "username": {
-                                    "type": "string"
-                                },
-                                "password": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "produces": [],
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            }
-        },
-        "/api/user/login": {
-            "post": {
-                "tags": [
-                    "User"
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "ndDN",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "email": {
-                                    "required": false,
-                                    "type": "string"
-                                },
-                                "facebookID": {
-                                    "type": "string"
-                                },
-                                "facebookEmail": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "produces": [],
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "Failed. unit not found."
-                    }
-                }
-            }
-        },
-        "/api/vocabulary/update-content/{vocabularyId}": {
-            "parameters": [
-                {
-                    "name": "vocabularyId",
-                    "in": "path",
-                    "required": true,
-                    "description": "vopcabulary",
-                    "type": "number"
-                },
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "patch": {
-                "tags": [
-                    "Vocabulary",
-                    "Admin"
-                ],
-                "parameters": [
-                    {
-                        "name": "body content vocabulary",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "vocabulary": {
-                                    "type": "string"
-                                },
-                                "vocabularyTranslate": {
-                                    "type": "string"
-                                },
-                                "dictionaryEntry": {
-                                    "type": "string"
-                                },
-                                "dictionaryEntryTranslate": {
-                                    "type": "string"
-                                },
-                                "exampleSentences": {
-                                    "type": "string"
-                                },
-                                "exampleSentencesTranslate": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "summary": "admin update vocabulary content",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "bad request"
-                    }
-                }
-            }
-        },
-        "/api/vocabulary/new/{unit}": {
-            "parameters": [
-                {
-                    "name": "unit",
-                    "in": "path",
-                    "required": true,
-                    "description": "vopcabulary",
-                    "type": "number"
-                },
-                {
-                    "$ref": "#/definitions/auth"
-                }
-            ],
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "parameters": [
-                    {
-                        "name": "body content vocabulary",
-                        "in": "body",
-                        "required": false,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "vocabulary": {
-                                    "type": "string"
-                                },
-                                "vocabularyTranslate": {
-                                    "type": "string"
-                                },
-                                "dictionaryEntry": {
-                                    "type": "string"
-                                },
-                                "dictionaryEntryTranslate": {
-                                    "type": "string"
-                                },
-                                "exampleSentences": {
-                                    "type": "string"
-                                },
-                                "exampleSentencesTranslate": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "summary": "admin add new vocabulary",
-                "responses": {
-                    "200": {
-                        "$ref": "#/definitions/200"
-                    },
-                    "404": {
-                        "description": "bad request"
-                    }
-                }
-            }
-        }
+    {
+      "name": "Reading",
+      "description": "API for Reading"
     },
-    "definitions": {
-        "200": {
-            "description": "Success"
-        },
-        "auth": {
-            "name": "Auth-key",
-            "in": "header",
-            "description": "access token",
-            "required": true,
-            "type": "string"
-        }
+    {
+      "name": "User",
+      "description": "API for User"
+    },
+    {
+      "name": "Multiple Choice",
+      "description": "API for Multiple Choice"
+    },
+    {
+      "name": "Listening",
+      "description": "API for Listening"
+    },
+    {
+      "name": "Unit",
+      "description": "API for Unit"
+    },
+    {
+      "name": "Flash card",
+      "description": "API for Flash card"
+    },
+    {
+      "name": "Admin",
+      "description": "admin management"
     }
+  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/vocabulary/unit/{unit}": {
+      "parameters": [
+        {
+          "name": "unit",
+          "in": "path",
+          "required": true,
+          "description": "unit that we want to match",
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Vocabulary"],
+        "summary": "Get all vocabulary in unit",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      }
+    },
+    "/api/vocabulary/details/{unit}": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "post": {
+        "tags": ["Vocabulary"],
+        "parameters": [
+          {
+            "name": "unit",
+            "in": "path",
+            "required": true,
+            "description": "unit that we want to match",
+            "type": "string"
+          },
+          {
+            "name": "body details vocabulary",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vocabulary": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Get detail vocabulary",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "vocabulary is not exist1"
+          }
+        }
+      }
+    },
+    "/api/vocabulary/details/{unit}/{id}": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Vocabulary"],
+        "parameters": [
+          {
+            "name": "unit",
+            "in": "path",
+            "required": true,
+            "description": "unit that we want to match",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id vocebulary to get detail",
+            "type": "string"
+          }
+        ],
+        "summary": "Get detail vocabulary",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "vocabulary is not exist1"
+          }
+        }
+      }
+    },
+    "/api/vocabulary/word-list/{page_size}/{page_index}": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Vocabulary"],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "path",
+            "required": true,
+            "description": "page size",
+            "type": "number"
+          },
+          {
+            "name": "page_index",
+            "in": "path",
+            "required": true,
+            "description": "page index",
+            "type": "number"
+          }
+        ],
+        "summary": "Get detail vocabulary",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "vocabulary is not exist1"
+          }
+        }
+      }
+    },
+    "/api/vocabulary/word-list": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "post": {
+        "tags": ["Vocabulary"],
+        "parameters": [
+          {
+            "name": "body add wordlist",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vocabulary_id": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "add vocabulary to wordlist",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/api/vocabulary/word-list/{wordlist_id}": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "delete": {
+        "tags": ["Vocabulary"],
+        "parameters": [
+          {
+            "name": "wordlist_id",
+            "in": "path",
+            "required": true,
+            "description": "wordlist id",
+            "type": "number"
+          }
+        ],
+        "summary": "delete wordlist",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Vocabulary"],
+        "parameters": [
+          {
+            "name": "wordlist_id",
+            "in": "path",
+            "required": true,
+            "description": "wordlist id",
+            "type": "number"
+          }
+        ],
+        "summary": "highlight wordlist",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/api/reading/unit/{unit}": {
+      "parameters": [
+        {
+          "name": "unit",
+          "in": "path",
+          "required": true,
+          "description": "unit that we want to match",
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Reading"],
+        "summary": "Get all Reading in unit",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      }
+    },
+    "/api/multiple-choice/unit/{unit}": {
+      "parameters": [
+        {
+          "name": "unit",
+          "in": "path",
+          "required": true,
+          "description": "unit that we want to multipleQuestion",
+          "type": "number"
+        },
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Multiple Choice"],
+        "summary": "Get question Multiple choice in unit",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Multiple Choice"],
+        "summary": "reset point in Multiple choice of unit",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Multiple Choice"],
+        "parameters": [
+          {
+            "name": "body to check multiple choice",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "vocabulary": {
+                  "type": "string"
+                },
+                "answer": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "check exact multiple choice",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/api/listening/unit/{unit}": {
+      "parameters": [
+        {
+          "name": "unit",
+          "in": "path",
+          "required": true,
+          "description": "unit that we want to get listening question",
+          "type": "number"
+        },
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Listening"],
+        "summary": "Get listening question in unit",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Listening"],
+        "summary": "reset point in Listening of unit",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Listening"],
+        "parameters": [
+          {
+            "name": "body to check listening question",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "answer": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "check exact listening question",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/api/unit/all": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Unit"],
+        "summary": "Get all unit",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      }
+    },
+    "/api/unit/all-unit-detail": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Unit", "Admin"],
+        "summary": "Get all unit just for admin",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      }
+    },
+    "/api/flash-card": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Flash card"],
+        "summary": "Get list Flash card of user",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Flash card"],
+        "parameters": [
+          {
+            "name": "body to set Day remind Flash card",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vocabularyId": {
+                  "type": "number"
+                },
+                "timeRemind": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "set Day remind Flash card",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/api/flash-card/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "id Flash card to delete",
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "delete": {
+        "tags": ["Flash card"],
+        "summary": "delete Flash card",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      }
+    },
+    "/api/user/infor": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["User"],
+        "summary": "get user information",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      }
+    },
+    "/api/user/admin-login": {
+      "post": {
+        "tags": ["Admin"],
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "ndDN",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": [],
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "tags": ["User"],
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "ndDN",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "required": false,
+                  "type": "string"
+                },
+                "facebookID": {
+                  "type": "string"
+                },
+                "facebookEmail": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": [],
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "Failed. unit not found."
+          }
+        }
+      }
+    },
+    "/api/vocabulary/update-content/{vocabularyId}": {
+      "parameters": [
+        {
+          "name": "vocabularyId",
+          "in": "path",
+          "required": true,
+          "description": "vopcabulary",
+          "type": "number"
+        },
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "patch": {
+        "tags": ["Vocabulary", "Admin"],
+        "parameters": [
+          {
+            "name": "body content vocabulary",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vocabulary": {
+                  "type": "string"
+                },
+                "vocabularyTranslate": {
+                  "type": "string"
+                },
+                "dictionaryEntry": {
+                  "type": "string"
+                },
+                "dictionaryEntryTranslate": {
+                  "type": "string"
+                },
+                "exampleSentences": {
+                  "type": "string"
+                },
+                "exampleSentencesTranslate": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "admin update vocabulary content",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/api/user/users/{page_size}/{page_index}": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "path",
+            "required": true,
+            "description": "page size",
+            "type": "number"
+          },
+          {
+            "name": "page_index",
+            "in": "path",
+            "required": true,
+            "description": "page index",
+            "type": "number"
+          }
+        ],
+        "summary": "get list user pagin",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "invaild pagin data"
+          }
+        }
+      }
+    },
+    "/api/vocabulary/new/{unit}": {
+      "parameters": [
+        {
+          "name": "unit",
+          "in": "path",
+          "required": true,
+          "description": "vopcabulary",
+          "type": "number"
+        },
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "post": {
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "body content vocabulary",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vocabulary": {
+                  "type": "string"
+                },
+                "vocabularyTranslate": {
+                  "type": "string"
+                },
+                "dictionaryEntry": {
+                  "type": "string"
+                },
+                "dictionaryEntryTranslate": {
+                  "type": "string"
+                },
+                "exampleSentences": {
+                  "type": "string"
+                },
+                "exampleSentencesTranslate": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "admin add new vocabulary",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "200": {
+      "description": "Success"
+    },
+    "auth": {
+      "name": "Auth-key",
+      "in": "header",
+      "description": "access token",
+      "required": true,
+      "type": "string"
+    }
+  }
 }
