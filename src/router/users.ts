@@ -41,6 +41,11 @@ class UserRouter extends BaseRouter {
       [check("username").notEmpty(), check("password").notEmpty()],
       this.handleAdminLogin
     );
+    this.postMethod(
+      "/admin-update-user",
+      [check("user-id").notEmpty(), check("password").notEmpty()],
+      this.handleAdminLogin
+    );
   }
   private handleGetUserPagin = async (
     req: express.Request,

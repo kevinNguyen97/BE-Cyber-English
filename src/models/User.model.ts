@@ -54,7 +54,7 @@ export class User {
 
 export class UserResponse {
   id: number = 0;
-  fullame: string = "";
+  fullName: string = "";
   userEmail: string = "";
   userRole: number = 0;
   dateConnected: number = 0;
@@ -84,7 +84,7 @@ export class UserResponse {
       this.isActiveAccount = !!data.is_active_account;
       this.currentUnit = data.current_unit;
       this.created = data.created;
-      this.fullame = data.full_name;
+      this.fullName = data.full_name;
       this.dateExpired = data.date_expired;
       this.userRoleName = getUserRoleName(this.userRole);
       this.isAdmin = this.userRoleName === ROLE.ADMIN;
