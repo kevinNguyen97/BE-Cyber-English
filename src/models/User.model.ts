@@ -52,7 +52,7 @@ export class User {
   }
 }
 
-export class UserResponse {
+export class UserResponseDB {
   id: number = 0;
   fullName: string = "";
   userEmail: string = "";
@@ -96,6 +96,32 @@ export class UserResponse {
   }
 }
 
+export class UserResponse extends UserResponseDB {
+  constructor(data: User | null) {
+    super(null);
+    if (data && data.id) {
+      this.id = data.id;
+      this.modified = data.modified;
+      this.userEmail = data.userEmail;
+      this.userRole = data.userRole;
+      this.avatarUrl = data.avatarUrl;
+      this.displayName = data.displayName;
+      this.dateConnected = data.dateConnected;
+      this.userLogin = data.userLogin;
+      this.isActiveAccount = !!data.isActiveAccount;
+      this.currentUnit = data.currentUnit;
+      this.created = data.created;
+      this.fullName = data.fullName;
+      this.dateExpired = data.dateExpired;
+      this.userRoleName = getUserRoleName(this.userRole);
+      this.isAdmin = this.userRoleName === ROLE.ADMIN;
+      this.dateRemaining = calculateDaysRemaining(
+        timeStampSeconds(),
+        this.dateExpired
+      );
+    }
+  }
+}
 // tslint:disable-next-line: max-classes-per-file
 export class UserLoginResponse {
   id: number | null = null;

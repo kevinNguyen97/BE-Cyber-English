@@ -48,8 +48,8 @@ class Authentication {
           .then((user) => {
             const unit = Number(req.params.unit);
             if (
-              (unit && user.currentUnit < unit && !user.isAdmin) ||
-              (!user.isAdmin && !user.dateRemaining)
+              (unit && user && user?.currentUnit < unit && !user?.isAdmin) ||
+              (!user?.isAdmin && !user?.dateRemaining)
             ) {
               const obj = new ResponseData<any>();
               obj.success = false;
@@ -95,7 +95,7 @@ class Authentication {
         this.userService
           .getUserById(userInfo.userId)
           .then((user) => {
-            if (!user.isAdmin) {
+            if (!user?.isAdmin) {
               const obj = new ResponseData<any>();
               obj.success = false;
               obj.data = {

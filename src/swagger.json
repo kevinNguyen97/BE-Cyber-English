@@ -143,6 +143,25 @@
         }
       }
     },
+    "/api/user/get-all-role": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Get all role",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "can not get all role"
+          }
+        }
+      }
+    },
     "/api/vocabulary/word-list/{page_size}/{page_index}": {
       "parameters": [
         {
@@ -251,6 +270,52 @@
           }
         ],
         "summary": "highlight wordlist",
+        "responses": {
+          "200": {
+            "$ref": "#/definitions/200"
+          },
+          "404": {
+            "description": "bad request"
+          }
+        }
+      }
+    },
+    "/api/user/admin-update-user": {
+      "parameters": [
+        {
+          "$ref": "#/definitions/auth"
+        }
+      ],
+      "patch": {
+        "tags": ["Admin"],
+        "parameters": [
+          {
+            "name": "body to update user infor for admin",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "fullName": {
+                  "type": "string"
+                },
+                "dateExpired": {
+                  "type": "number"
+                },
+                "currentUnit": {
+                  "type": "number"
+                },
+                "userRole": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "check exact multiple choice",
         "responses": {
           "200": {
             "$ref": "#/definitions/200"
