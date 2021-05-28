@@ -244,7 +244,7 @@ class UserService extends BaseService {
           if (result) {
             const data = new User(null);
             data.id = result.insertId;
-            data.fullame = user.hoTen;
+            data.fullName = user.hoTen;
             data.displayName = user.biDanh;
             data.userEmail = user.email;
             data.userRole = role.id;
