@@ -9,9 +9,12 @@ import CacheService from "./cache.service";
 @singleton()
 class RoleService {
   private connection: mysql.Pool;
-  allRole: Role[] = [];
-  constructor(private dBService: DBService,private cacheServ: CacheService, ) {
+  constructor(private dBService: DBService, private cacheServ: CacheService) {
     this.connection = this.dBService.getConnection();
+  }
+
+  get allRole() {
+    return this.cacheServ.role.allData;
   }
 
   getRoleIdByName = (userRole: any): Promise<number | null> => {
@@ -81,8 +84,6 @@ class RoleService {
       );
     });
   };
-
-
 }
 
 export default RoleService;

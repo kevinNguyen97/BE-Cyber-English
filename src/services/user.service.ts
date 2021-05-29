@@ -1,3 +1,4 @@
+import { UserResponseDB } from "./../models/User.model";
 import "reflect-metadata";
 import { singleton } from "tsyringe";
 import JWTHelper, { TokenData } from "../helpers/jwt.helper";
@@ -43,7 +44,7 @@ class UserService extends BaseService {
       );
     });
 
-  getUserById = (userId: number): Promise<User> =>
+  getUserById = (userId: number): Promise<User | null> =>
     new Promise((resolve, reject) => {
       if (!userId) {
         reject(null);
@@ -54,7 +55,22 @@ class UserService extends BaseService {
         (err, result) => {
           if (err) return reject(err);
           if (result && result.length > 0) resolve(new User(result[0]));
-          else reject(null);
+          resolve(null);
+        }
+      );
+    });
+
+  checkUserIsExistById = (userId: number): Promise<boolean> =>
+    new Promise((resolve, reject) => {
+      if (!userId) {
+        reject(null);
+        return;
+      }
+      this.connection.query(
+        `SELECT * FROM users WHERE id=${userId}`,
+        (err, result) => {
+          if (err) return reject(err);
+          resolve(result && result.length > 0);
         }
       );
     });
@@ -96,6 +112,29 @@ class UserService extends BaseService {
             return reject(err);
           }
           if (result) return resolve(result);
+        }
+      );
+    });
+
+  updateUserInfor = (
+    userId: number,
+    fullName: string,
+    dateExpired: number,
+    currentUnit: number,
+    userRole: number
+  ): Promise<any> =>
+    new Promise(async (resolve, reject) => {
+      this.connection.query(
+        `UPDATE users SET modified = ${this.timeNow}, current_unit = ${currentUnit},
+            full_name = "${fullName}", date_expired = ${dateExpired}, user_role = ${userRole}
+          WHERE id = ${userId};`,
+        (err, result) => {
+          if (err) {
+            this.log(err, "");
+            return reject(err);
+          }
+          if (result) return resolve(result);
+          resolve(null);
         }
       );
     });
@@ -156,7 +195,7 @@ class UserService extends BaseService {
         config.extenalServer +
         cyberLearnFacebookLoginURI +
         "/" +
-        'none' +
+        "none" +
         "/" +
         email;
       axios
@@ -185,7 +224,7 @@ class UserService extends BaseService {
         "/" +
         facebookId +
         "/" +
-        'none';
+        "none";
       axios
         .get(url)
         .then((res) => {
@@ -243,7 +282,7 @@ class UserService extends BaseService {
           if (result) {
             const data = new User(null);
             data.id = result.insertId;
-            data.fullame = user.hoTen;
+            data.fullName = user.hoTen;
             data.displayName = user.biDanh;
             data.userEmail = user.email;
             data.userRole = role.id;
@@ -252,6 +291,32 @@ class UserService extends BaseService {
             data.dateExpired = dateExpired;
             return resolve(data);
           }
+        }
+      );
+    });
+
+  getUsersPagin = async (
+    pageSize: number,
+    pageIndex: number
+  ): Promise<{ users: User[]; pagination: object } | null> =>
+    new Promise((resolve, reject) => {
+      const subQueryPagin = pageSize
+        ? `LIMIT ${pageIndex * pageSize},${pageSize}`
+        : "";
+      this.connection.query(
+        `SELECT *, (SELECT count(1) FROM users) as totalUser FROM users ${subQueryPagin}`,
+        (err, result) => {
+          if (err) return reject(err);
+          if (result && result.length > 0)
+            resolve({
+              users: result.map((item) => new UserResponseDB(item)),
+              pagination: {
+                total: result[0].totalUser,
+                pageIndex,
+                pageSize,
+              },
+            });
+          else reject(null);
         }
       );
     });

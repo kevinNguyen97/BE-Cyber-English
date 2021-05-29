@@ -6,14 +6,24 @@ import { handleError, ResponseCode, ResponseData } from "../models/response";
 // import Authentication from '../middleware/Authentication';
 import UserService from "../services/user.service";
 import BaseRouter from "./baseRouter";
-import { User, UserLoginResponse } from "../models/User.model";
+import {
+  User,
+  UserLoginResponse,
+  UserResponse,
+  UserResponseDB,
+} from "../models/User.model";
 import config from "../config/config";
+import RoleService from "../services/role.service";
+import { getDateTime, timeStampSeconds } from "../ultils/Ultil";
+import UnitService from "../services/unit.service";
 
 @singleton()
 class UserRouter extends BaseRouter {
   constructor(
     // private auth: Authentication,
-    private userSev: UserService
+    private unitServ: UnitService,
+    private userSev: UserService,
+    private roleServ: RoleService
   ) {
     super();
     this.init();
@@ -30,12 +40,178 @@ class UserRouter extends BaseRouter {
 
     this.getMethod("/infor", [this.checkAuthThenGetuser], this.handleInforUser);
 
+    this.getMethod(
+      "/users/:page_size/:page_index",
+      [this.checkIsAdmin],
+      this.handleGetUserPagin
+    );
+
     this.postMethod(
       "/admin-login",
       [check("username").notEmpty(), check("password").notEmpty()],
       this.handleAdminLogin
     );
+
+    this.getMethod("/get-all-role", [this.checkIsAdmin], this.handleGetAllRole);
+
+    this.patchMethod(
+      "/admin-update-user",
+      [
+        check("userId").notEmpty(),
+        check("fullName").notEmpty(),
+        check("dateExpired").notEmpty(),
+        check("currentUnit").notEmpty(),
+        check("userRole").notEmpty(),
+      ],
+      this.handleUpdateUserInfor
+    );
   }
+
+  private handleUpdateUserInfor = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+
+      const userId = req.body.userId ? req.body.userId : "";
+      const fullName = req.body.fullName ? req.body.fullName : "";
+      const dateExpired = Number(req.body.dateExpired) || 0;
+      const currentUnit = Number(req.body.currentUnit) || 0;
+      const userRole = Number(req.body.userRole) || 0;
+
+      if (!userId) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invaild input userId ${userId}`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const isExistUserId = await this.userSev.checkUserIsExistById(userId);
+
+      if (!isExistUserId) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`user id ${userId} is not exist in system`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const isExistUnit = await this.unitServ.checkUnitsExist(currentUnit);
+
+      if (!isExistUnit) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`unit ${currentUnit} is not exist in system`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+      const role = await this.roleServ.getUserRole(userRole);
+      if (!role) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`dateExpired ${dateExpired} is a feature timeStamp`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const result = await this.userSev.updateUserInfor(
+        userId,
+        fullName,
+        dateExpired,
+        currentUnit,
+        userRole
+      );
+
+      if (!result) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`can't not update`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+
+      const userInfor = await this.userSev.getUserById(userId);
+
+      responseData.success = true;
+      responseData.data = new UserResponse(userInfor);
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private handleGetAllRole = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const result = this.roleServ.allRole;
+      responseData.success = true;
+      responseData.data = result;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
+
+  private handleGetUserPagin = async (
+    req: express.Request,
+    resp: express.Response,
+    next: express.NextFunction,
+    responseData: ResponseData<any>
+  ) => {
+    try {
+      const user: User = req.body.userData;
+
+      const pageSize: number = Number(req.params.page_size)
+        ? Number(req.params.page_size)
+        : 0;
+      const pageIndex: number = Number(req.params.page_index)
+        ? Number(req.params.page_index)
+        : 0;
+      const userList = await this.userSev.getUsersPagin(pageSize, pageIndex);
+
+      if (!userList) {
+        return this.handleError(
+          resp,
+          responseData,
+          [`invaild paginator data`],
+          ResponseCode.BAD_REQUEST
+        );
+      }
+      responseData.success = true;
+      responseData.data = userList;
+      return resp.status(ResponseCode.OK).json(responseData);
+    } catch (error) {
+      return handleError(
+        resp,
+        ResponseCode.INTERNAL_SERVER_ERROR,
+        error,
+        this.nameSpace
+      );
+    }
+  };
 
   private handleInforUser = async (
     req: express.Request,
@@ -198,7 +374,11 @@ class UserRouter extends BaseRouter {
       if (user && user.id && user.isActiveAccount) {
         const token: string | undefined = await this.userSev.getToken(user);
         responseData.success = true;
-        responseData.data = new UserLoginResponse(token, user, isFirstTimeLogin);
+        responseData.data = new UserLoginResponse(
+          token,
+          user,
+          isFirstTimeLogin
+        );
 
         return resp.status(ResponseCode.OK).json(responseData);
       } else {

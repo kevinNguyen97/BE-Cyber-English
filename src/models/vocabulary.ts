@@ -7,6 +7,7 @@ export class VocabularyModel {
   modified: number = 0;
   vocabulary: string = "";
   translate: string = "";
+  spelling: string = '';
   dictionaryEntry: string = "";
   audioDictionaryUS: stringOrNull = "";
   audioDictionaryUK: stringOrNull = "";
@@ -29,6 +30,7 @@ export class VocabularyModel {
         modified,
         vocabulary,
         translate,
+        spelling,
         dictionary_entry,
         dictionary_entry_translate,
         example_sentences,
@@ -48,6 +50,7 @@ export class VocabularyModel {
       this.modified = modified;
       this.vocabulary = vocabulary;
       this.translate = translate;
+      this.spelling = spelling;
       this.dictionaryEntry = dictionary_entry;
       this.dictionaryEntryTranslate = dictionary_entry_translate;
       this.exampleSentences = example_sentences;
