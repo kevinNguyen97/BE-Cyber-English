@@ -60,8 +60,6 @@ class FlashCardRouter extends BaseRouter {
         const vocabularyItem = this.cacheServ.vocabulary.allData.find(
           (elem) => elem.id === item.vocabularyId
         );
-        this.log(item.remindDay, "remind day");
-        this.log(this.timeNow, "now");
         if (item.remindDay < this.timeNow) {
           data.push(new FlashCardData(item, vocabularyItem));
         }
