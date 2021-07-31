@@ -111,7 +111,7 @@ class VocabularyService extends BaseService {
         : "";
 
       this.connection.query(
-        `SELECT *, (SELECT count(1) FROM user_worklist WHERE user_id = ${userId}) as totalWordList FROM user_worklist WHERE user_id = ${userId} ${subQueryPagin}`,
+        `SELECT *, (SELECT count(1) FROM user_worklist WHERE user_id = ${userId} AND is_deleted = 0) as totalWordList FROM user_worklist WHERE user_id = ${userId} AND is_deleted = 0 ${subQueryPagin}`,
         (err, result) => {
           let total = 0;
           if (err) {
