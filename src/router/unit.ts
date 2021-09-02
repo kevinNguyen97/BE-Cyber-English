@@ -81,6 +81,7 @@ class UnitRouter extends BaseRouter {
       const dataResponse = listUnits.sort((a, b) => a.unit - b.unit);
 
       console.log({ listUnits, dataResponse });
+      
       responseData.success = true;
       responseData.data = dataResponse;
       return resp.status(ResponseCode.OK).json(responseData);
