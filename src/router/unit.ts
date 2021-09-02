@@ -29,11 +29,13 @@ class UnitRouter extends BaseRouter {
     );
     this.patchMethod(
       "/update-content:unit",
-      [this.checkIsAdmin,
-      this.check('title').isString().isEmpty(),
-      this.check('translate').isString().isEmpty(),
-      this.check('').isString().isEmpty(),
-      this.check('').isString().isEmpty(),],
+      [
+        this.checkIsAdmin,
+        this.check("title").isString().isEmpty(),
+        this.check("translate").isString().isEmpty(),
+        this.check("").isString().isEmpty(),
+        this.check("").isString().isEmpty(),
+      ],
       this.updatUnitTitle
     );
   }
@@ -74,11 +76,11 @@ class UnitRouter extends BaseRouter {
     responseData: ResponseData<any>
   ) => {
     try {
-
       const listUnits = await this.unitService.getAllUnit();
 
       const dataResponse = listUnits.sort((a, b) => a.unit - b.unit);
 
+      console.log({ listUnits, dataResponse });
       responseData.success = true;
       responseData.data = dataResponse;
       return resp.status(ResponseCode.OK).json(responseData);
@@ -102,25 +104,24 @@ class UnitRouter extends BaseRouter {
       const unit = Number(req.params.unit);
 
       if (!unit)
-      return this.handleError(
-        resp,
-        responseData,
-        [`invaild unit ${unit}`],
-        ResponseCode.BAD_REQUEST
-      );
+        return this.handleError(
+          resp,
+          responseData,
+          [`invaild unit ${unit}`],
+          ResponseCode.BAD_REQUEST
+        );
 
-      const isExistUnit = await this.unitService.checkUnitsExist(unit)
+      const isExistUnit = await this.unitService.checkUnitsExist(unit);
 
       if (!isExistUnit)
-      return this.handleError(
-        resp,
-        responseData,
-        [`unit ${unit} is not exist`],
-        ResponseCode.BAD_REQUEST
-      );
+        return this.handleError(
+          resp,
+          responseData,
+          [`unit ${unit} is not exist`],
+          ResponseCode.BAD_REQUEST
+        );
 
       const listUnits = await this.unitService.getAllUnit();
-
 
       responseData.success = true;
       responseData.data = true;
