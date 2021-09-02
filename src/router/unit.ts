@@ -56,6 +56,8 @@ class UnitRouter extends BaseRouter {
         .map((unit) => new UnitsResponse(unit, unit.unit <= currentUnit))
         .sort((a, b) => a.unit - b.unit);
 
+      this.log({ listUnits, dataResponse });
+
       responseData.success = true;
       responseData.data = dataResponse;
       return resp.status(ResponseCode.OK).json(responseData);
@@ -80,8 +82,6 @@ class UnitRouter extends BaseRouter {
 
       const dataResponse = listUnits.sort((a, b) => a.unit - b.unit);
 
-      console.log({ listUnits, dataResponse });
-      
       responseData.success = true;
       responseData.data = dataResponse;
       return resp.status(ResponseCode.OK).json(responseData);
