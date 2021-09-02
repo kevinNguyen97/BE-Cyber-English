@@ -131,7 +131,7 @@ class Authentication {
 
   isUserLoggedIn = async (req: any, res: any) => {
     return new Promise(async (resolve, reject) => {
-      const token = req.headers["sb-auth-key"];
+      const token = req.headers["auth-key"];
       const userInfo = await this.userService.getUserByToken(token);
       if (userInfo) {
         resolve(userInfo);
