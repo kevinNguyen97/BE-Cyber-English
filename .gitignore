@@ -107,3 +107,5 @@ dist
 package-lock.json
 
 config.env.ts
+
+mysql_data/

@@ -13,7 +13,7 @@ class ResponseData<T> {
     }
 }
 
-const handleError = (resp: express.Response, statusCode: number, error: string, nameSpace: string) => {
+const handleError = (resp: express.Response, statusCode: number, error: any, nameSpace: string) => {
     const logger = container.resolve(LoggerService);
     logger.error(nameSpace, statusCode.toString(), error)
     return resp.status(statusCode).json(error);

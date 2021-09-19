@@ -21,13 +21,13 @@ class DBService {
 
     private initConnection = (): mysql.Pool => {
         const connection = mysql.createPool(this.params);
-        // connection.on('connection', (err) => {
-        //     if (err) {
-        //         console.log('Connect Database Error: ', err);
-        //     } else {
-        //         console.log('Database connected!!!');
-        //     }
-        // })
+        connection.on('connection', (err) => {
+            if (err) {
+                console.log('Connect Database Error: ', err);
+            } else {
+                console.log('Database connected!!!', config.mysql.host);
+            }
+        })
         return connection;
     }
 

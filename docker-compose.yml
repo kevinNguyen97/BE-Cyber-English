@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  # client:
+  #   stdin_open: true
+  #   container_name: client
+  #   restart: always
+  #   build:
+  #     context: ./fe-tnms
+  #     dockerfile: ./docker/DockerFile.build
+  #   # ports:
+  #   #   - 3000:3000
+  #   networks:
+  #     - nw_tnms
+
+  node:
+    container_name: api
+    restart: always
+    image: xaythixin/images:english.prod.be.latest
+    ports:
+      - 3000:3000
+    networks:
+      - nw_tnms
+    environment:
+      MYSQL_DATABASE: "cyber_english"
+      MYSQL_HOST: mysql
+      MYSQL_USER: "cyberEnglishProd"
+      MYSQL_PASSWORD: "cyberEngl1sh@production"
+      MYSQL_PORT: 3306
+      MYSQL_CONNECTIONLIMIT: 10
+      SERVER_HOSTNAME: "https://eng.cybersoft.edu.vn"
+      SERVER_PORT: 3000
+      SERVER_DOMAIN_ASSETS: "https://eng.cybersoft.edu.vn"
+      URL_CHECK_LOGIN: "https://apicrm.cybersoft.edu.vn/api"
+      ASSETS_PORT: 3000
+      LOG_DIR: "/logs"
+      LOG_LEVEL: "info"
+      NODE_ENV: "production"
+    volumes: 
+      - ./logs:/logs
+    networks: 
+      - nw_tnms
+
+  mysql:
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    image: mysql:8.0.26
+    ports: 
+      - 3306:3306
+    volumes: 
+      - ./mysql_data:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: 123456788
+      MYSQL_PASSWORD: cyberEngl1sh@production
+      MYSQL_DATABASE: cyber_english
+      MYSQL_USER: cyberEnglishProd
+    networks: 
+      - nw_tnms
+
+networks:
+  nw_tnms:
+    external: 

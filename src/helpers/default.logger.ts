@@ -13,7 +13,7 @@ configure({
       layout: { type: 'basic' },
       compress: true,
       filename: `${config.LogConfig.logDir}/${getDateTime().split('/').join('-').trim()}.txt`,
-      daysToKeep: 14,
+      daysToKeep: 5,
     }
   },
   categories: {

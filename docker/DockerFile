@@ -1,0 +1,18 @@
+FROM node:14.17.4-alpine
+
+# vi tri thu muc 
+WORKDIR /app
+
+COPY package.json ./
+
+COPY yarn.lock ./
+
+# cau lenh run
+RUN yarn
+
+# coppy source
+COPY . .
+
+EXPOSE 3300
+
+CMD [ "yarn", "dev" ]

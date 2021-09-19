@@ -13,9 +13,8 @@ import MultipleChoiceRouter from "./router/multipleChoice";
 import ListeningComprehension from "./router/listeningComprehension";
 import UnitRouter from "./router/unit";
 import FlashCardRouter from "./router/flashCard";
-import pm2ProdDoc from "./pm2Config.prod.json";
-import pm2stagingDoc from "./pm2Config.staging.json";
 import LoggerService from "./config/logger";
+const path = require("path");
 
 @singleton()
 class AppRouter {
@@ -53,7 +52,8 @@ class AppRouter {
     });
 
     // static
-    this.appRouter.use("/assets", express.static("../public"));
+    const publicPathDirectory = path.join(__dirname, "../public");
+    this.appRouter.use("/assets", express.static(publicPathDirectory));
 
     this.appRouter.use("/api/vocabulary", this.vocabulary.router);
     this.appRouter.use("/api/listening", this.listening.router);
